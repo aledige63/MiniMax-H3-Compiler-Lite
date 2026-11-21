@@ -1,0 +1,61 @@
+{
+  "request": "<Subject 1> è seduta sul divano e guarda la camera. Pronuncia la battuta d1. Durante la battuta, <Subject 2> entra e si ferma accanto a lei.",
+  "active_units": [
+    {
+      "subject": 1,
+      "name": "Anna",
+      "role": "character",
+      "description_en": "Anna",
+      "confirmed": true,
+      "sources": [
+        {
+          "picture_slot": 1,
+          "attribute": "identity",
+          "linked_to_h3": true
+        },
+        {
+          "picture_slot": 2,
+          "attribute": "outfit",
+          "linked_to_h3": true
+        }
+      ]
+    },
+    {
+      "subject": 2,
+      "name": "Marco",
+      "role": "character",
+      "description_en": "Marco",
+      "confirmed": true,
+      "sources": [
+        {
+          "picture_slot": 3,
+          "attribute": "identity",
+          "linked_to_h3": true
+        }
+      ]
+    },
+    {
+      "subject": 3,
+      "name": "Stanza",
+      "role": "environment",
+      "description_en": "the room",
+      "confirmed": true,
+      "sources": [
+        {
+          "picture_slot": 4,
+          "attribute": "environment",
+          "linked_to_h3": true
+        }
+      ]
+    }
+  ],
+  "dialogues": [
+    {
+      "id": "d1",
+      "text": "Sono pronta.",
+      "language": "Italian",
+      "speaker_subject": 1,
+      "confirmed": true
+    }
+  ]
+}

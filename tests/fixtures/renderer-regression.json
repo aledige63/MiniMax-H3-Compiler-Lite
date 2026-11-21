@@ -1,0 +1,100 @@
+{
+  "runs": [
+    {
+      "case": "A01",
+      "result": {
+        "interpretation": {
+          "narrative_en": "<Subject 1> is sitting on the sofa and looks toward the camera. {{dialogue:d1}} While <Subject 1> speaks, <Subject 2> enters and stops next to her.",
+          "estimated_duration_s": 10.0,
+          "question": null
+        },
+        "input_hash": "a38eab2a2642d5f61cafb1d22b92b8957f223d4468ea7a78e70bb91c2ac34e34",
+        "prompt": "subject_definitions:\n<Subject 1> is Anna, with identity from <Picture 1>, outfit from <Picture 2>.\n<Subject 2> is Marco, with identity from <Picture 3>.\n<Subject 3> is the room, with environment from <Picture 4>.\n\nsummary:\n[reference generation] Active references: <Subject 1> (character); <Subject 2> (character); <Subject 3> (environment).\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - supplied identity and outfit.\n<Subject 2> (appears in [Shot 1]): fully_preserved - supplied identity.\n<Subject 3> (appears in [Shot 1]): fully_preserved - supplied environment.\n\ndetailed_description:\n[Shot 1] <Subject 1> is sitting on the sofa and looks toward the camera. <Subject 1> (S1) says: <d>[Italian] Sono pronta.</d> While <Subject 1> speaks, <Subject 2> enters and stops next to her.\n\noverall_soundscape:\nOn-screen speech only.\n\nnon_diegetic_music:\nN/A"
+      }
+    },
+    {
+      "case": "A03",
+      "result": {
+        "interpretation": {
+          "narrative_en": "The room of <Subject 3> remains empty for two seconds, then <Subject 1> enters. The camera remains fixed for the entire cut.",
+          "estimated_duration_s": 6.0,
+          "question": null
+        },
+        "input_hash": "f7ad8ce0766f7a4bb1bcbea2c2bd3f4e76fa7ff45ef98f98ffd22f8096de5788",
+        "prompt": "subject_definitions:\n<Subject 1> is Anna, with identity from <Picture 1>, outfit from <Picture 2>.\n<Subject 3> is the room, with environment from <Picture 4>.\n\nsummary:\n[reference generation] Active references: <Subject 1> (character); <Subject 3> (environment).\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - supplied identity and outfit.\n<Subject 3> (appears in [Shot 1]): fully_preserved - supplied environment.\n\ndetailed_description:\n[Shot 1] The room of <Subject 3> remains empty for two seconds, then <Subject 1> enters. The camera remains fixed for the entire cut.\n\noverall_soundscape:\nN/A\n\nnon_diegetic_music:\nN/A"
+      }
+    },
+    {
+      "case": "A05",
+      "result": {
+        "interpretation": {
+          "narrative_en": "<Subject 1> looks toward the camera. {{dialogue:d1}}",
+          "estimated_duration_s": 8.0,
+          "question": null
+        },
+        "input_hash": "986d914e57655aebb1143020276ebe4efef235728cf05bc85027a7a63f5593af",
+        "prompt": "subject_definitions:\n<Subject 1> is Anna, with identity from <Picture 1>, outfit from <Picture 2>.\n<Subject 3> is the room, with environment from <Picture 4>.\n\nsummary:\n[reference generation] Active references: <Subject 1> (character); <Subject 3> (environment).\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - supplied identity and outfit.\n<Subject 3> (appears in [Shot 1]): fully_preserved - supplied environment.\n\ndetailed_description:\n[Shot 1] <Subject 1> looks toward the camera. <Subject 1> (S1) says: <d>[Italian] Ciao,  sono qui... davvero!</d>\n\noverall_soundscape:\nOn-screen speech only.\n\nnon_diegetic_music:\nN/A"
+      }
+    },
+    {
+      "case": "A09",
+      "result": {
+        "interpretation": {
+          "narrative_en": "<Subject 1> walks toward the door and stops.",
+          "estimated_duration_s": 6.0,
+          "question": null
+        },
+        "input_hash": "11949ec40264882498c7b24724bcba38143437b02d26717e49ced43526926c49",
+        "prompt": "subject_definitions:\n<Subject 1> is Anna, with identity from <Picture 1>, outfit from <Picture 2>.\n<Subject 3> is the room, with environment from <Picture 4>.\n\nsummary:\n[reference generation] Active references: <Subject 1> (character); <Subject 3> (environment).\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - supplied identity and outfit.\n<Subject 3> (appears in [Shot 1]): fully_preserved - supplied environment.\n\ndetailed_description:\n[Shot 1] <Subject 1> walks toward the door and stops.\n\noverall_soundscape:\nN/A\n\nnon_diegetic_music:\nN/A"
+      }
+    },
+    {
+      "case": "A01",
+      "result": {
+        "interpretation": {
+          "narrative_en": "<Subject 1> is sitting on the sofa and looks toward the camera. {{dialogue:d1}} During the speech, <Subject 2> enters and stops next to her.",
+          "estimated_duration_s": 8.0,
+          "question": null
+        },
+        "input_hash": "a38eab2a2642d5f61cafb1d22b92b8957f223d4468ea7a78e70bb91c2ac34e34",
+        "prompt": "subject_definitions:\n<Subject 1> is Anna, with identity from <Picture 1>, outfit from <Picture 2>.\n<Subject 2> is Marco, with identity from <Picture 3>.\n<Subject 3> is the room, with environment from <Picture 4>.\n\nsummary:\n[reference generation] Active references: <Subject 1> (character); <Subject 2> (character); <Subject 3> (environment).\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - supplied identity and outfit.\n<Subject 2> (appears in [Shot 1]): fully_preserved - supplied identity.\n<Subject 3> (appears in [Shot 1]): fully_preserved - supplied environment.\n\ndetailed_description:\n[Shot 1] <Subject 1> is sitting on the sofa and looks toward the camera. <Subject 1> (S1) says: <d>[Italian] Sono pronta.</d> During the speech, <Subject 2> enters and stops next to her.\n\noverall_soundscape:\nOn-screen speech only.\n\nnon_diegetic_music:\nN/A"
+      }
+    },
+    {
+      "case": "A03",
+      "result": {
+        "interpretation": {
+          "narrative_en": "<Subject 3> remains empty for two seconds, then <Subject 1> enters. Fixed camera for the entire cut.",
+          "estimated_duration_s": 5.0,
+          "question": null
+        },
+        "input_hash": "f7ad8ce0766f7a4bb1bcbea2c2bd3f4e76fa7ff45ef98f98ffd22f8096de5788",
+        "prompt": "subject_definitions:\n<Subject 1> is Anna, with identity from <Picture 1>, outfit from <Picture 2>.\n<Subject 3> is the room, with environment from <Picture 4>.\n\nsummary:\n[reference generation] Active references: <Subject 1> (character); <Subject 3> (environment).\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - supplied identity and outfit.\n<Subject 3> (appears in [Shot 1]): fully_preserved - supplied environment.\n\ndetailed_description:\n[Shot 1] <Subject 3> remains empty for two seconds, then <Subject 1> enters. Fixed camera for the entire cut.\n\noverall_soundscape:\nN/A\n\nnon_diegetic_music:\nN/A"
+      }
+    },
+    {
+      "case": "A05",
+      "result": {
+        "interpretation": {
+          "narrative_en": "<Subject 1> looks toward the camera. {{dialogue:d1}}",
+          "estimated_duration_s": 5.0,
+          "question": null
+        },
+        "input_hash": "986d914e57655aebb1143020276ebe4efef235728cf05bc85027a7a63f5593af",
+        "prompt": "subject_definitions:\n<Subject 1> is Anna, with identity from <Picture 1>, outfit from <Picture 2>.\n<Subject 3> is the room, with environment from <Picture 4>.\n\nsummary:\n[reference generation] Active references: <Subject 1> (character); <Subject 3> (environment).\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - supplied identity and outfit.\n<Subject 3> (appears in [Shot 1]): fully_preserved - supplied environment.\n\ndetailed_description:\n[Shot 1] <Subject 1> looks toward the camera. <Subject 1> (S1) says: <d>[Italian] Ciao,  sono qui... davvero!</d>\n\noverall_soundscape:\nOn-screen speech only.\n\nnon_diegetic_music:\nN/A"
+      }
+    },
+    {
+      "case": "A09",
+      "result": {
+        "interpretation": {
+          "narrative_en": "<Subject 1> walks to the door and stops.",
+          "estimated_duration_s": 4.0,
+          "question": null
+        },
+        "input_hash": "11949ec40264882498c7b24724bcba38143437b02d26717e49ced43526926c49",
+        "prompt": "subject_definitions:\n<Subject 1> is Anna, with identity from <Picture 1>, outfit from <Picture 2>.\n<Subject 3> is the room, with environment from <Picture 4>.\n\nsummary:\n[reference generation] Active references: <Subject 1> (character); <Subject 3> (environment).\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - supplied identity and outfit.\n<Subject 3> (appears in [Shot 1]): fully_preserved - supplied environment.\n\ndetailed_description:\n[Shot 1] <Subject 1> walks to the door and stops.\n\noverall_soundscape:\nN/A\n\nnon_diegetic_music:\nN/A"
+      }
+    }
+  ]
+}

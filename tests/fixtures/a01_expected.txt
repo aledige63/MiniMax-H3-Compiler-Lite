@@ -1,0 +1,21 @@
+subject_definitions:
+<Subject 1> is Anna, with identity from <Picture 1>, outfit from <Picture 2>.
+<Subject 2> is Marco, with identity from <Picture 3>.
+<Subject 3> is the room, with environment from <Picture 4>.
+
+summary:
+[reference generation] Active references: <Subject 1> (character); <Subject 2> (character); <Subject 3> (environment).
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1]): fully_preserved - supplied identity and outfit.
+<Subject 2> (appears in [Shot 1]): fully_preserved - supplied identity.
+<Subject 3> (appears in [Shot 1]): fully_preserved - supplied environment.
+
+detailed_description:
+[Shot 1] <Subject 1> is sitting on the sofa and looks toward the camera. <Subject 1> (S1) says: <d>[Italian] Sono pronta.</d>. While <Subject 1> speaks, <Subject 2> enters and stops beside her.
+
+overall_soundscape:
+Ambient sounds.
+
+non_diegetic_music:
+N/A

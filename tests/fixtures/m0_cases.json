@@ -1,0 +1,240 @@
+[
+  {
+    "id": "A01",
+    "input": {
+      "request": "<Subject 1> è seduta sul divano e guarda la camera. Pronuncia la battuta d1. Durante la battuta, <Subject 2> entra e si ferma accanto a lei.",
+      "active_units": [
+        {
+          "subject": 1,
+          "name": "Anna",
+          "role": "character",
+          "description_en": "Anna",
+          "confirmed": true,
+          "sources": [
+            {
+              "picture_slot": 1,
+              "attribute": "identity",
+              "linked_to_h3": true
+            },
+            {
+              "picture_slot": 2,
+              "attribute": "outfit",
+              "linked_to_h3": true
+            }
+          ]
+        },
+        {
+          "subject": 2,
+          "name": "Marco",
+          "role": "character",
+          "description_en": "Marco",
+          "confirmed": true,
+          "sources": [
+            {
+              "picture_slot": 3,
+              "attribute": "identity",
+              "linked_to_h3": true
+            }
+          ]
+        },
+        {
+          "subject": 3,
+          "name": "Stanza",
+          "role": "environment",
+          "description_en": "the room",
+          "confirmed": true,
+          "sources": [
+            {
+              "picture_slot": 4,
+              "attribute": "environment",
+              "linked_to_h3": true
+            }
+          ]
+        }
+      ],
+      "dialogues": [
+        {
+          "id": "d1",
+          "text": "Sono pronta.",
+          "language": "Italian",
+          "speaker_subject": 1,
+          "confirmed": true
+        }
+      ]
+    },
+    "expected_plan": {
+      "narrative_en": "<Subject 1> is sitting on the sofa and looks toward the camera. {{dialogue:d1}} While <Subject 1> speaks, <Subject 2> enters and stops beside her.",
+      "estimated_duration_s": 8,
+      "question": null
+    },
+    "semantic_review": [
+      "Anna seduta e sguardo camera una volta",
+      "Ingresso di Marco durante la battuta, non già presente",
+      "Nessuna regia, luce, suono o gesto aggiunto"
+    ]
+  },
+  {
+    "id": "A03",
+    "input": {
+      "request": "La stanza di <Subject 3> rimane vuota per due secondi, poi <Subject 1> entra. Camera fissa per tutto il cut. Nessun dialogo.",
+      "active_units": [
+        {
+          "subject": 1,
+          "name": "Anna",
+          "role": "character",
+          "description_en": "Anna",
+          "confirmed": true,
+          "sources": [
+            {
+              "picture_slot": 1,
+              "attribute": "identity",
+              "linked_to_h3": true
+            },
+            {
+              "picture_slot": 2,
+              "attribute": "outfit",
+              "linked_to_h3": true
+            }
+          ]
+        },
+        {
+          "subject": 3,
+          "name": "Stanza",
+          "role": "environment",
+          "description_en": "the room",
+          "confirmed": true,
+          "sources": [
+            {
+              "picture_slot": 4,
+              "attribute": "environment",
+              "linked_to_h3": true
+            }
+          ]
+        }
+      ],
+      "dialogues": []
+    },
+    "expected_plan": {
+      "narrative_en": "The room defined by <Subject 3> is empty for two seconds, then <Subject 1> enters. The camera remains fixed throughout.",
+      "estimated_duration_s": 6,
+      "question": null
+    },
+    "semantic_review": [
+      "Pausa vuota di due secondi prima dell’ingresso",
+      "Camera fissa richiesta, un solo shot",
+      "Nessuna azione aggiuntiva"
+    ]
+  },
+  {
+    "id": "A05",
+    "input": {
+      "request": "<Subject 1> guarda la camera e pronuncia la battuta d1. È parlato nativo, senza file audio.",
+      "active_units": [
+        {
+          "subject": 1,
+          "name": "Anna",
+          "role": "character",
+          "description_en": "Anna",
+          "confirmed": true,
+          "sources": [
+            {
+              "picture_slot": 1,
+              "attribute": "identity",
+              "linked_to_h3": true
+            },
+            {
+              "picture_slot": 2,
+              "attribute": "outfit",
+              "linked_to_h3": true
+            }
+          ]
+        },
+        {
+          "subject": 3,
+          "name": "Stanza",
+          "role": "environment",
+          "description_en": "the room",
+          "confirmed": true,
+          "sources": [
+            {
+              "picture_slot": 4,
+              "attribute": "environment",
+              "linked_to_h3": true
+            }
+          ]
+        }
+      ],
+      "dialogues": [
+        {
+          "id": "d1",
+          "text": "Ciao,  sono qui... davvero!",
+          "language": "Italian",
+          "speaker_subject": 1,
+          "confirmed": true
+        }
+      ]
+    },
+    "expected_plan": {
+      "narrative_en": "<Subject 1> looks toward the camera. {{dialogue:d1}}",
+      "estimated_duration_s": 5,
+      "question": null
+    },
+    "semantic_review": [
+      "Spazi doppi e punteggiatura del dialogo identici",
+      "Nessun Audio inventato",
+      "Nessun arricchimento della voce"
+    ]
+  },
+  {
+    "id": "A09",
+    "input": {
+      "request": "Nuovo cut: <Subject 1> cammina fino alla porta e si ferma. Nessun dialogo, nessuna traccia sonora dal cut precedente.",
+      "active_units": [
+        {
+          "subject": 1,
+          "name": "Anna",
+          "role": "character",
+          "description_en": "Anna",
+          "confirmed": true,
+          "sources": [
+            {
+              "picture_slot": 1,
+              "attribute": "identity",
+              "linked_to_h3": true
+            },
+            {
+              "picture_slot": 2,
+              "attribute": "outfit",
+              "linked_to_h3": true
+            }
+          ]
+        },
+        {
+          "subject": 3,
+          "name": "Stanza",
+          "role": "environment",
+          "description_en": "the room",
+          "confirmed": true,
+          "sources": [
+            {
+              "picture_slot": 4,
+              "attribute": "environment",
+              "linked_to_h3": true
+            }
+          ]
+        }
+      ],
+      "dialogues": []
+    },
+    "expected_plan": {
+      "narrative_en": "<Subject 1> walks to the door and stops.",
+      "estimated_duration_s": 5,
+      "question": null
+    },
+    "semantic_review": [
+      "Nessuna battuta, speaker o Audio ereditato da A05",
+      "Cammino e arresto una volta",
+      "Nessuna posa o camera ereditata"
+    ]
+  }
+]
