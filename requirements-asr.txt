@@ -1,0 +1,4 @@
+# Opzionale: nessun modello viene scaricato da questa installazione.
+-r requirements.lock
+mlx-whisper==0.4.3
+scipy>=1.15,<2
