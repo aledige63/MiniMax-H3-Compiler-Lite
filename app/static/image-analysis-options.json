@@ -1,0 +1,30 @@
+{
+  "categories": [
+    {"value":"auto","label":"Dal ruolo dell’immagine"},
+    {"value":"character","label":"Personaggio · Character"},
+    {"value":"clothing","label":"Abbigliamento · Clothing"},
+    {"value":"footwear","label":"Calzature · Footwear"},
+    {"value":"accessory","label":"Accessorio indossato · Accessory"},
+    {"value":"held_item","label":"Oggetto / oggetto impugnato · Held item"},
+    {"value":"environment","label":"Ambiente · Environment"},
+    {"value":"body_shape","label":"Corporatura · Body shape"},
+    {"value":"style_transfer","label":"Stile visivo · Style transfer"},
+    {"value":"attribute_transfer","label":"Attributo specifico · Attribute transfer"},
+    {"value":"body_mark","label":"Tatuaggio / cicatrice · Body mark"},
+    {"value":"replacement","label":"Parte sostitutiva / protesi · Replacement"}
+  ],
+  "levels": [
+    {"value":"compact","label":"Compact · essenziale"},
+    {"value":"medium","label":"Medium · equilibrata"},
+    {"value":"full","label":"Full · dettagliata"}
+  ],
+  "views": [
+    {"value":"","label":"Vista non specificata"},
+    {"value":"front","label":"Fronte"},
+    {"value":"back","label":"Retro"},
+    {"value":"left","label":"Lato sinistro di chi indossa"},
+    {"value":"right","label":"Lato destro di chi indossa"},
+    {"value":"detail","label":"Dettaglio"}
+  ],
+  "role_categories": {"identity":"character","appearance":"character","outfit":"clothing","shoes":"footwear","object":"held_item","style":"style_transfer"}
+}

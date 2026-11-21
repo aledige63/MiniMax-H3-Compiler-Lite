@@ -1,0 +1,39 @@
+{
+  "emotions": [
+    {"value":"happy","label":"Felice","en":"in a happy tone"},
+    {"value":"sad","label":"Triste","en":"in a sad tone"},
+    {"value":"angry","label":"Arrabbiata","en":"in an angry tone"},
+    {"value":"excited","label":"Entusiasta","en":"in an excited tone"},
+    {"value":"calm","label":"Calma","en":"in a calm tone"},
+    {"value":"nervous","label":"Nervosa","en":"in a nervous tone"},
+    {"value":"confident","label":"Sicura di sé","en":"in a confident tone"},
+    {"value":"surprised","label":"Sorpresa","en":"in a surprised tone"},
+    {"value":"scared","label":"Impaurita","en":"in a frightened tone"},
+    {"value":"worried","label":"Preoccupata","en":"in a worried tone"},
+    {"value":"frustrated","label":"Frustrata","en":"in a frustrated tone"},
+    {"value":"empathetic","label":"Empatica","en":"in an empathetic tone"},
+    {"value":"embarrassed","label":"Imbarazzata","en":"in an embarrassed tone"},
+    {"value":"proud","label":"Orgogliosa","en":"in a proud tone"},
+    {"value":"curious","label":"Curiosa","en":"in a curious tone"},
+    {"value":"sarcastic","label":"Sarcastica","en":"in a sarcastic tone"},
+    {"value":"disappointed","label":"Delusa","en":"in a disappointed tone"},
+    {"value":"confused","label":"Confusa","en":"in a confused tone"},
+    {"value":"determined","label":"Determinata","en":"in a determined tone"},
+    {"value":"hopeful","label":"Speranzosa","en":"in a hopeful tone"},
+    {"value":"nostalgic","label":"Nostalgica","en":"in a nostalgic tone"},
+    {"value":"indifferent","label":"Indifferente","en":"in an indifferent tone"},
+    {"value":"grateful","label":"Grata","en":"in a grateful tone"},
+    {"value":"relaxed","label":"Rilassata","en":"in a relaxed tone"}
+  ],
+  "modes": [
+    {"value":"normal","label":"Normale","en":"at a normal speaking volume and pace"},
+    {"value":"whispering","label":"Sussurrata","en":"whispering"},
+    {"value":"shouting","label":"Urlata","en":"shouting"},
+    {"value":"screaming","label":"Gridata con intensità","en":"screaming"},
+    {"value":"soft","label":"A voce bassa e dolce","en":"in a soft voice"},
+    {"value":"hurried","label":"Affrettata","en":"speaking hurriedly"},
+    {"value":"hesitant","label":"Esitante","en":"speaking hesitantly"},
+    {"value":"slow","label":"Lenta","en":"speaking slowly"},
+    {"value":"firm","label":"Ferma e decisa","en":"with a firm delivery"}
+  ]
+}

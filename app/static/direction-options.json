@@ -1,0 +1,247 @@
+{
+  "source": "https://huggingface.co/MiniMaxAI/MiniMax-H3/blob/main/docs/VIDEO_PROMPT_WRITING_GUIDE_base_en.md#43-camera-motion-motion-type--amplitude--speed",
+  "framing": [
+    {
+      "value": "extreme_wide",
+      "label": "Campo lunghissimo",
+      "en": "extreme wide shot",
+      "hint": "Ambiente molto ampio; il soggetto occupa una parte minima del quadro."
+    },
+    {
+      "value": "wide",
+      "label": "Campo lungo",
+      "en": "wide shot",
+      "hint": "Soggetto e ambiente circostante."
+    },
+    {
+      "value": "full",
+      "label": "Figura intera",
+      "en": "full shot",
+      "hint": "La figura dalla testa ai piedi."
+    },
+    {
+      "value": "american",
+      "label": "Piano americano",
+      "en": "American shot, framed from the knees up",
+      "hint": "Taglio indicativo dalle ginocchia in su."
+    },
+    {
+      "value": "medium",
+      "label": "Mezza figura / piano medio",
+      "en": "medium shot",
+      "hint": "Taglio indicativo dalla vita in su."
+    },
+    {
+      "value": "medium_close",
+      "label": "Mezzo primo piano",
+      "en": "medium close-up",
+      "hint": "Taglio indicativo dal petto in su."
+    },
+    {
+      "value": "close",
+      "label": "Primo piano",
+      "en": "close-up",
+      "hint": "Viso o soggetto ripreso da vicino."
+    },
+    {
+      "value": "extreme_close",
+      "label": "Primissimo piano / dettaglio",
+      "en": "extreme close-up",
+      "hint": "Porzione ravvicinata del viso o dettaglio di un oggetto."
+    }
+  ],
+  "angle": [
+    {
+      "value": "eye_level",
+      "label": "Altezza occhi",
+      "en": "eye-level angle",
+      "hint": "Camera all’altezza dello sguardo."
+    },
+    {
+      "value": "low",
+      "label": "Dal basso",
+      "en": "low angle",
+      "hint": "Camera rivolta verso l’alto."
+    },
+    {
+      "value": "high",
+      "label": "Dall’alto",
+      "en": "high angle",
+      "hint": "Camera rivolta verso il basso."
+    },
+    {
+      "value": "bird_eye",
+      "label": "Zenitale",
+      "en": "overhead view",
+      "hint": "Vista verticale dall’alto."
+    },
+    {
+      "value": "worm_eye",
+      "label": "Dal suolo",
+      "en": "ground-level low angle",
+      "hint": "Punto di vista vicino al suolo."
+    },
+    {
+      "value": "dutch",
+      "label": "Dutch angle / quadro inclinato",
+      "en": "Dutch angle",
+      "hint": "Inclinazione del quadro, distinta dal movimento di roll."
+    },
+    {
+      "value": "over_shoulder",
+      "label": "Oltre la spalla",
+      "en": "over-the-shoulder view",
+      "hint": "Vista oltre la spalla: specifica nelle note le persone coinvolte."
+    },
+    {
+      "value": "pov",
+      "label": "Soggettiva / POV",
+      "en": "point-of-view shot",
+      "hint": "Punto di vista del soggetto; non è uno spostamento della camera."
+    }
+  ],
+  "movement": [
+    {
+      "value": "static",
+      "label": "Camera fissa",
+      "en": "holds a static shot",
+      "hint": "Camera e obiettivo fermi."
+    },
+    {
+      "value": "zoom_in",
+      "label": "Zoom avanti",
+      "en": "zooms in",
+      "hint": "Cambia la focale; la camera non avanza."
+    },
+    {
+      "value": "zoom_out",
+      "label": "Zoom indietro",
+      "en": "zooms out",
+      "hint": "Cambia la focale; la camera non arretra."
+    },
+    {
+      "value": "push_in",
+      "label": "Avvicinamento / dolly in",
+      "en": "pushes in",
+      "hint": "La camera si sposta fisicamente in avanti."
+    },
+    {
+      "value": "pull_out",
+      "label": "Allontanamento / dolly out",
+      "en": "pulls out",
+      "hint": "La camera si sposta fisicamente indietro."
+    },
+    {
+      "value": "pan_left",
+      "label": "Panoramica a sinistra",
+      "en": "pans left",
+      "hint": "Rotazione orizzontale sul posto."
+    },
+    {
+      "value": "pan_right",
+      "label": "Panoramica a destra",
+      "en": "pans right",
+      "hint": "Rotazione orizzontale sul posto."
+    },
+    {
+      "value": "truck_left",
+      "label": "Traslazione a sinistra / truck",
+      "en": "trucks left",
+      "hint": "Spostamento laterale della camera."
+    },
+    {
+      "value": "truck_right",
+      "label": "Traslazione a destra / truck",
+      "en": "trucks right",
+      "hint": "Spostamento laterale della camera."
+    },
+    {
+      "value": "tilt_up",
+      "label": "Inclinazione verso l’alto / tilt",
+      "en": "tilts up",
+      "hint": "Rotazione verticale sul posto."
+    },
+    {
+      "value": "tilt_down",
+      "label": "Inclinazione verso il basso / tilt",
+      "en": "tilts down",
+      "hint": "Rotazione verticale sul posto."
+    },
+    {
+      "value": "pedestal_up",
+      "label": "Sollevamento / pedestal",
+      "en": "moves upward in a pedestal move",
+      "hint": "L’intera camera sale."
+    },
+    {
+      "value": "pedestal_down",
+      "label": "Abbassamento / pedestal",
+      "en": "moves downward in a pedestal move",
+      "hint": "L’intera camera scende."
+    },
+    {
+      "value": "arc",
+      "label": "Arco intorno al soggetto",
+      "en": "arcs around the target",
+      "hint": "Movimento ad arco; specifica il soggetto o il centro nelle note."
+    },
+    {
+      "value": "tracking",
+      "label": "Tracking / segue il soggetto",
+      "en": "tracks the moving subject",
+      "hint": "La camera segue un soggetto in movimento."
+    },
+    {
+      "value": "shake_slight",
+      "label": "Scuotimento lieve",
+      "en": "shakes slightly",
+      "hint": "Leggera oscillazione della camera."
+    },
+    {
+      "value": "shake_strong",
+      "label": "Scuotimento forte",
+      "en": "shakes strongly",
+      "hint": "Oscillazione marcata della camera."
+    },
+    {
+      "value": "roll_clockwise",
+      "label": "Roll orario",
+      "en": "rolls clockwise",
+      "hint": "Rotazione intorno all’asse dell’obiettivo."
+    },
+    {
+      "value": "roll_counterclockwise",
+      "label": "Roll antiorario",
+      "en": "rolls counterclockwise",
+      "hint": "Rotazione intorno all’asse dell’obiettivo."
+    }
+  ],
+  "amplitude": [
+    {
+      "value": "small",
+      "label": "Piccola",
+      "en": "with small amplitude",
+      "hint": ""
+    },
+    {
+      "value": "large",
+      "label": "Ampia",
+      "en": "with large amplitude",
+      "hint": ""
+    }
+  ],
+  "speed": [
+    {
+      "value": "slow",
+      "label": "Lenta",
+      "en": "at slow speed",
+      "hint": ""
+    },
+    {
+      "value": "fast",
+      "label": "Rapida",
+      "en": "at fast speed",
+      "hint": ""
+    }
+  ]
+}
