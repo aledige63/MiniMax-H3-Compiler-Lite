@@ -1,0 +1,4040 @@
+{
+  "$defs": {
+    "AccessSettingsCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "current_password": {
+          "default": "",
+          "maxLength": 256,
+          "title": "Current Password",
+          "type": "string"
+        },
+        "password": {
+          "default": "",
+          "maxLength": 256,
+          "title": "Password",
+          "type": "string"
+        }
+      },
+      "required": [
+        "enabled"
+      ],
+      "title": "AccessSettingsCommand",
+      "type": "object"
+    },
+    "ActionPart": {
+      "additionalProperties": false,
+      "properties": {
+        "action_en": {
+          "minLength": 1,
+          "title": "Action En",
+          "type": "string"
+        }
+      },
+      "required": [
+        "action_en"
+      ],
+      "title": "ActionPart",
+      "type": "object"
+    },
+    "AddItemCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "enum": [
+            "unit",
+            "dialogue",
+            "picture",
+            "audio",
+            "video"
+          ],
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "kind"
+      ],
+      "title": "AddItemCommand",
+      "type": "object"
+    },
+    "AddSourceCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "subject": {
+          "minimum": 1,
+          "title": "Subject",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "subject"
+      ],
+      "title": "AddSourceCommand",
+      "type": "object"
+    },
+    "AssistanceCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "enum": [
+            "image_analyze",
+            "image_character_sheet",
+            "vision_trial",
+            "description_translate",
+            "audio_asr"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "target_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Id"
+        },
+        "model": {
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "force": {
+          "default": false,
+          "title": "Force",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "kind",
+        "model"
+      ],
+      "title": "AssistanceCommand",
+      "type": "object"
+    },
+    "AssistanceResult": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "proposal",
+            "error"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        },
+        "language": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Language"
+        },
+        "recognized": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "boolean"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Recognized"
+        },
+        "issues": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        },
+        "metrics": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Metrics"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "title": "AssistanceResult",
+      "type": "object"
+    },
+    "AttachMediaCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "media_id": {
+          "format": "uuid",
+          "title": "Media Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "media_id"
+      ],
+      "title": "AttachMediaCommand",
+      "type": "object"
+    },
+    "AttachOutputCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "media_id": {
+          "format": "uuid",
+          "title": "Media Id",
+          "type": "string"
+        },
+        "version_id": {
+          "format": "uuid",
+          "title": "Version Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "media_id",
+        "version_id"
+      ],
+      "title": "AttachOutputCommand",
+      "type": "object"
+    },
+    "AudioReference": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^a[1-9][0-9]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "slot": {
+          "maximum": 3,
+          "minimum": 1,
+          "title": "Slot",
+          "type": "integer"
+        },
+        "media_id": {
+          "minLength": 1,
+          "title": "Media Id",
+          "type": "string"
+        },
+        "name": {
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        },
+        "mode": {
+          "default": "copy",
+          "enum": [
+            "copy",
+            "reference"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "role": {
+          "default": "speech",
+          "enum": [
+            "speech",
+            "sound",
+            "voice"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "measured_duration_s": {
+          "exclusiveMinimum": 0,
+          "title": "Measured Duration S",
+          "type": "number"
+        },
+        "sample_rate": {
+          "exclusiveMinimum": 0,
+          "title": "Sample Rate",
+          "type": "integer"
+        },
+        "sample_count": {
+          "exclusiveMinimum": 0,
+          "title": "Sample Count",
+          "type": "integer"
+        },
+        "channels": {
+          "minimum": 1,
+          "title": "Channels",
+          "type": "integer"
+        },
+        "segment_start_s": {
+          "default": 0.0,
+          "minimum": 0,
+          "title": "Segment Start S",
+          "type": "number"
+        },
+        "segment_end_s": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Segment End S"
+        },
+        "offset_s": {
+          "default": 0.0,
+          "minimum": 0,
+          "title": "Offset S",
+          "type": "number"
+        },
+        "speaker_subject": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Speaker Subject"
+        },
+        "language": {
+          "default": "Italian",
+          "pattern": "^[A-Za-z][A-Za-z -]*$",
+          "title": "Language",
+          "type": "string"
+        },
+        "transcript": {
+          "default": "",
+          "title": "Transcript",
+          "type": "string"
+        },
+        "description_en": {
+          "default": "",
+          "title": "Description En",
+          "type": "string"
+        },
+        "confirmed": {
+          "default": false,
+          "title": "Confirmed",
+          "type": "boolean"
+        },
+        "linked_to_h3": {
+          "default": false,
+          "title": "Linked To H3",
+          "type": "boolean"
+        },
+        "exclusive_full_track": {
+          "default": false,
+          "title": "Exclusive Full Track",
+          "type": "boolean"
+        },
+        "voice_tone": {
+          "default": "",
+          "maxLength": 500,
+          "title": "Voice Tone",
+          "type": "string"
+        },
+        "voice_emotion": {
+          "default": "",
+          "title": "Voice Emotion",
+          "type": "string"
+        },
+        "voice_mode": {
+          "default": "",
+          "title": "Voice Mode",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "slot",
+        "media_id",
+        "measured_duration_s",
+        "sample_rate",
+        "sample_count",
+        "channels"
+      ],
+      "title": "AudioReference",
+      "type": "object"
+    },
+    "CameraDirection": {
+      "additionalProperties": false,
+      "properties": {
+        "framing": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Framing"
+        },
+        "angle": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Angle"
+        },
+        "movement": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Movement"
+        },
+        "amplitude": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Amplitude"
+        },
+        "speed": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Speed"
+        },
+        "subject": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subject"
+        },
+        "placement": {
+          "default": "as_requested",
+          "enum": [
+            "as_requested",
+            "throughout",
+            "opening",
+            "during_dialogue",
+            "after_dialogue"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "dialogue_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dialogue Id"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 1200,
+          "title": "Notes",
+          "type": "string"
+        }
+      },
+      "title": "CameraDirection",
+      "type": "object"
+    },
+    "CameraPart": {
+      "additionalProperties": false,
+      "properties": {
+        "camera_id": {
+          "const": "main",
+          "title": "Camera Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "camera_id"
+      ],
+      "title": "CameraPart",
+      "type": "object"
+    },
+    "CameraPreset": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "tag": {
+          "pattern": "^[a-z][a-z0-9_]{0,59}$",
+          "title": "Tag",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "camera": {
+          "$ref": "#/$defs/CameraDirection"
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "name",
+        "revision",
+        "camera"
+      ],
+      "title": "CameraPreset",
+      "type": "object"
+    },
+    "CompileCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "cut_id": {
+          "format": "uuid",
+          "title": "Cut Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "input": {
+          "$ref": "#/$defs/CompileInput"
+        }
+      },
+      "required": [
+        "command_id",
+        "cut_id",
+        "expected_revision",
+        "input"
+      ],
+      "title": "CompileCommand",
+      "type": "object"
+    },
+    "CompileInput": {
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "const": "H3-Base-Ref2VA",
+          "default": "H3-Base-Ref2VA",
+          "title": "Profile",
+          "type": "string"
+        },
+        "request": {
+          "minLength": 1,
+          "title": "Request",
+          "type": "string"
+        },
+        "active_units": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/VisualUnit"
+              },
+              {
+                "$ref": "#/$defs/ExcludedUnit"
+              }
+            ]
+          },
+          "title": "Active Units",
+          "type": "array"
+        },
+        "pictures": {
+          "anyOf": [
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/PictureReference"
+                  },
+                  {
+                    "$ref": "#/$defs/ExcludedPicture"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pictures"
+        },
+        "dialogues": {
+          "items": {
+            "$ref": "#/$defs/Dialogue"
+          },
+          "title": "Dialogues",
+          "type": "array"
+        },
+        "audio_references": {
+          "items": {
+            "$ref": "#/$defs/AudioReference"
+          },
+          "maxItems": 3,
+          "title": "Audio References",
+          "type": "array"
+        },
+        "videos": {
+          "items": {
+            "$ref": "#/$defs/VideoReference"
+          },
+          "maxItems": 3,
+          "title": "Videos",
+          "type": "array"
+        },
+        "continuity": {
+          "$ref": "#/$defs/Continuity"
+        },
+        "declared_duration_s": {
+          "anyOf": [
+            {
+              "maximum": 15,
+              "minimum": 4,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Declared Duration S"
+        },
+        "ambient_sound": {
+          "default": true,
+          "title": "Ambient Sound",
+          "type": "boolean"
+        },
+        "camera": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CameraDirection"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "soundscape_text": {
+          "default": "",
+          "title": "Soundscape Text",
+          "type": "string"
+        },
+        "shot_presets": {
+          "items": {
+            "$ref": "#/$defs/CameraPreset"
+          },
+          "title": "Shot Presets",
+          "type": "array"
+        }
+      },
+      "required": [
+        "request"
+      ],
+      "title": "CompileInput",
+      "type": "object"
+    },
+    "CompileResult": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "proposal",
+            "clarification_needed",
+            "error"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "input_hash": {
+          "title": "Input Hash",
+          "type": "string"
+        },
+        "interpretation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Interpretation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "prompt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prompt"
+        },
+        "duration_s": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration S"
+        },
+        "duration_origin": {
+          "anyOf": [
+            {
+              "enum": [
+                "declared",
+                "estimated",
+                "measured"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration Origin"
+        },
+        "structural_checks_passed": {
+          "default": false,
+          "title": "Structural Checks Passed",
+          "type": "boolean"
+        },
+        "user_approved": {
+          "const": false,
+          "default": false,
+          "title": "User Approved",
+          "type": "boolean"
+        },
+        "confirmation_allowed": {
+          "default": false,
+          "title": "Confirmation Allowed",
+          "type": "boolean"
+        },
+        "issues": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "metrics": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Metrics"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "status",
+        "input_hash"
+      ],
+      "title": "CompileResult",
+      "type": "object"
+    },
+    "ConfirmCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "candidate_id": {
+          "format": "uuid",
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "user_approved": {
+          "const": true,
+          "title": "User Approved",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "candidate_id",
+        "user_approved"
+      ],
+      "title": "ConfirmCommand",
+      "type": "object"
+    },
+    "ConfirmVersionCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "version_id": {
+          "format": "uuid",
+          "title": "Version Id",
+          "type": "string"
+        },
+        "acknowledge_reference_changes": {
+          "default": false,
+          "title": "Acknowledge Reference Changes",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "version_id"
+      ],
+      "title": "ConfirmVersionCommand",
+      "type": "object"
+    },
+    "ConnectionSettingsCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "ollama_url": {
+          "maxLength": 500,
+          "title": "Ollama Url",
+          "type": "string"
+        },
+        "api_key": {
+          "anyOf": [
+            {
+              "maxLength": 1024,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Api Key"
+        },
+        "remove_api_key": {
+          "default": false,
+          "title": "Remove Api Key",
+          "type": "boolean"
+        },
+        "timeout_s": {
+          "default": 120,
+          "maximum": 600,
+          "minimum": 10,
+          "title": "Timeout S",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "ollama_url"
+      ],
+      "title": "ConnectionSettingsCommand",
+      "type": "object"
+    },
+    "ConnectionTrialCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "text",
+            "vision"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "model": {
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "model"
+      ],
+      "title": "ConnectionTrialCommand",
+      "type": "object"
+    },
+    "Continuity": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "default": "none",
+          "enum": [
+            "none",
+            "video_reference",
+            "tail_frames",
+            "latent"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "declared_state": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Declared State"
+        },
+        "previous_cut_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Previous Cut Id"
+        },
+        "previous_version_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Previous Version Id"
+        },
+        "external_source": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "External Source"
+        },
+        "video_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Video Id"
+        },
+        "context_media_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context Media Id"
+        },
+        "context_media_kind": {
+          "anyOf": [
+            {
+              "enum": [
+                "video",
+                "image"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context Media Kind"
+        },
+        "window_frames": {
+          "anyOf": [
+            {
+              "maximum": 10000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Window Frames"
+        },
+        "trim_frames": {
+          "anyOf": [
+            {
+              "maximum": 10000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Trim Frames"
+        },
+        "sampling_prefix_frames": {
+          "anyOf": [
+            {
+              "maximum": 10000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sampling Prefix Frames"
+        },
+        "seamless": {
+          "default": false,
+          "title": "Seamless",
+          "type": "boolean"
+        }
+      },
+      "title": "Continuity",
+      "type": "object"
+    },
+    "CreateCutCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "name": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "inherit_references": {
+          "default": false,
+          "title": "Inherit References",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "name"
+      ],
+      "title": "CreateCutCommand",
+      "type": "object"
+    },
+    "CurrentInterpretation": {
+      "additionalProperties": false,
+      "description": "Contratto delle nuove inferenze; Interpretation legge anche lo storico.",
+      "properties": {
+        "narrative_en": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Narrative En"
+        },
+        "estimated_duration_s": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Estimated Duration S"
+        },
+        "question": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Question"
+        },
+        "summary_en": {
+          "anyOf": [
+            {
+              "maxLength": 700,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Summary En"
+        },
+        "soundscape_en": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Soundscape En"
+        },
+        "voice_tones_en": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Voice Tones En"
+        },
+        "physical_details_en": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/PhysicalDetailTranslation"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Physical Details En"
+        },
+        "scales_en": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/ScaleTranslation"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scales En"
+        }
+      },
+      "required": [
+        "narrative_en",
+        "estimated_duration_s",
+        "question",
+        "summary_en"
+      ],
+      "title": "CurrentInterpretation",
+      "type": "object"
+    },
+    "CutSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "scene_id": {
+          "format": "uuid",
+          "title": "Scene Id",
+          "type": "string"
+        },
+        "number": {
+          "title": "Number",
+          "type": "integer"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "revision": {
+          "title": "Revision",
+          "type": "integer"
+        },
+        "state": {
+          "title": "State",
+          "type": "string"
+        },
+        "confirmed_version_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Confirmed Version Id"
+        },
+        "duration_s": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration S"
+        },
+        "duration_origin": {
+          "anyOf": [
+            {
+              "enum": [
+                "declared",
+                "estimated",
+                "measured"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration Origin"
+        },
+        "selected_version_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Selected Version Id"
+        },
+        "output_duration_s": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Output Duration S"
+        }
+      },
+      "required": [
+        "id",
+        "scene_id",
+        "number",
+        "title",
+        "revision",
+        "state",
+        "confirmed_version_id"
+      ],
+      "title": "CutSummary",
+      "type": "object"
+    },
+    "CutView": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "revision": {
+          "title": "Revision",
+          "type": "integer"
+        },
+        "draft_input": {
+          "additionalProperties": true,
+          "title": "Draft Input",
+          "type": "object"
+        },
+        "state": {
+          "enum": [
+            "draft",
+            "queued",
+            "compiling",
+            "proposal",
+            "clarification_needed",
+            "error",
+            "confirmed"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "latest_job": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/JobView"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "latest_candidate_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latest Candidate Id"
+        },
+        "manual_version_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Manual Version Id"
+        },
+        "versions": {
+          "items": {
+            "$ref": "#/$defs/PromptVersion"
+          },
+          "title": "Versions",
+          "type": "array"
+        },
+        "catalogue_issues": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Catalogue Issues",
+          "type": "array"
+        },
+        "scene_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scene Id"
+        },
+        "project_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Project Id"
+        },
+        "number": {
+          "default": 1,
+          "title": "Number",
+          "type": "integer"
+        },
+        "title": {
+          "default": "Cut 1",
+          "title": "Title",
+          "type": "string"
+        },
+        "confirmed_version_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confirmed Version Id"
+        },
+        "unit_ids": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Unit Ids",
+          "type": "object"
+        },
+        "media_by_picture": {
+          "additionalProperties": true,
+          "title": "Media By Picture",
+          "type": "object"
+        },
+        "reference_revisions": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Reference Revisions",
+          "type": "object"
+        },
+        "unit_revisions": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Unit Revisions",
+          "type": "object"
+        },
+        "confirmation_issues": {
+          "additionalProperties": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "Confirmation Issues",
+          "type": "object"
+        },
+        "tokens": {
+          "items": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "title": "Tokens",
+          "type": "array"
+        },
+        "proxy_by_picture": {
+          "additionalProperties": true,
+          "title": "Proxy By Picture",
+          "type": "object"
+        },
+        "assistance_jobs": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Assistance Jobs",
+          "type": "array"
+        },
+        "audio_media": {
+          "additionalProperties": true,
+          "title": "Audio Media",
+          "type": "object"
+        },
+        "video_media": {
+          "additionalProperties": true,
+          "title": "Video Media",
+          "type": "object"
+        },
+        "context_media": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context Media"
+        },
+        "output_by_version": {
+          "additionalProperties": true,
+          "title": "Output By Version",
+          "type": "object"
+        },
+        "previous_cut": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Previous Cut"
+        },
+        "reference_updates": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reference Updates",
+          "type": "array"
+        },
+        "camera_presets": {
+          "items": {
+            "$ref": "#/$defs/CameraPreset"
+          },
+          "title": "Camera Presets",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "revision",
+        "draft_input",
+        "state"
+      ],
+      "title": "CutView",
+      "type": "object"
+    },
+    "Dialogue": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "language": {
+          "pattern": "^[A-Za-z][A-Za-z -]*$",
+          "title": "Language",
+          "type": "string"
+        },
+        "speaker_subject": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Speaker Subject"
+        },
+        "origin": {
+          "const": "native",
+          "default": "native",
+          "title": "Origin",
+          "type": "string"
+        },
+        "confirmed": {
+          "title": "Confirmed",
+          "type": "boolean"
+        },
+        "delivery": {
+          "default": "on_screen",
+          "enum": [
+            "on_screen",
+            "off_screen",
+            "narrator"
+          ],
+          "title": "Delivery",
+          "type": "string"
+        },
+        "narrator_voice": {
+          "anyOf": [
+            {
+              "enum": [
+                "male",
+                "female"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Narrator Voice"
+        },
+        "voice_tone": {
+          "default": "",
+          "maxLength": 500,
+          "title": "Voice Tone",
+          "type": "string"
+        },
+        "voice_emotion": {
+          "default": "",
+          "title": "Voice Emotion",
+          "type": "string"
+        },
+        "voice_mode": {
+          "default": "",
+          "title": "Voice Mode",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "language",
+        "confirmed"
+      ],
+      "title": "Dialogue",
+      "type": "object"
+    },
+    "DialoguePart": {
+      "additionalProperties": false,
+      "properties": {
+        "dialogue_id": {
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "title": "Dialogue Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "dialogue_id"
+      ],
+      "title": "DialoguePart",
+      "type": "object"
+    },
+    "DraftCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "input": {
+          "additionalProperties": true,
+          "title": "Input",
+          "type": "object"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "input"
+      ],
+      "title": "DraftCommand",
+      "type": "object"
+    },
+    "ExcludedPicture": {
+      "additionalProperties": true,
+      "description": "Un riferimento escluso conserva anche una bozza ancora incompleta.",
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "slot": {
+          "maximum": 9,
+          "minimum": 1,
+          "title": "Slot",
+          "type": "integer"
+        },
+        "excluded": {
+          "const": true,
+          "title": "Excluded",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "slot",
+        "excluded"
+      ],
+      "title": "ExcludedPicture",
+      "type": "object"
+    },
+    "ExcludedUnit": {
+      "additionalProperties": true,
+      "properties": {
+        "subject": {
+          "minimum": 1,
+          "title": "Subject",
+          "type": "integer"
+        },
+        "excluded": {
+          "const": true,
+          "title": "Excluded",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "subject",
+        "excluded"
+      ],
+      "title": "ExcludedUnit",
+      "type": "object"
+    },
+    "ExportSelection": {
+      "additionalProperties": false,
+      "properties": {
+        "scope": {
+          "enum": [
+            "cut",
+            "scene",
+            "project"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "resource_id": {
+          "format": "uuid",
+          "title": "Resource Id",
+          "type": "string"
+        },
+        "policy": {
+          "default": "confirmed",
+          "enum": [
+            "confirmed",
+            "latest"
+          ],
+          "title": "Policy",
+          "type": "string"
+        },
+        "versions": {
+          "additionalProperties": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "Versions",
+          "type": "object"
+        },
+        "reference_notes": {
+          "default": true,
+          "title": "Reference Notes",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "scope",
+        "resource_id"
+      ],
+      "title": "ExportSelection",
+      "type": "object"
+    },
+    "FinalizeCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "finalized": {
+          "title": "Finalized",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "finalized"
+      ],
+      "title": "FinalizeCommand",
+      "type": "object"
+    },
+    "GuideMapping": {
+      "additionalProperties": false,
+      "properties": {
+        "figure": {
+          "default": "",
+          "maxLength": 200,
+          "title": "Figure",
+          "type": "string"
+        },
+        "role": {
+          "default": "figure",
+          "enum": [
+            "figure",
+            "start",
+            "destination",
+            "camera_start",
+            "camera_direction",
+            "motion"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "subject": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subject"
+        }
+      },
+      "title": "GuideMapping",
+      "type": "object"
+    },
+    "GuidePart": {
+      "additionalProperties": false,
+      "properties": {
+        "guide_id": {
+          "pattern": "^(picture|video)_[1-9][0-9]*$",
+          "title": "Guide Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "guide_id"
+      ],
+      "title": "GuidePart",
+      "type": "object"
+    },
+    "GuideUsage": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "mappings": {
+          "items": {
+            "$ref": "#/$defs/GuideMapping"
+          },
+          "maxItems": 12,
+          "title": "Mappings",
+          "type": "array"
+        },
+        "prompt_en": {
+          "default": "",
+          "maxLength": 2500,
+          "title": "Prompt En",
+          "type": "string"
+        },
+        "anchor": {
+          "anyOf": [
+            {
+              "enum": [
+                "first",
+                "last",
+                "keyframe"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Anchor"
+        },
+        "at_s": {
+          "anyOf": [
+            {
+              "maximum": 15,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "At S"
+        },
+        "workflow": {
+          "default": "",
+          "maxLength": 400,
+          "title": "Workflow",
+          "type": "string"
+        },
+        "continuity_checked": {
+          "default": false,
+          "title": "Continuity Checked",
+          "type": "boolean"
+        }
+      },
+      "title": "GuideUsage",
+      "type": "object"
+    },
+    "HealthView": {
+      "additionalProperties": false,
+      "properties": {
+        "app_ok": {
+          "const": true,
+          "default": true,
+          "title": "App Ok",
+          "type": "boolean"
+        },
+        "ollama_available": {
+          "title": "Ollama Available",
+          "type": "boolean"
+        },
+        "default_model": {
+          "title": "Default Model",
+          "type": "string"
+        }
+      },
+      "required": [
+        "ollama_available",
+        "default_model"
+      ],
+      "title": "HealthView",
+      "type": "object"
+    },
+    "ImageAnalysisSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "default": "auto",
+          "enum": [
+            "accessory",
+            "attribute_transfer",
+            "auto",
+            "body_mark",
+            "body_shape",
+            "character",
+            "clothing",
+            "environment",
+            "footwear",
+            "held_item",
+            "replacement",
+            "style_transfer"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "level": {
+          "default": "compact",
+          "enum": [
+            "compact",
+            "full",
+            "medium"
+          ],
+          "title": "Level",
+          "type": "string"
+        },
+        "attribute": {
+          "default": "",
+          "maxLength": 300,
+          "title": "Attribute",
+          "type": "string"
+        },
+        "view": {
+          "default": "",
+          "enum": [
+            "",
+            "back",
+            "detail",
+            "front",
+            "left",
+            "right"
+          ],
+          "title": "View",
+          "type": "string"
+        }
+      },
+      "title": "ImageAnalysisSettings",
+      "type": "object"
+    },
+    "ImportDialoguesCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "source_request": {
+          "title": "Source Request",
+          "type": "string"
+        },
+        "dialogues": {
+          "items": {
+            "$ref": "#/$defs/InlineDialogueChoice"
+          },
+          "maxItems": 30,
+          "minItems": 1,
+          "title": "Dialogues",
+          "type": "array"
+        },
+        "confirmed": {
+          "const": true,
+          "title": "Confirmed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "source_request",
+        "dialogues",
+        "confirmed"
+      ],
+      "title": "ImportDialoguesCommand",
+      "type": "object"
+    },
+    "InlineDialogueChoice": {
+      "additionalProperties": false,
+      "properties": {
+        "index": {
+          "minimum": 0,
+          "title": "Index",
+          "type": "integer"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "language": {
+          "pattern": "^[A-Za-z][A-Za-z -]*$",
+          "title": "Language",
+          "type": "string"
+        },
+        "speaker_subject": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Speaker Subject"
+        },
+        "delivery": {
+          "default": "on_screen",
+          "enum": [
+            "on_screen",
+            "off_screen",
+            "narrator"
+          ],
+          "title": "Delivery",
+          "type": "string"
+        },
+        "narrator_voice": {
+          "anyOf": [
+            {
+              "enum": [
+                "male",
+                "female"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Narrator Voice"
+        }
+      },
+      "required": [
+        "index",
+        "text",
+        "language"
+      ],
+      "title": "InlineDialogueChoice",
+      "type": "object"
+    },
+    "Interpretation": {
+      "additionalProperties": false,
+      "properties": {
+        "narrative_en": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Narrative En"
+        },
+        "estimated_duration_s": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Estimated Duration S"
+        },
+        "question": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Question"
+        },
+        "summary_en": {
+          "anyOf": [
+            {
+              "maxLength": 700,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Summary En"
+        },
+        "soundscape_en": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Soundscape En"
+        },
+        "voice_tones_en": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Voice Tones En"
+        },
+        "physical_details_en": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/PhysicalDetailTranslation"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Physical Details En"
+        },
+        "scales_en": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/ScaleTranslation"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scales En"
+        }
+      },
+      "required": [
+        "narrative_en",
+        "estimated_duration_s",
+        "question"
+      ],
+      "title": "Interpretation",
+      "type": "object"
+    },
+    "JobView": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "cut_id": {
+          "format": "uuid",
+          "title": "Cut Id",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "queued",
+            "running",
+            "succeeded",
+            "failed",
+            "cancelled"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "input_revision": {
+          "title": "Input Revision",
+          "type": "integer"
+        },
+        "input_hash": {
+          "title": "Input Hash",
+          "type": "string"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CompileResult"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "candidate_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Candidate Id"
+        },
+        "stale": {
+          "default": false,
+          "title": "Stale",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "cut_id",
+        "status",
+        "input_revision",
+        "input_hash",
+        "model"
+      ],
+      "title": "JobView",
+      "type": "object"
+    },
+    "LibraryTrashCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "trashed": {
+          "title": "Trashed",
+          "type": "boolean"
+        },
+        "expected_reference_revision": {
+          "minimum": 1,
+          "title": "Expected Reference Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "trashed",
+        "expected_reference_revision"
+      ],
+      "title": "LibraryTrashCommand",
+      "type": "object"
+    },
+    "ManualPromptCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "text"
+      ],
+      "title": "ManualPromptCommand",
+      "type": "object"
+    },
+    "Metrics": {
+      "additionalProperties": false,
+      "properties": {
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "digest": {
+          "title": "Digest",
+          "type": "string"
+        },
+        "task": {
+          "default": "text_compile",
+          "enum": [
+            "text_compile",
+            "image_analyze",
+            "image_character_sheet",
+            "vision_trial",
+            "description_translate",
+            "audio_asr"
+          ],
+          "title": "Task",
+          "type": "string"
+        },
+        "inference_calls": {
+          "title": "Inference Calls",
+          "type": "integer"
+        },
+        "input_hash": {
+          "title": "Input Hash",
+          "type": "string"
+        },
+        "input_chars": {
+          "title": "Input Chars",
+          "type": "integer"
+        },
+        "queue_s": {
+          "title": "Queue S",
+          "type": "number"
+        },
+        "wall_s": {
+          "title": "Wall S",
+          "type": "number"
+        },
+        "load_s": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Load S"
+        },
+        "prompt_eval_s": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prompt Eval S"
+        },
+        "eval_s": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Eval S"
+        },
+        "total_s": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Total S"
+        },
+        "prompt_tokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prompt Tokens"
+        },
+        "output_tokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Output Tokens"
+        },
+        "done_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Done Reason"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "cache_hit": {
+          "default": false,
+          "title": "Cache Hit",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "model",
+        "digest",
+        "inference_calls",
+        "input_hash",
+        "input_chars",
+        "queue_s",
+        "wall_s"
+      ],
+      "title": "Metrics",
+      "type": "object"
+    },
+    "ModelSettingsCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "text_model": {
+          "minLength": 1,
+          "title": "Text Model",
+          "type": "string"
+        },
+        "vision_model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Vision Model"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "text_model"
+      ],
+      "title": "ModelSettingsCommand",
+      "type": "object"
+    },
+    "ModelView": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "digest": {
+          "title": "Digest",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "digest"
+      ],
+      "title": "ModelView",
+      "type": "object"
+    },
+    "NamedCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "name": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "name"
+      ],
+      "title": "NamedCommand",
+      "type": "object"
+    },
+    "NarrativePlan": {
+      "additionalProperties": false,
+      "properties": {
+        "narrative_parts": {
+          "anyOf": [
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/ActionPart"
+                  },
+                  {
+                    "$ref": "#/$defs/DialoguePart"
+                  },
+                  {
+                    "$ref": "#/$defs/OffScreenAudioPart"
+                  },
+                  {
+                    "$ref": "#/$defs/ShotPart"
+                  },
+                  {
+                    "$ref": "#/$defs/GuidePart"
+                  },
+                  {
+                    "$ref": "#/$defs/CameraPart"
+                  }
+                ]
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Narrative Parts"
+        },
+        "summary_en": {
+          "anyOf": [
+            {
+              "maxLength": 700,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Summary En"
+        },
+        "soundscape_en": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Soundscape En"
+        },
+        "voice_tones_en": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Voice Tones En"
+        },
+        "physical_details_en": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/PhysicalDetailTranslation"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Physical Details En"
+        },
+        "scales_en": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/ScaleTranslation"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scales En"
+        },
+        "estimated_duration_s": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Estimated Duration S"
+        },
+        "question": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Question"
+        }
+      },
+      "required": [
+        "narrative_parts",
+        "summary_en",
+        "estimated_duration_s",
+        "question"
+      ],
+      "title": "NarrativePlan",
+      "type": "object"
+    },
+    "OffScreenAudioPart": {
+      "additionalProperties": false,
+      "properties": {
+        "off_screen_audio_id": {
+          "pattern": "^a[1-9][0-9]*$",
+          "title": "Off Screen Audio Id",
+          "type": "string"
+        },
+        "listener_subject": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Listener Subject"
+        }
+      },
+      "required": [
+        "off_screen_audio_id"
+      ],
+      "title": "OffScreenAudioPart",
+      "type": "object"
+    },
+    "PasswordCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "password": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Password",
+          "type": "string"
+        }
+      },
+      "required": [
+        "password"
+      ],
+      "title": "PasswordCommand",
+      "type": "object"
+    },
+    "PhysicalDetail": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^p[1-9][0-9]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "description": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "body_location": {
+          "maxLength": 150,
+          "minLength": 1,
+          "title": "Body Location",
+          "type": "string"
+        },
+        "operation": {
+          "enum": [
+            "add",
+            "replace",
+            "modify"
+          ],
+          "title": "Operation",
+          "type": "string"
+        },
+        "picture_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Picture Id"
+        },
+        "origin": {
+          "default": "picture",
+          "enum": [
+            "picture",
+            "context"
+          ],
+          "title": "Origin",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "description",
+        "body_location",
+        "operation"
+      ],
+      "title": "PhysicalDetail",
+      "type": "object"
+    },
+    "PhysicalDetailTranslation": {
+      "additionalProperties": false,
+      "properties": {
+        "description_en": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Description En",
+          "type": "string"
+        },
+        "body_location_en": {
+          "maxLength": 150,
+          "minLength": 1,
+          "title": "Body Location En",
+          "type": "string"
+        }
+      },
+      "required": [
+        "description_en",
+        "body_location_en"
+      ],
+      "title": "PhysicalDetailTranslation",
+      "type": "object"
+    },
+    "PictureReference": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "slot": {
+          "maximum": 9,
+          "minimum": 1,
+          "title": "Slot",
+          "type": "integer"
+        },
+        "name": {
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        },
+        "role": {
+          "default": "identity",
+          "enum": [
+            "identity",
+            "appearance",
+            "outfit",
+            "shoes",
+            "environment",
+            "object",
+            "scale_reference",
+            "style",
+            "spatial_map",
+            "composition_previz",
+            "initial_composition",
+            "frame_anchor"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "description_en": {
+          "default": "",
+          "title": "Description En",
+          "type": "string"
+        },
+        "confirmed": {
+          "default": false,
+          "title": "Confirmed",
+          "type": "boolean"
+        },
+        "linked_to_h3": {
+          "default": false,
+          "title": "Linked To H3",
+          "type": "boolean"
+        },
+        "description_language": {
+          "default": "English",
+          "title": "Description Language",
+          "type": "string"
+        },
+        "use_original_language": {
+          "default": false,
+          "title": "Use Original Language",
+          "type": "boolean"
+        },
+        "original_description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Original Description"
+        },
+        "original_language": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Original Language"
+        },
+        "guidance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/GuideUsage"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "analysis": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImageAnalysisSettings"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "excluded": {
+          "const": false,
+          "default": false,
+          "title": "Excluded",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "slot"
+      ],
+      "title": "PictureReference",
+      "type": "object"
+    },
+    "ProjectView": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "revision": {
+          "title": "Revision",
+          "type": "integer"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "updated_at": {
+          "title": "Updated At",
+          "type": "string"
+        },
+        "trashed": {
+          "title": "Trashed",
+          "type": "boolean"
+        },
+        "scenes": {
+          "items": {
+            "$ref": "#/$defs/SceneView"
+          },
+          "title": "Scenes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "revision",
+        "created_at",
+        "updated_at",
+        "trashed"
+      ],
+      "title": "ProjectView",
+      "type": "object"
+    },
+    "PromptVersion": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "origin": {
+          "enum": [
+            "generated",
+            "manual"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "input_hash": {
+          "title": "Input Hash",
+          "type": "string"
+        },
+        "input_revision": {
+          "title": "Input Revision",
+          "type": "integer"
+        },
+        "duration_s": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration S"
+        },
+        "duration_origin": {
+          "anyOf": [
+            {
+              "enum": [
+                "declared",
+                "estimated",
+                "measured"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration Origin"
+        },
+        "structural_checks_passed": {
+          "title": "Structural Checks Passed",
+          "type": "boolean"
+        },
+        "user_approved": {
+          "default": false,
+          "title": "User Approved",
+          "type": "boolean"
+        },
+        "issues": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "input_snapshot": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Input Snapshot"
+        },
+        "base_candidate_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Candidate Id"
+        },
+        "media_snapshot": {
+          "additionalProperties": true,
+          "title": "Media Snapshot",
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "origin",
+        "text",
+        "input_hash",
+        "input_revision",
+        "structural_checks_passed"
+      ],
+      "title": "PromptVersion",
+      "type": "object"
+    },
+    "PurgeCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "selection": {
+          "$ref": "#/$defs/PurgeSelection"
+        },
+        "plan_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Plan Hash",
+          "type": "string"
+        },
+        "confirmed": {
+          "const": true,
+          "title": "Confirmed",
+          "type": "boolean"
+        },
+        "confirmation": {
+          "const": "ELIMINA",
+          "title": "Confirmation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "command_id",
+        "selection",
+        "plan_hash",
+        "confirmed",
+        "confirmation"
+      ],
+      "title": "PurgeCommand",
+      "type": "object"
+    },
+    "PurgeSelection": {
+      "additionalProperties": false,
+      "properties": {
+        "scope": {
+          "default": "trash",
+          "enum": [
+            "trash",
+            "cut",
+            "scene",
+            "project"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "resource_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resource Id"
+        }
+      },
+      "title": "PurgeSelection",
+      "type": "object"
+    },
+    "ReuseCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "enum": [
+            "picture",
+            "unit"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "reference_id": {
+          "format": "uuid",
+          "title": "Reference Id",
+          "type": "string"
+        },
+        "slots": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Slots",
+          "type": "object"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "kind",
+        "reference_id"
+      ],
+      "title": "ReuseCommand",
+      "type": "object"
+    },
+    "ReuseContextCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "subject": {
+          "minimum": 1,
+          "title": "Subject",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "subject"
+      ],
+      "title": "ReuseContextCommand",
+      "type": "object"
+    },
+    "RevisionCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision"
+      ],
+      "title": "RevisionCommand",
+      "type": "object"
+    },
+    "SaveCameraPresetCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "expected_preset_revision": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Expected Preset Revision",
+          "type": "integer"
+        },
+        "name": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "camera": {
+          "$ref": "#/$defs/CameraDirection"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "name",
+        "camera"
+      ],
+      "title": "SaveCameraPresetCommand",
+      "type": "object"
+    },
+    "ScaleTranslation": {
+      "additionalProperties": false,
+      "properties": {
+        "measurements_en": {
+          "maxLength": 500,
+          "title": "Measurements En",
+          "type": "string"
+        },
+        "comparison_en": {
+          "maxLength": 700,
+          "title": "Comparison En",
+          "type": "string"
+        }
+      },
+      "required": [
+        "measurements_en",
+        "comparison_en"
+      ],
+      "title": "ScaleTranslation",
+      "type": "object"
+    },
+    "SceneView": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "project_id": {
+          "format": "uuid",
+          "title": "Project Id",
+          "type": "string"
+        },
+        "number": {
+          "title": "Number",
+          "type": "integer"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "revision": {
+          "title": "Revision",
+          "type": "integer"
+        },
+        "finalized": {
+          "title": "Finalized",
+          "type": "boolean"
+        },
+        "trashed": {
+          "title": "Trashed",
+          "type": "boolean"
+        },
+        "cuts": {
+          "items": {
+            "$ref": "#/$defs/CutSummary"
+          },
+          "title": "Cuts",
+          "type": "array"
+        },
+        "trashed_cuts": {
+          "items": {
+            "$ref": "#/$defs/CutSummary"
+          },
+          "title": "Trashed Cuts",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "project_id",
+        "number",
+        "title",
+        "revision",
+        "finalized",
+        "trashed"
+      ],
+      "title": "SceneView",
+      "type": "object"
+    },
+    "ShotPart": {
+      "additionalProperties": false,
+      "properties": {
+        "shot_id": {
+          "pattern": "^s[1-9][0-9]*$",
+          "title": "Shot Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "shot_id"
+      ],
+      "title": "ShotPart",
+      "type": "object"
+    },
+    "Source": {
+      "additionalProperties": false,
+      "properties": {
+        "picture_slot": {
+          "anyOf": [
+            {
+              "maximum": 9,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Picture Slot"
+        },
+        "picture_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Picture Id"
+        },
+        "attribute": {
+          "enum": [
+            "identity",
+            "appearance",
+            "outfit",
+            "shoes",
+            "environment",
+            "object"
+          ],
+          "title": "Attribute",
+          "type": "string"
+        },
+        "linked_to_h3": {
+          "default": false,
+          "title": "Linked To H3",
+          "type": "boolean"
+        },
+        "origin": {
+          "default": "picture",
+          "enum": [
+            "picture",
+            "context"
+          ],
+          "title": "Origin",
+          "type": "string"
+        }
+      },
+      "required": [
+        "attribute"
+      ],
+      "title": "Source",
+      "type": "object"
+    },
+    "SubjectScale": {
+      "additionalProperties": false,
+      "properties": {
+        "measurements": {
+          "default": "",
+          "maxLength": 500,
+          "title": "Measurements",
+          "type": "string"
+        },
+        "comparison": {
+          "default": "",
+          "maxLength": 700,
+          "title": "Comparison",
+          "type": "string"
+        },
+        "reference_subject_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reference Subject Id"
+        },
+        "reference_subject": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reference Subject"
+        },
+        "picture_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Picture Id"
+        }
+      },
+      "title": "SubjectScale",
+      "type": "object"
+    },
+    "TrashCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "trashed": {
+          "title": "Trashed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "trashed"
+      ],
+      "title": "TrashCommand",
+      "type": "object"
+    },
+    "VideoReference": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^v[1-9][0-9]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "slot": {
+          "maximum": 3,
+          "minimum": 1,
+          "title": "Slot",
+          "type": "integer"
+        },
+        "name": {
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        },
+        "role": {
+          "default": "continuation",
+          "enum": [
+            "continuation",
+            "camera",
+            "subject_motion",
+            "camera_and_subject_motion"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "guidance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/GuideUsage"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "description_en": {
+          "default": "the source clip for continuation",
+          "title": "Description En",
+          "type": "string"
+        },
+        "media_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Media Id"
+        },
+        "duration_s": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "maximum": 600,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration S"
+        },
+        "duration_origin": {
+          "default": "declared",
+          "enum": [
+            "declared",
+            "measured"
+          ],
+          "title": "Duration Origin",
+          "type": "string"
+        },
+        "file_exists": {
+          "default": false,
+          "title": "File Exists",
+          "type": "boolean"
+        },
+        "linked_to_h3": {
+          "default": false,
+          "title": "Linked To H3",
+          "type": "boolean"
+        },
+        "confirmed": {
+          "default": false,
+          "title": "Confirmed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "slot"
+      ],
+      "title": "VideoReference",
+      "type": "object"
+    },
+    "VisualUnit": {
+      "additionalProperties": false,
+      "properties": {
+        "subject": {
+          "minimum": 1,
+          "title": "Subject",
+          "type": "integer"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "role": {
+          "enum": [
+            "character",
+            "environment",
+            "object"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "description_en": {
+          "default": "",
+          "title": "Description En",
+          "type": "string"
+        },
+        "definition_mode": {
+          "default": "picture",
+          "enum": [
+            "picture",
+            "manual"
+          ],
+          "title": "Definition Mode",
+          "type": "string"
+        },
+        "confirmed": {
+          "title": "Confirmed",
+          "type": "boolean"
+        },
+        "sources": {
+          "items": {
+            "$ref": "#/$defs/Source"
+          },
+          "minItems": 1,
+          "title": "Sources",
+          "type": "array"
+        },
+        "physical_details": {
+          "items": {
+            "$ref": "#/$defs/PhysicalDetail"
+          },
+          "maxItems": 20,
+          "title": "Physical Details",
+          "type": "array"
+        },
+        "scale": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SubjectScale"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "excluded": {
+          "const": false,
+          "default": false,
+          "title": "Excluded",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "subject",
+        "name",
+        "role",
+        "confirmed",
+        "sources"
+      ],
+      "title": "VisualUnit",
+      "type": "object"
+    },
+    "WebCompileCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "cut_id": {
+          "format": "uuid",
+          "title": "Cut Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "input": {
+          "$ref": "#/$defs/CompileInput"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model"
+        }
+      },
+      "required": [
+        "command_id",
+        "cut_id",
+        "expected_revision",
+        "input"
+      ],
+      "title": "WebCompileCommand",
+      "type": "object"
+    },
+    "WebManualPromptCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "base_candidate_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Candidate Id"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "text"
+      ],
+      "title": "WebManualPromptCommand",
+      "type": "object"
+    }
+  },
+  "title": "MiniMax H3 Lite M6"
+}
