@@ -1,0 +1,19 @@
+MiniMax H3 Compiler Lite — source upgrade — English
+Italiano: UPDATE-IT.txt
+
+1. Save edits and wait for jobs to finish. Stop the server with Ctrl+C.
+2. Create a verified data backup: follow README-EN.txt, section 6.
+3. Extract new sources into a NEW local folder outside synchronized storage.
+   Do not move or reuse the old .venv.
+4. Start Avvia.command on Mac or Avvia.cmd on Windows. If operational data
+   uses a custom --data-dir, pass that exact same path.
+5. Check projects, media, text/vision choices, versions and manual text.
+   Export an existing version without recompiling and compare the text.
+6. Keep the previous copy and backup until validation is complete.
+   Test rollback on a separate restored backup before switching back.
+   Do not open an upgraded database with older code without a trial.
+
+Source edition 2026.11.19-preview3-source1: runtime preserved from preview3,
+independent history excluding local files and metadata. It does not replace
+the two tested ZIPs or implement Stage integration. MIT, Copyright (c) 2026 aledige.
+This preparation does not publish to GitHub. Linux remains outside the plan.

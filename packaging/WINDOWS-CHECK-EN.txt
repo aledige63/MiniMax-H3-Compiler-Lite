@@ -1,0 +1,103 @@
+MiniMax H3 Compiler Lite — Windows 11 x64 checklist
+Version 2026.11.19-preview3-source1 — English (Italiano: WINDOWS-CHECK-IT.txt)
+
+The runtime is identical to preview2 already tested by the user. This guide
+checks the new packaging. Mac execution or matching hashes are not reported
+as a new native Windows run. Use Command Prompt (CMD), not PowerShell.
+
+1. DOWNLOAD AND CHECKSUM
+For a development build, use its Windows ZIP and matching SHA256SUMS.txt.
+For the source copy, use its source ZIP and matching checksum instead.
+Press Windows+R, type cmd and press Enter. For the default Downloads location:
+certutil -hashfile "%USERPROFILE%\Downloads\MiniMax-H3-Compiler-Lite-2026.11.19-preview3-source1-windows-x64.zip" SHA256
+Compare with SHA256SUMS.txt. Adapt the path if you changed the name or folder.
+If the hash differs, download the file again before proceeding.
+
+2. WINDOWS AND PYTHON
+Check Windows 11 and x64 architecture in the PC's system information. In CMD:
+py -3.12 -c "import sys,platform; print(sys.version); print(platform.machine()); print('64 bit' if sys.maxsize > 2**32 else '32 bit')"
+Expected: Python 3.12.x, AMD64/x86_64 and 64 bit. If py is unavailable, try
+the same command with python instead of py -3.12 and check its version too.
+Reuse Python 3.12 if installed. Otherwise consult
+https://www.python.org/downloads/ and install Python 3.12 x64 with pip/launcher.
+
+3. EXTRACTION AND DOCUMENTATION
+Extract completely into a new local folder outside Drive/OneDrive. Open the
+subfolder containing Avvia.cmd and start.py. Check:
+- LICENSE: MIT and Copyright (c) 2026 aledige;
+- THIRD-PARTY-NOTICES.md: Italiano and English sections;
+- LEGGIMI.txt and README-EN.txt;
+- NOTE-DIPENDENZE.txt and DEPENDENCIES-EN.txt;
+- UPDATE-IT.txt and UPDATE-EN.txt;
+- this guide and WINDOWS-CHECK-IT.txt;
+- release-manifest.json: license MIT, it/en documentation and file hashes.
+In File Explorer, type cmd in the code folder's address bar and press Enter.
+Check the current directory with: dir Avvia.cmd
+
+4. START WITH A NEW ARCHIVE
+Avvia.cmd --data-dir "%LOCALAPPDATA%\MiniMax H3 Compiler Lite - Collaudo\preview3-check" --port 18767
+Wait for .venv creation, dependency installation, the Pronto ready message and
+the browser opening at http://127.0.0.1:18767/. If it does not open, use that
+URL manually after Pronto and record whether automatic opening worked.
+Keep the launcher window open. Expected: no personal data, empty Ollama
+address and no preselected text or vision model.
+
+5. CONNECTIONS, IF REPEATING REAL MODEL TESTS
+For a license-only check, continue at step 9. To test the functional workflow,
+use an existing Ollama service or OpenAI with your own API key.
+127.0.0.1:11434 means Ollama on this same PC. Select and save text/vision
+models independently and verify them one at a time. A selected, verified vision
+model is required for complete setup. Explicitly choose already installed models suitable for both roles. Password protection is optional.
+OpenAI tests use your API account.
+
+6. SYNTHETIC IMAGE
+Open a second CMD window in the code folder and run the following on one line:
+.venv\Scripts\python.exe -c "from PIL import Image,ImageDraw; i=Image.new('RGB',(512,512),'white'); ImageDraw.Draw(i).rectangle((156,156,356,356),fill='red'); i.save('immagine-collaudo.png')"
+Expected: a red square on white. In the browser create a test project, upload
+the PNG as an Object Picture and analyze it with the verified vision model.
+Review the proposal, apply it and confirm it. Applying a proposal is explicit.
+
+7. SUBJECT AND COMPILATION
+Add an Object Subject and link it to the Picture with an Object source.
+Confirm its definition/associations. Declare the Picture's H3 link if you
+intend to use this same image in the external workflow's slot.
+Set declared duration to 5 seconds. Insert the reference with # and, using
+the actual allocated number, write: <Subject 1> remains still for five seconds.
+Save, compile, review the six sections, confirm and export TXT. No video
+generation is required. Keep the export for later comparison.
+
+8. ARCHIVE LOCK AND OCCUPIED PORT
+With the first server running, use the second CMD window:
+Avvia.cmd --data-dir "%LOCALAPPDATA%\MiniMax H3 Compiler Lite - Collaudo\preview3-check" --port 18768
+Expected: archive in use, no second server. Return to the prompt and run:
+Avvia.cmd --data-dir "%LOCALAPPDATA%\MiniMax H3 Compiler Lite - Collaudo\preview3-port-check" --port 18767
+Expected: occupied port. The first server should continue working.
+
+9. STOP AND REOPEN
+Save all edits, wait for processing to finish and press Ctrl+C in the server
+window. Wait for shutdown and respond to CMD's terminate-batch prompt if shown.
+Restart using the same step-4 command. Expected: data and selections preserved,
+without a complete dependency reinstall on the second launch.
+
+10. BACKUP AND RESTORE
+Stop the server and use a NEW destination:
+Avvia.cmd --data-dir "%LOCALAPPDATA%\MiniMax H3 Compiler Lite - Collaudo\preview3-check" --backup "%USERPROFILE%\MiniMax-preview3-backup-01"
+Avvia.cmd --verify-backup "%USERPROFILE%\MiniMax-preview3-backup-01"
+Expected: verified true. Restore into another NEW folder:
+.venv\Scripts\python.exe -X utf8 -m scripts.backup_workspace restore "%USERPROFILE%\MiniMax-preview3-backup-01" "%USERPROFILE%\MiniMax-preview3-restored-01"
+Expected: restored true. Start only the restored copy:
+Avvia.cmd --data-dir "%USERPROFILE%\MiniMax-preview3-restored-01\data" --port 18768
+Check its data and stop with Ctrl+C. If you created no projects or media,
+the restored empty archive should remain empty.
+
+11. UPGRADE FROM PREVIEW2
+Follow UPDATE-EN.txt to reopen your previously tested archive from the new
+code folder. Data, selections and versions should remain available. Compare
+an export of the same version without recompiling.
+
+12. RESULTS
+Record Windows/build, Python/architecture, SHA-256, license/guide checks,
+startup/browser behavior, chosen models and the checks you actually performed.
+Mark skipped steps NOT TESTED. Report the first failure and its full message.
+Do not send keys, passwords or backups. The source history backup is separate
+from operational data.

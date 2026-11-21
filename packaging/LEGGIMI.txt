@@ -1,0 +1,172 @@
+MiniMax H3 Compiler Lite — primo avvio
+Versione 2026.11.19-preview3-source1 — MIT — documentazione IT/EN
+English: open README-EN.txt.
+
+1. PREPARAZIONE
+
+Scarica lo ZIP adatto al computer ed estrailo completamente in una cartella
+locale scrivibile, per esempio una cartella MiniMax nella tua cartella utente.
+Non avviare il programma dentro lo ZIP. Evita cartelle sincronizzate da Drive,
+OneDrive o iCloud per il codice e per l'archivio di lavoro.
+
+Occorre Python 3.12 a 64 bit, installato separatamente:
+https://www.python.org/downloads/
+Scegli una release Python 3.12 con installer per la tua piattaforma.
+Mac: macOS 14 o successivo e Python nativo per Apple Silicon
+(arm64/universal2), senza Rosetta.
+Windows 11 x64: usa l'installer x64, includendo il launcher «py».
+Se è installata anche un'altra versione di Python, mantieni disponibile la 3.12.
+
+Al primo avvio occorre Internet per installare le dipendenze Python fissate
+in requirements.lock. Python, Ollama, modelli e chiavi API non sono inclusi.
+Questi ZIP non sono installazioni offline. Nessun modello viene scaricato.
+
+2. AVVIO E ARRESTO
+
+Mac Apple Silicon: doppio clic su Avvia.command.
+Se il sistema richiede di aprire lo script esplicitamente, usa il menu
+contestuale «Apri» e verifica che provenga dalla cartella appena estratta.
+Se manca il permesso di esecuzione, apri Terminale nella cartella e digita:
+  chmod +x Avvia.command
+  ./Avvia.command
+
+Windows 11 x64: doppio clic su Avvia.cmd.
+Non servono PowerShell, permessi di amministratore o modifiche alla sua policy.
+
+La finestra mostra i passaggi: controllo Python, creazione di .venv,
+installazione dipendenze e avvio. Al termine apre il browser su:
+  http://127.0.0.1:8767/
+Se il browser non si apre, copia questo indirizzo dopo il messaggio «Pronto».
+Lascia aperta la finestra di avvio mentre usi l'applicazione.
+Per fermare: salva bozza e testo manuale, attendi la fine delle elaborazioni,
+poi premi Ctrl+C nella finestra e attendi l'arresto. Chiudere il browser
+non ferma il programma. Questi ZIP non installano avvio automatico o servizi.
+
+Se Python manca, installa la versione richiesta e ripeti il doppio clic.
+Se l'installazione fallisce, leggi il messaggio, controlla Internet e riprova.
+Se .venv è stata spostata insieme al codice, eliminala e riavvia: si ricrea.
+Se la porta è occupata, ferma l'altra copia oppure scegli una porta diversa:
+  Mac:     ./Avvia.command --port 18767
+  Windows: Avvia.cmd --port 18767
+Apri quindi http://127.0.0.1:18767/. Due copie non possono usare lo stesso
+archivio nemmeno se le porte sono diverse. Non rimuovere il lock a mano.
+
+3. DOVE SONO I DATI
+
+Mac:
+  ~/Library/Application Support/MiniMax H3 Compiler Lite/data
+Windows:
+  %LOCALAPPDATA%\MiniMax H3 Compiler Lite\data
+
+Il percorso effettivo compare nella finestra di avvio. Contiene database,
+immagini, audio, video, impostazioni e l'eventuale chiave API privata.
+Conserva tutta questa cartella. Non inserirla in Git o in una condivisione
+pubblica. L'ambiente .venv dentro il codice può invece essere ricreato.
+Un nuovo ZIP usa lo stesso percorso dati, indipendentemente dalla cartella
+in cui lo estrai. Se esistono già dati in quel percorso, verranno riaperti.
+I pacchetti non importano automaticamente dati da installazioni precedenti
+che usavano la cartella data accanto al codice.
+
+Per un collaudo senza toccare i dati personali:
+  Mac:     ./Avvia.command --data-dir "$HOME/MiniMax-prova/data" --port 18767
+  Windows: Avvia.cmd --data-dir "%USERPROFILE%\MiniMax-prova\data" --port 18767
+Usa lo stesso --data-dir anche per backup e successive prove sul medesimo
+archivio. Da PowerShell, usa .\Avvia.cmd e "$env:USERPROFILE\MiniMax-prova\data".
+
+4. OLLAMA O OPENAI
+
+Apri Impostazioni utente. Puoi usare Ollama installato sul tuo computer o un
+servizio Ollama di cui conosci l'indirizzo, oppure OpenAI con una tua chiave API.
+L'indirizzo Ollama iniziale è vuoto: per il servizio sullo stesso computer
+imposta http://127.0.0.1:11434 e recupera i modelli installati.
+L'app non installa Ollama e non scarica i modelli.
+
+Nessun modello testo è preimpostato nelle nuove installazioni.
+Scegli separatamente servizio e modello per testo e vision. Un unico modello
+multimodale può coprire entrambe le funzioni. Esegui le verifiche sintetiche
+disponibili nelle impostazioni. Per completare la configurazione occorre
+un modello vision selezionato e verificato, oltre al testo.
+Verifica il servizio mostrato prima di avviare una prova: testo e immagini
+vengono inviati al servizio scelto. Le chiamate OpenAI utilizzano il tuo account.
+Il salvataggio delle impostazioni non avvia un'inferenza.
+
+Puoi impostare una password per l'unico account, cambiarla o disattivarla.
+La password è facoltativa. L'avvio guidato ascolta soltanto sul computer locale.
+Le chiavi API rimangono nel backend, dentro l'archivio privato; anche i backup
+dei dati devono quindi rimanere privati.
+
+5. PRIMA PROVA NEUTRA
+
+Crea un progetto di prova. Carica una foto neutra, per esempio una tazza vuota
+su un tavolo, come Picture con ruolo Oggetto. Scegli il modello vision
+verificato e premi Analizza immagine. Controlla la proposta, applicala e
+conferma la descrizione. La proposta non sostituisce i campi automaticamente.
+Aggiungi un Subject Oggetto, collegalo esplicitamente a quella Picture e
+conferma le associazioni. Dichiara il collegamento allo slot H3 solo se intendi
+usare davvero quella stessa foto nel workflow H3 esterno.
+
+Imposta un cut di 5 secondi e scrivi una richiesta semplice, per esempio:
+  La tazza resta immobile sul tavolo per cinque secondi.
+Usa il richiamo # del Subject quando opportuno, salva la bozza e compila.
+Controlla il prompt, conservalo e prova Esporta / stampa. Chiudi e riavvia il
+programma per verificare la riapertura del progetto e della versione salvata.
+Le proposte sono da controllare; l'app prepara il prompt e non genera video H3.
+L'interfaccia si può impostare in italiano o inglese, chiara o scura.
+
+6. BACKUP VERIFICATO
+
+Salva gli edit, attendi la fine dei lavori e ferma il programma con Ctrl+C.
+Dalla cartella estratta, scegli una destinazione locale NUOVA:
+  Mac:     ./Avvia.command --backup "$HOME/MiniMax-backup-01"
+  Windows: Avvia.cmd --backup "%USERPROFILE%\MiniMax-backup-01"
+Poi verifica:
+  Mac:     ./Avvia.command --verify-backup "$HOME/MiniMax-backup-01"
+  Windows: Avvia.cmd --verify-backup "%USERPROFILE%\MiniMax-backup-01"
+Se usavi --data-dir, aggiungilo anche al comando --backup.
+Il backup include dati, media e impostazioni del percorso selezionato;
+non include il codice (conserva lo ZIP), Python o i modelli Ollama esterni.
+L'ASR non è configurato in questi pacchetti. Pesi ASR esterni aggiunti a mano
+richiedono una conservazione separata; non sono raccolti da questo avvio.
+
+Il backup rifiuta un servizio attivo e una destinazione già esistente.
+Solo dopo l'esito positivo comprimi la cartella verificata e copiala su Drive.
+Riavvia poi normalmente. Non usare il database operativo dentro Google Drive.
+
+Per provare un ripristino in una destinazione nuova, senza sostituire dati:
+  Mac:
+    .venv/bin/python -m scripts.backup_workspace restore "$HOME/MiniMax-backup-01" "$HOME/MiniMax-ripristino-01"
+    ./Avvia.command --data-dir "$HOME/MiniMax-ripristino-01/data" --port 18767
+  Windows (Prompt dei comandi):
+    .venv\Scripts\python.exe -X utf8 -m scripts.backup_workspace restore "%USERPROFILE%\MiniMax-backup-01" "%USERPROFILE%\MiniMax-ripristino-01"
+    Avvia.cmd --data-dir "%USERPROFILE%\MiniMax-ripristino-01\data" --port 18767
+Il ripristino verifica prima il backup e rifiuta destinazioni esistenti.
+
+7. AGGIORNAMENTO
+
+Salva tutto, ferma la copia precedente e crea un backup verificato.
+Estrai il nuovo ZIP in una cartella nuova: non sovrascrivere la vecchia .venv.
+Avvia il nuovo pacchetto. Ricreerà le dipendenze e riaprirà lo stesso percorso
+dati personale (oppure passa lo stesso --data-dir personalizzato).
+Verifica un progetto già popolato, le versioni e un export. Conserva vecchio
+ZIP e backup fino al completamento della prova. Un ritorno a una versione
+precedente va provato su una copia ripristinata del backup, mai sul database
+già aggiornato. Non sostituire il tuo servizio Mac attuale con questo pacchetto
+di prova senza avere scelto esplicitamente quali dati usare.
+
+8. EDIZIONE SORGENTI E LICENZA
+
+Questa copia dei sorgenti ha versione 2026.11.19-preview3-source1 e una nuova
+cronologia indipendente. Il codice applicativo è preservato rispetto alla
+preview3; fonti esterne, inventari, report e schermate locali sono esclusi.
+Non include database, media, modelli, interpreti Python o credenziali.
+I pacchetti collaudati preview3 sono separati e non vengono sostituiti.
+
+La ricetta autonoma genera ZIP di sviluppo con nomi distinti. I manifesti
+riportano l'elenco esplicito dei file, la provenienza e gli hash SHA256.
+Non richiede i vecchi tag Git e non ricrea gli ZIP originali byte per byte.
+Il confronto del runtime non equivale a un nuovo collaudo nativo Windows.
+
+MIT — Copyright (c) 2026 aledige. Conservare LICENSE e l'avviso di copyright.
+Le dipendenze mantengono le proprie condizioni: THIRD-PARTY-NOTICES.md e
+NOTE-DIPENDENZE.txt. Guide IT/EN disponibili in questa cartella.
+Linux escluso. La preparazione non effettua alcuna pubblicazione GitHub.

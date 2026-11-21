@@ -1,0 +1,19 @@
+MiniMax H3 Compiler Lite — aggiornamento sorgenti — Italiano
+English: UPDATE-EN.txt
+
+1. Salvare gli edit e attendere la fine dei lavori. Fermare il server con Ctrl+C.
+2. Creare un backup verificato della cartella dati: seguire LEGGIMI.txt, punto 6.
+3. Estrarre i nuovi sorgenti in una cartella locale NUOVA, fuori da cartelle
+   sincronizzate. Non spostare o riutilizzare la vecchia .venv.
+4. Avviare con Avvia.command su Mac o Avvia.cmd su Windows. Se i dati operativi
+   usano un --data-dir personalizzato, passare esattamente lo stesso percorso.
+5. Controllare progetti, media, selezioni testo/vision, versioni e testo manuale.
+   Esportare una versione esistente senza ricompilare e confrontare il testo.
+6. Conservare la vecchia copia e il backup finché la verifica è completata.
+   Per tornare indietro, provare prima su un ripristino separato del backup.
+   Non aprire con codice precedente un database aggiornato senza una prova.
+
+Edizione sorgenti 2026.11.19-preview3-source1: runtime preservato dalla preview3,
+cronologia autonoma senza file e metadati locali. Non sostituisce i due ZIP
+collaudati e non avvia l'integrazione Stage. MIT, Copyright (c) 2026 aledige.
+Questa preparazione non pubblica su GitHub. Linux escluso.

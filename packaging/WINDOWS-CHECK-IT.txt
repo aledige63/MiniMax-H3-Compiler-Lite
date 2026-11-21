@@ -1,0 +1,103 @@
+MiniMax H3 Compiler Lite — controllo Windows 11 x64
+Versione 2026.11.19-preview3-source1 — Italiano (English: WINDOWS-CHECK-EN.txt)
+
+Il runtime è identico alla preview2 già collaudata dall'utente. Questa guida
+permette di controllare la nuova confezione; un esito su Mac o un confronto
+di hash non vengono dichiarati come nuova esecuzione nativa su Windows.
+Esegui i comandi nel Prompt dei comandi (CMD), non in PowerShell.
+
+1. DOWNLOAD E CHECKSUM
+Per una build di sviluppo, usa lo ZIP Windows e SHA256SUMS.txt della stessa build.
+Per la copia sorgenti usa invece il relativo ZIP sorgenti e checksum.
+Windows+R, scrivi cmd, Invio. Se il file è nella cartella Download standard:
+certutil -hashfile "%USERPROFILE%\Downloads\MiniMax-H3-Compiler-Lite-2026.11.19-preview3-source1-windows-x64.zip" SHA256
+Confronta con SHA256SUMS.txt. Se nome o cartella cambiano, adatta il percorso.
+Se l'hash differisce, riscarica prima di proseguire.
+
+2. WINDOWS E PYTHON
+Controlla Windows 11 e sistema x64 nelle informazioni del PC. In CMD:
+py -3.12 -c "import sys,platform; print(sys.version); print(platform.machine()); print('64 bit' if sys.maxsize > 2**32 else '32 bit')"
+Atteso: Python 3.12.x, AMD64/x86_64 e 64 bit. Se py manca, prova lo stesso
+comando con python al posto di py -3.12, verificando comunque la versione.
+Se Python 3.12 è già disponibile, riusalo. In caso contrario consulta
+https://www.python.org/downloads/ e installa Python 3.12 x64 con pip/launcher.
+
+3. ESTRAZIONE E DOCUMENTAZIONE
+Estrai completamente in una cartella locale nuova, fuori da Drive/OneDrive.
+Apri la sottocartella dove compaiono Avvia.cmd e start.py. Controlla:
+- LICENSE: MIT e Copyright (c) 2026 aledige;
+- THIRD-PARTY-NOTICES.md: sezioni Italiano ed English;
+- LEGGIMI.txt e README-EN.txt;
+- NOTE-DIPENDENZE.txt e DEPENDENCIES-EN.txt;
+- UPDATE-IT.txt e UPDATE-EN.txt;
+- questa guida e WINDOWS-CHECK-EN.txt;
+- release-manifest.json: license MIT, documentazione it/en e hash dei file.
+In Esplora file scrivi cmd nella barra dell'indirizzo della cartella del
+programma e premi Invio. Controlla con: dir Avvia.cmd
+
+4. AVVIO SU UN ARCHIVIO NUOVO
+Avvia.cmd --data-dir "%LOCALAPPDATA%\MiniMax H3 Compiler Lite - Collaudo\preview3-check" --port 18767
+Attendi creazione .venv, dipendenze, messaggio Pronto e apertura del browser
+su http://127.0.0.1:18767/. Se il browser non si apre, usa manualmente l'URL
+dopo Pronto e annota l'esito dell'apertura automatica. La finestra resta aperta.
+Atteso: nessun dato personale, indirizzo Ollama e modelli testo/vision vuoti.
+
+5. CONNESSIONI, SE VUOI RIPETERE LE PROVE REALI
+Per il solo controllo della licenza puoi passare al punto 9. Per verificare
+anche il flusso funzionale, usa un tuo servizio Ollama già disponibile oppure
+OpenAI con la tua chiave. 127.0.0.1:11434 indica Ollama su questo stesso PC.
+Scegli e salva separatamente testo/vision; esegui una alla volta le verifiche
+dei due modelli. Il vision verificato è richiesto per la configurazione completa.
+Scegli esplicitamente modelli già installati e adatti alle due funzioni.
+La password è facoltativa. Le prove OpenAI usano il tuo account API.
+
+6. IMMAGINE SINTETICA
+Apri una seconda finestra CMD nella cartella del programma ed esegui su una riga:
+.venv\Scripts\python.exe -c "from PIL import Image,ImageDraw; i=Image.new('RGB',(512,512),'white'); ImageDraw.Draw(i).rectangle((156,156,356,356),fill='red'); i.save('immagine-collaudo.png')"
+Atteso: un quadrato rosso su bianco. Nel browser crea un progetto di prova,
+carica il PNG come Picture Oggetto e analizzalo con il vision verificato.
+Controlla la proposta, applicala e confermala. L'applicazione è esplicita.
+
+7. SUBJECT E COMPILAZIONE
+Aggiungi un Subject Oggetto e collegalo alla Picture con sorgente Oggetto.
+Conferma definizione/associazioni. Dichiara il collegamento Picture a H3 se
+intendi usare la stessa immagine nello slot del workflow esterno.
+Durata dichiarata 5 secondi; inserisci il richiamo con # e scrivi, usando il
+numero effettivo: <Subject 1> rimane immobile per cinque secondi.
+Salva, compila, controlla le sei sezioni, conferma ed esporta il TXT. Nessuna
+generazione video è necessaria. Conserva il file per il confronto successivo.
+
+8. LOCK E PORTA OCCUPATA
+Con il primo server attivo, dalla seconda finestra prova:
+Avvia.cmd --data-dir "%LOCALAPPDATA%\MiniMax H3 Compiler Lite - Collaudo\preview3-check" --port 18768
+Atteso: archivio in uso, nessun secondo server. Torna al prompt e prova:
+Avvia.cmd --data-dir "%LOCALAPPDATA%\MiniMax H3 Compiler Lite - Collaudo\preview3-port-check" --port 18767
+Atteso: porta occupata. Il primo server deve continuare a funzionare.
+
+9. ARRESTO E RIAPERTURA
+Salva tutto, attendi la fine dei lavori e premi Ctrl+C nella finestra del server.
+Attendi l'arresto; rispondi alla richiesta CMD di terminare il batch, se appare.
+Riavvia con lo stesso comando del punto 4. Atteso: dati e selezioni conservati,
+nessuna reinstallazione completa delle dipendenze al secondo avvio.
+
+10. BACKUP E RIPRISTINO
+Ferma il server. Usa una destinazione NUOVA:
+Avvia.cmd --data-dir "%LOCALAPPDATA%\MiniMax H3 Compiler Lite - Collaudo\preview3-check" --backup "%USERPROFILE%\MiniMax-preview3-backup-01"
+Avvia.cmd --verify-backup "%USERPROFILE%\MiniMax-preview3-backup-01"
+Atteso: verified true. Per ripristinare in un'altra cartella NUOVA:
+.venv\Scripts\python.exe -X utf8 -m scripts.backup_workspace restore "%USERPROFILE%\MiniMax-preview3-backup-01" "%USERPROFILE%\MiniMax-preview3-restored-01"
+Atteso: restored true. Apri solo la copia ripristinata:
+Avvia.cmd --data-dir "%USERPROFILE%\MiniMax-preview3-restored-01\data" --port 18768
+Controlla i dati e ferma con Ctrl+C. Se non hai creato progetti o media,
+un archivio vuoto ripristinato deve rimanere vuoto.
+
+11. AGGIORNAMENTO DA PREVIEW2
+Segui UPDATE-IT.txt per riaprire il tuo archivio già collaudato dalla nuova
+cartella del codice. Conserva dati, selezioni e versioni; confronta l'export
+della medesima versione senza ricompilare.
+
+12. ESITO
+Annota Windows/build, Python/architettura, SHA-256, controllo licenza/guide,
+avvio/browser, modelli selezionati, prove effettivamente svolte e loro esito.
+Segna NON PROVATO per i passaggi saltati. Riporta il primo errore e il messaggio
+completo. Non inviare chiavi, password o backup. Il backup della cronologia pubblicabile è separato dai dati operativi.
