@@ -13,8 +13,8 @@
       "bytes": 348
     },
     "AGENTS.md": {
-      "sha256": "0b0e082a3888991cbb788e88d47c81151dc39abdb1a3faf7634c1ecfa0cbd973",
-      "bytes": 982
+      "sha256": "0add83d0be95def447eea8f283cc6a4bddefa598fdc659eb0bf4876646e8f3e3",
+      "bytes": 1002
     },
     "Avvia.cmd": {
       "sha256": "e0dbb5aee4c536fc907f258175aa0197b933884f87a6e586b7b3cc85776efae5",
@@ -29,12 +29,16 @@
       "bytes": 1064
     },
     "README-EN.md": {
-      "sha256": "30089ea53bdc7ca1eb64f6c43a6aabf1cb63a804715b50a904f317afa2273a09",
-      "bytes": 3794
+      "sha256": "0a22c8e3785984f7c640c443935e5e4b88767be2dd649a2ef2f4bad40c1b864b",
+      "bytes": 196
+    },
+    "README-IT.md": {
+      "sha256": "9ed966e11937189c6d6c50a6ae14e770e45724932d335747215d8e0b0fd17077",
+      "bytes": 9127
     },
     "README.md": {
-      "sha256": "82146427c38a2a3a9d790dc7cbb78708f271d1d09947d82c9d16bd96a432f8af",
-      "bytes": 4008
+      "sha256": "aa98bd73e41597b0760d9ec39a8d5496180727be7536a6912b2b77fa8c539e0d",
+      "bytes": 8631
     },
     "THIRD-PARTY-NOTICES.md": {
       "sha256": "562644163637d1d9d206286d88f68b6256510e7966f0158ff29cbe86fa010a44",
@@ -297,16 +301,16 @@
       "bytes": 1955
     },
     "docs/ROADMAP.md": {
-      "sha256": "b1ec0fed18a9577aacd1aaafd13b958c02295d41307a3949bdb7b95cc4398c91",
-      "bytes": 980
+      "sha256": "19e5c75bb96b5f8a587cee7ed2c64ba002704e09c3ee65dee4358f7d24c8bec8",
+      "bytes": 872
     },
     "docs/SOURCE-COPY-EN.md": {
-      "sha256": "d8c00bc599a8f1904295affed863ce1d0cd3d163dd71cd6fbfd6a7fcda1bccf9",
-      "bytes": 1245
+      "sha256": "ce7ea1e6ba522e5681fb0305f736b802fde1b731f1092769928b1d5b6dc56e25",
+      "bytes": 1403
     },
     "docs/SOURCE-COPY-IT.md": {
-      "sha256": "1b220e1a8d2571eefd2a9e1bc97fa96e9e780336a73c06dd3aaad4182edc7f0f",
-      "bytes": 1347
+      "sha256": "87b636f2b7288d990cc96deb93e9b5c6e9bf705b9d8b182830df735f5663c857",
+      "bytes": 1526
     },
     "docs/contracts.schema.json": {
       "sha256": "ea7e568dcc3a672343dc74da67f2784290122cb01ecb8026c707ba326f81b3f1",
@@ -637,5 +641,6 @@
       "bytes": 8372
     }
   },
-  "manifest_self_excluded": true
+  "manifest_self_excluded": true,
+  "documentation_revision": "english-first-installation-2026-11-21"
 }

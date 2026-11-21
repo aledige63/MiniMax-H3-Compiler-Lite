@@ -1,76 +1,212 @@
 # MiniMax H3 Compiler Lite
 
-English: [README-EN.md](README-EN.md).
+**English** · [Italiano](README-IT.md)
 
-Compilatore locale di prompt per il workflow MiniMax H3. Organizza progetti,
-scene, cut, riferimenti Picture/Subject, dialoghi, regia, guide video e versioni.
-Supporta analisi immagini esplicita, ASR facoltativo, export TXT e stampa dal browser.
-Prepara prompt in inglese e conserva il parlato nella lingua originale.
-Le proposte richiedono revisione umana. Non genera video e non esegue MiniMax H3.
+A local web application for preparing MiniMax H3 prompts. Organize projects,
+scenes, cuts, Picture/Subject references, exact dialogue, camera direction and
+video guides. Review model proposals, keep manual versions, export TXT and
+print from the browser. Video generation takes place in your separate MiniMax
+H3 workflow.
 
-**MIT — Copyright (c) 2026 aledige.** Vedere [LICENSE](LICENSE) e
-[note sulle dipendenze](THIRD-PARTY-NOTICES.md).
+**MIT License — Copyright (c) 2026 aledige.** See [LICENSE](LICENSE) and
+[dependency notices](THIRD-PARTY-NOTICES.md).
 
-## Copia sorgenti
+## Download and install
 
-Edizione `2026.11.19-preview3-source1`, preparata per una futura pubblicazione.
-Il codice applicativo e gli avvii corrispondono alla preview3, il cui runtime
-è identico alla preview2 collaudata. Questa copia contiene una nuova cronologia
-indipendente; i vecchi tag e la storia locale non sono inclusi. Gli ZIP collaudati
-restano distribuzioni separate: non vengono rigenerati o sostituiti da questa copia.
-Materiali esterni, inventari, report reali e schermate di sviluppo sono esclusi.
-La ricetta di sviluppo funziona anche senza Git e produce ZIP con nomi distinti.
-Vedere [sviluppo](docs/DEVELOPMENT-IT.md) e [ambito](docs/SOURCE-COPY-IT.md).
-Nessuna pubblicazione è stata eseguita durante questa preparazione.
+This repository contains the source code and startup tools. Clone it with Git,
+then run the included guided launcher to install the Python dependencies and
+open the application. The previously tested Mac/Windows ZIP packages remain
+separate distributions. [Technical source notes](docs/SOURCE-COPY-EN.md).
 
-## Avvio
+### 1. Install the prerequisites
 
-Piattaforme previste: Mac Apple Silicon con macOS 14 o successivo e Windows 11 x64.
-Linux escluso. Installare separatamente Python 3.12 nativo a 64 bit.
-Estrarre i sorgenti in una cartella locale scrivibile fuori da Drive/OneDrive/iCloud.
+| Requirement | Mac | Windows |
+|---|---|---|
+| System | macOS 14 or later, Apple Silicon | Windows 11 x64 |
+| Python | Native 64-bit Python **3.12** | 64-bit Python **3.12**, with the `py` launcher |
+| Git | [Git for macOS](https://git-scm.com/install/mac) | [Git for Windows](https://git-scm.com/install/windows) |
 
-- Mac: doppio clic su `Avvia.command` (se serve: `chmod +x Avvia.command`).
-- Windows: doppio clic su `Avvia.cmd`.
+Install Python from [python.org](https://www.python.org/downloads/). Select the
+**3.12** series: the launcher requires it even if a newer Python is installed.
+On Mac, use an Apple Silicon compatible installer (`arm64`/`universal2`) and a
+native terminal session. On Windows, choose the x64 installer and include pip
+and the Python launcher. The download site lists Python 3.12 releases that
+provide native installers.
 
-Al primo avvio occorre Internet per installare `requirements.lock` in `.venv`.
-Nessun modello viene scaricato. Si apre `http://127.0.0.1:8767/`.
-Salvare, attendere la fine dei lavori e premere Ctrl+C per fermare il server.
-L'interfaccia del browser offre italiano e inglese; gli avvisi degli avvii sono italiani.
+Open a new terminal after installing Git or Python. Internet access is needed
+for the download and first dependency installation. Linux is outside the
+supported delivery targets.
 
-I dati persistenti sono in `~/Library/Application Support/MiniMax H3 Compiler Lite/data`
-su Mac e `%LOCALAPPDATA%\MiniMax H3 Compiler Lite\data` su Windows.
-Se esistono già dati in questi percorsi, saranno riaperti. Per una prova isolata:
+### 2. Download with Git
+
+Use the instructions for your computer. The examples create a local `Projects`
+folder under your user account. Keep source and working data outside folders
+synchronized by Drive, OneDrive or iCloud.
+
+**Mac — Terminal**
+
+First check Git and Python:
 
 ```sh
-./Avvia.command --data-dir "$HOME/MiniMax-prova/data" --port 18767
+git --version
+python3.12 -c "import sys, platform; print(sys.version); print(platform.machine())"
 ```
 
-```bat
-Avvia.cmd --data-dir "%USERPROFILE%\MiniMax-prova\data" --port 18767
+Expected Python output: `3.12.x` and `arm64`. If macOS offers to install command
+line tools on your first use of Git, complete the installation before continuing.
+
+Clone the repository and enter its folder:
+
+```sh
+mkdir -p "$HOME/Projects"
+cd "$HOME/Projects"
+git clone https://github.com/aledige63/MiniMax-H3-Compiler-Lite.git
+cd MiniMax-H3-Compiler-Lite
 ```
 
-## Configurazione e uso
+**Windows — PowerShell**
 
-Aprire Impostazioni utente e scegliere Ollama locale/remoto oppure OpenAI.
-Nessun endpoint personale o modello testo/vision è preselezionato. Per Ollama sullo
-stesso computer usare `http://127.0.0.1:11434`; i modelli vanno installati separatamente.
-Scegliere e verificare testo e vision; un vision verificato completa la configurazione.
-La password dell'unico account è facoltativa. Le chiavi API restano nell'archivio privato.
-Salvataggi, caricamenti, export e copia non avviano inferenze.
+Open PowerShell and check Git and Python:
 
-Creare un progetto e un cut. Caricare una Picture, analizzarla su richiesta e
-controllare/applicare/confermare la descrizione. Aggiungere e collegare il Subject
-esplicitamente: un'immagine non crea automaticamente un Subject. I numeri dei
-Subject sono locali alla scena; le associazioni usano identità persistenti.
-Scrivere la richiesta, registrare il parlato esatto e il parlante, salvare e compilare.
-Rivedere la proposta prima di confermare ed esportare. Testo manuale e versioni
-storiche conservano parole, spazi e snapshot.
+```powershell
+git --version
+py -3.12 -c "import sys, platform, struct; print(sys.version); print(platform.machine()); print(struct.calcsize('P') * 8)"
+```
 
-Le guide dettagliate di avvio, backup e ripristino sono in
-[packaging/LEGGIMI.txt](packaging/LEGGIMI.txt). Prima di un backup salvare e fermare
-il server. Ripristinare solo in una destinazione nuova e verificare gli hash.
-Codice e archivio operativo hanno backup distinti; non mettere dati, credenziali,
-media o pesi nel repository e non lavorare sul database operativo dentro Drive.
+Expected Python output: `3.12.x`, `AMD64`/`x86_64`, and `64`.
 
-L'integrazione futura Stage è nel [piano IT/EN](docs/ROADMAP.md): modalità da decidere
-dopo una prova con video e prompt reali. Non è implementata in questa edizione.
+Clone the repository and enter its folder:
+
+```powershell
+New-Item -ItemType Directory -Force "$env:USERPROFILE\Projects" | Out-Null
+Set-Location "$env:USERPROFILE\Projects"
+git clone https://github.com/aledige63/MiniMax-H3-Compiler-Lite.git
+Set-Location MiniMax-H3-Compiler-Lite
+```
+
+The repository is public; downloading it does not require a GitHub account.
+Cloning downloads the project files and public Git history. It does not install
+Python, dependencies or models. If the destination folder already exists,
+choose another local parent folder or update the existing clone as described below.
+
+### 3. Install dependencies and start
+
+Run the following command **inside the cloned `MiniMax-H3-Compiler-Lite`
+folder**. It starts the guided installer included in the project.
+
+**Mac — Terminal**
+
+```sh
+python3.12 -X utf8 start.py
+```
+
+**Windows — PowerShell**
+
+```powershell
+py -3.12 -X utf8 start.py
+```
+
+On first launch, the program checks Python and the platform, creates `.venv`,
+installs the versions in `requirements.lock` from PyPI, checks dependencies and
+starts the local server. Keep the terminal open and wait for the ready message.
+The browser should open at **<http://127.0.0.1:8767/>**.
+
+If the browser does not open automatically, open that address after the server
+is ready. Use the same command on subsequent launches; the prepared environment
+is reused when still valid. Launcher messages are currently Italian. The browser
+interface offers English and Italian in its settings.
+
+To stop, save changes, wait for jobs to finish and press **Ctrl+C** in the
+terminal. Closing the browser alone leaves the server running.
+
+### 4. Configure text and vision
+
+Open **User settings**. Choose an existing local/remote Ollama service or OpenAI,
+then select and verify text and vision independently. A verified vision model
+is required for complete setup.
+
+For Ollama on the same computer, enter `http://127.0.0.1:11434`. Install Ollama
+and suitable models separately. No personal endpoint or text/vision model is
+preselected, and the application does not download models. Requests go to your
+chosen provider; OpenAI calls use your API account. Keys stay in the private
+backend archive. The single account password is optional. Saving settings,
+loading, copying and exporting do not trigger inference.
+
+Create a project and a cut. Upload a Picture, request analysis, then review,
+apply and confirm the description. Add and associate a Subject explicitly;
+uploading an image does not create one. Subject numbers belong to each scene.
+Enter the request, exact dialogue and speaker, save and compile. Review the
+proposal before confirming or exporting. Manual text and historical versions
+preserve words, whitespace and snapshots.
+
+## Data and isolated trials
+
+Working data is separate from the cloned source folder:
+
+| Platform | Default data folder |
+|---|---|
+| Mac | `~/Library/Application Support/MiniMax H3 Compiler Lite/data` |
+| Windows | `%LOCALAPPDATA%\MiniMax H3 Compiler Lite\data` |
+
+Existing data at these paths will reopen. Before switching an existing working
+installation, save changes, stop its server and create a verified backup using
+the [backup and recovery guide](packaging/README-EN.txt). Pass the same
+`--data-dir` explicitly if you use a custom archive. Data stored next to another
+source folder is not imported automatically.
+
+For a trial in a separate archive and on another port:
+
+**Mac**
+
+```sh
+python3.12 -X utf8 start.py --data-dir "$HOME/MiniMax-trial/data" --port 18767
+```
+
+**Windows — PowerShell**
+
+```powershell
+py -3.12 -X utf8 start.py --data-dir "$env:USERPROFILE\MiniMax-trial\data" --port 18767
+```
+
+Open `http://127.0.0.1:18767/`. Reuse the same `--data-dir` to reopen that trial
+archive. Two servers cannot use the same archive simultaneously.
+
+## Update an existing Git clone
+
+Save changes, wait for jobs to finish, stop the application and create a
+verified data backup. Open a terminal in your existing repository folder:
+
+```sh
+git status --short
+git pull --ff-only
+```
+
+If `git status` lists local changes, review and preserve them before updating.
+Resolve any conflict or divergent history reported by Git before continuing.
+After a successful pull, run the same startup command for your platform. The
+launcher prepares dependencies again if needed and reopens the selected data
+folder. Check saved projects, model choices, versions and an export.
+
+## Troubleshooting
+
+| Symptom | What to check |
+|---|---|
+| `git` is not recognized | Install Git, then open a new terminal. |
+| Python 3.12 is not found | Install 64-bit Python 3.12; on Windows include the `py` launcher. |
+| Mac reports the wrong architecture | Use native Apple Silicon Python and a terminal session outside Rosetta. |
+| A dependency installation fails | Read the terminal error, check Internet access, then rerun the startup command. |
+| Port 8767 is occupied | Stop the other server or add `--port 18767` and open the matching URL. |
+| The archive is already in use | Stop its server or choose a separate `--data-dir`. |
+
+## Documentation
+
+| Topic | English | Italiano |
+|---|---|---|
+| Operation, backup and recovery | [User guide](packaging/README-EN.txt) | [Guida utente](packaging/LEGGIMI.txt) |
+| Dependencies | [Dependency notes](packaging/DEPENDENCIES-EN.txt) | [Note dipendenze](packaging/NOTE-DIPENDENZE.txt) |
+| Source development and tests | [Development](docs/DEVELOPMENT-EN.md) | [Sviluppo](docs/DEVELOPMENT-IT.md) |
+| Source provenance and scope | [Source notes](docs/SOURCE-COPY-EN.md) | [Ambito sorgenti](docs/SOURCE-COPY-IT.md) |
+
+See the [roadmap](docs/ROADMAP.md) for future Stage integration using its exported
+guide video and matching camera prompt. The method remains to be decided after
+an export trial; it is not implemented in this version.
