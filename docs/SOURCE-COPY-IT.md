@@ -7,14 +7,18 @@ Resta una sola fixture di regressione derivata da casi sintetici: contiene
 input hash, interpretazione e testo atteso, senza modelli, prestazioni o metadati locali.
 Indirizzi e password nei test sono valori sintetici intenzionali, non credenziali reali.
 
-La nuova cronologia contiene solo questa copia revisionata, autore pubblico aledige
-con indirizzo convenzionale `aledige@users.noreply.github.com`. Non è una verifica
-di associazione dell'indirizzo all'account GitHub. Non sono importati vecchi commit,
-rami, tag, remoti, email o configurazioni locali. La cronologia privata resta separata.
-MIT e copyright aledige sono mantenuti. Le guide operative sono IT/EN.
+Il repository pubblico ha una propria cronologia, iniziata con l'importazione
+dei sorgenti revisionati. Non sono importati commit, rami e tag dello sviluppo
+originale, email personali o configurazioni locali. I commit pubblici usano
+indirizzi GitHub noreply; la cronologia privata resta separata.
+MIT e copyright aledige sono mantenuti. Il README principale è inglese;
+la versione italiana è README-IT.md. Le guide operative restano in entrambe le lingue.
 
 La ricetta autonoma e i relativi test sono adattati alla nuova copia senza i vecchi tag.
 La versione di sviluppo è distinta da quella dei pacchetti collaudati. Nessun vecchio
 tag è stato spostato e nessuno ZIP collaudato è stato modificato.
-Prima di pubblicare serviranno solo destinazione/visibilità, autorizzazione e le
-eventuali note di release. Questa preparazione non crea repository remoti né fa push.
+I sorgenti sono pubblicati su
+https://github.com/aledige63/MiniMax-H3-Compiler-Lite.
+Gli ZIP di avvio collaudati sono distribuzioni separate e non vengono sostituiti
+dalla pubblicazione dei sorgenti. Le istruzioni di scaricamento, installazione
+e aggiornamento sono in [README-IT.md](../README-IT.md).
