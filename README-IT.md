@@ -34,6 +34,21 @@ separate. [Note tecniche sui sorgenti](docs/SOURCE-COPY-IT.md).
 | Sistema | macOS 14 o successivo, Apple Silicon | Windows 11 x64 |
 | Python | Python **3.12** nativo a 64 bit | Python **3.12** a 64 bit, con launcher `py` |
 | Git | [Git per macOS](https://git-scm.com/install/mac) | [Git per Windows](https://git-scm.com/install/windows) |
+| Servizio AI | Ollama con modelli installati, oppure chiave API OpenAI (vedi sotto) | Ollama con modelli installati, oppure chiave API OpenAI (vedi sotto) |
+
+Per le funzioni AI, prepara una di queste alternative prima di configurare l’app:
+
+- **Ollama:** installa e avvia Ollama in locale con modelli adatti già scaricati,
+  oppure usa un servizio Ollama remoto già disponibile con modelli installati.
+- **OpenAI:** procurati una chiave API OpenAI e un account API abilitato ai
+  modelli scelti. Le richieste usano quell’account e possono comportare costi API.
+
+Scegli un modello testo per compilare i prompt e un modello vision per analizzare
+immagini e character sheet. Lo stesso modello multimodale può coprire entrambi
+i ruoli, oppure puoi configurare testo e vision separatamente. Per completare
+la configurazione occorre un modello vision verificato. Ollama, pesi dei modelli
+e chiavi API non sono inclusi; l’app non scarica modelli. Configura e verifica
+le scelte in **Impostazioni utente** dopo l’avvio, come descritto al punto 4.
 
 Installa Python da [python.org](https://www.python.org/downloads/). Scegli la
 serie **3.12**: l'avvio guidato richiede questa versione anche se ne hai

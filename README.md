@@ -34,6 +34,21 @@ separate distributions. [Technical source notes](docs/SOURCE-COPY-EN.md).
 | System | macOS 14 or later, Apple Silicon | Windows 11 x64 |
 | Python | Native 64-bit Python **3.12** | 64-bit Python **3.12**, with the `py` launcher |
 | Git | [Git for macOS](https://git-scm.com/install/mac) | [Git for Windows](https://git-scm.com/install/windows) |
+| AI service | Ollama with installed models, or an OpenAI API key (see below) | Ollama with installed models, or an OpenAI API key (see below) |
+
+For AI features, prepare one of these alternatives before configuring the app:
+
+- **Ollama:** install and run Ollama locally with suitable models already
+  downloaded, or use an existing remote Ollama service with installed models.
+- **OpenAI:** have an OpenAI API key and an API account enabled for the selected
+  models. Requests use that account and may incur API charges.
+
+Choose a text model for prompt compilation and a vision model for image and
+character-sheet analysis. The same multimodal model can serve both roles, or
+you can configure text and vision separately. A verified vision model is
+required to complete setup. Ollama, model weights and API keys are not included;
+the app does not download models. Configure and verify your choices in
+**User settings** after startup, as described in step 4.
 
 Install Python from [python.org](https://www.python.org/downloads/). Select the
 **3.12** series: the launcher requires it even if a newer Python is installed.
