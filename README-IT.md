@@ -8,6 +8,10 @@ Permette di rivedere le proposte dei modelli, conservare versioni manuali,
 esportare TXT e stampare dal browser. La generazione video avviene nel workflow
 MiniMax H3 esterno.
 
+> **Servizio AI necessario:** per usare le funzioni AI occorre un servizio
+> **Ollama locale o remoto** con modelli installati, oppure una **chiave API OpenAI**.
+> Generazione del testo e analisi delle immagini richiedono modelli adatti per testo e vision.
+
 **Licenza MIT — Copyright (c) 2026 aledige.** Vedere [LICENSE](LICENSE) e
 [note sulle dipendenze](THIRD-PARTY-NOTICES.md).
 

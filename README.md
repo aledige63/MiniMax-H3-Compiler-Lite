@@ -8,6 +8,10 @@ video guides. Review model proposals, keep manual versions, export TXT and
 print from the browser. Video generation takes place in your separate MiniMax
 H3 workflow.
 
+> **AI service required:** to use the AI features, you need a local or remote
+> **Ollama** service with installed models, or an **OpenAI API key**.
+> Text generation and image analysis require suitable text and vision models.
+
 **MIT License — Copyright (c) 2026 aledige.** See [LICENSE](LICENSE) and
 [dependency notices](THIRD-PARTY-NOTICES.md).
 
