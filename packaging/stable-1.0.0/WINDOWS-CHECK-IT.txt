@@ -1,0 +1,103 @@
+Collaudo Windows 11 x64 — 1.0.0
+Italiano — English: WINDOWS-CHECK-EN.txt
+
+1. SALVA E FERMA LA VECCHIA COPIA
+Prima copia in un file di testo gli eventuali campi che il conflitto impedisce
+di salvare. Salva il resto se possibile. Ferma il server con Ctrl+C nella sua
+finestra di avvio e attendi la chiusura. Chiudi le schede del browser.
+
+2. CREA UN BACKUP VERIFICATO
+Apri un Prompt dei comandi (CMD) nella VECCHIA cartella del programma:
+clicca la barra del percorso di Esplora file, scrivi cmd e premi Invio.
+Se usavi l'archivio predefinito, esegui:
+  Avvia.cmd --backup "%USERPROFILE%\MiniMax-before-v1.0.0-01"
+  Avvia.cmd --verify-backup "%USERPROFILE%\MiniMax-before-v1.0.0-01"
+Attendi il risultato di ogni comando e chiudi la pausa premendo un tasto.
+Atteso: verified true. La destinazione deve essere NUOVA; se esiste usa 02.
+Se avviavi con --data-dir, aggiungi al comando --backup lo stesso --data-dir
+con il percorso esatto già usato. Non fare il backup di un archivio vuoto diverso.
+Il backup contiene dati privati: non pubblicarlo e non inviarlo.
+
+3. RIPRISTINA UNA COPIA PER LA PROVA
+Sempre nel CMD della vecchia cartella, su una sola riga:
+  .venv\Scripts\python.exe -X utf8 -m scripts.backup_workspace restore "%USERPROFILE%\MiniMax-before-v1.0.0-01" "%USERPROFILE%\MiniMax-v1.0.0-test-01"
+Atteso: restored true. Anche questa destinazione deve essere NUOVA.
+L'archivio di prova sarà MiniMax-v1.0.0-test-01\data, non la cartella superiore.
+
+4. SCARICA ED ESTRAI IL NUOVO ZIP
+Scarica lo ZIP Windows e SHA256SUMS.txt dalla nuova cartella Drive.
+Nel CMD verifica (adatta il percorso se non usi Downloads):
+  certutil -hashfile "%USERPROFILE%\Downloads\MiniMax-H3-Compiler-Lite-1.0.0-windows-x64.zip" SHA256
+Confronta il valore con SHA256SUMS.txt. Poi usa Estrai tutto in una cartella
+locale NUOVA, fuori da cartelle sincronizzate. Non sovrascrivere la vecchia.
+
+5. AVVIA SULLA COPIA RIPRISTINATA
+Apri CMD nella NUOVA cartella che contiene Avvia.cmd ed esegui:
+  Avvia.cmd --data-dir "%USERPROFILE%\MiniMax-v1.0.0-test-01\data" --port 18768
+Controlla il percorso Dati nella finestra. Il primo avvio installa le dipendenze;
+serve Internet. Apri l'indirizzo mostrato e premi Ctrl+F5 nel browser.
+Verifica che progetti, selezioni dei modelli e versioni precedenti siano presenti.
+
+6. RIPRODUCI IL CASO SUBJECT 4
+Apri il progetto di prova e la scena interessata. Nel cut 2 controlla Subject 4:
+se il cut 1 ha già la nuova descrizione, la bozza del cut 2 deve riallinearsi.
+Salva senza riscrivere manualmente la vecchia descrizione. Atteso: nessun
+conflitto del riferimento. Slot, esclusioni e testo della richiesta restano propri.
+Poi nel cut 1 modifica un dettaglio riconoscibile e salva. Torna al cut 2:
+la descrizione condivisa deve essere aggiornata anche lì.
+
+7. CAMPI LOCALI E LIBRERIA
+Controlla sia Immagini sia Subject: «Dalla libreria del progetto» deve comparire
+in una barra distinta dai pulsanti + Immagine / + Subject. Scorri un elenco
+lungo: la barra e il pulsante devono restare visibili in alto in entrambe le
+sezioni, anche tornando a una sezione già scorsa. Entrambi aprono la stessa libreria.
+Apri il cut 2 in una seconda scheda e modifica SOLO la richiesta, senza salvarla.
+Nella prima scheda cambia la descrizione condivisa nel cut 1 e salva.
+Nella seconda scheda salva il cut 2: la richiesta locale deve restare e la nuova
+descrizione deve arrivare senza conflitto. Controlla anche una modifica identica
+al nuovo testo. Due descrizioni DIVERSE dello stesso campo possono invece dare
+un conflitto: è previsto. Non chiudere la scheda; copia il testo da conservare.
+Apri «Dalla libreria del progetto»: deve aprirsi. Ricarica il Subject scelto;
+gli altri campi locali e l'eventuale testo manuale non salvato devono restare.
+Salva esplicitamente le modifiche rimaste.
+
+8. PICTURE, STORICO E COMPILAZIONE
+Prova una piccola modifica alla descrizione di una Picture condivisa nella scena.
+Negli altri cut controlla descrizione nuova, stessi slot, collegamenti H3 ed
+esclusioni. Non sostituire file o proxy per questa prova.
+Apri una vecchia versione: il prompt e il suo snapshot devono restare identici.
+Una scena diversa che usa lo stesso riferimento deve conservare la sua bozza.
+Salvare e aprire la libreria non devono avviare inferenze.
+Infine premi Compila nel cut 2 con il tuo modello già configurato: questo solo
+passaggio avvia l'inferenza. Verifica il nuovo risultato e la conservazione del
+testo manuale precedente; controlla eventuali errori del modello separatamente.
+
+9. DESCRIZIONE SEMPLIFICATA E CHARACTER SHEET
+Segui DESCRIPTION-WORKFLOW-IT.md e CHARACTER-SHEET-IT.md inclusi nello ZIP.
+Apri una Picture con analisi precedenti: deve comparire al massimo una proposta
+attuale e uno storico chiuso. Scegli Tipo di analisi: Character sheet e premi
+Analizza con il modello vision già verificato. Ogni clic avvia una nuova analisi.
+Il risultato deve indicare Character sheet e descrivere una sola persona senza
+riquadri o viste, conservando scritte sugli abiti e dettagli del personaggio.
+Usa questa descrizione cambia solo la Descrizione della Picture, da riconfermare.
+Scarta lascia il testo attuale e sposta la proposta nello storico anche dopo
+riavvio; il risultato deve sparire SUBITO con un messaggio accanto alla descrizione.
+Se il salvataggio fallisce, deve tornare visibile con l'errore. Non deve fare
+riapparire una vecchia proposta. Prova Scarta anche con
+descrizione e manuale non salvati: entrambi devono restare. Aprire storico o
+cambiare tipo non deve avviare inferenze. Prova anche Immagine singola.
+Con lingua Inglese, Traduci in inglese deve essere nascosto; scegli Italiano
+per farlo comparire. Non deve avvenire una traduzione automatica.
+Per ogni Picture rimangono al massimo TRE analisi, compresa l'attuale. Le più
+vecchie vengono eliminate anche al primo avvio della versione 1.0.0; il backup
+dei punti precedenti va effettuato dalla vecchia installazione prima di avviare
+questa nuova copia. Descrizioni, prompt, versioni e file non vengono eliminati.
+
+10. DOPO LA PROVA
+Se qualcosa non torna, ferma la nuova copia e riapri la vecchia installazione
+con l'archivio originale: la prova ha usato solo la copia ripristinata.
+Se tutto passa, ferma entrambe le copie e avvia la nuova cartella senza --data-dir
+per l'archivio predefinito, oppure con il tuo --data-dir originale. Mantieni backup
+e ZIP vecchio. Le modifiche fatte nell'archivio di prova non sono trasferite.
+La versione 1.0.0 consolida il comportamento confermato dall’utente.
+Questi controlli verificano la tua installazione e la copia ripristinata.

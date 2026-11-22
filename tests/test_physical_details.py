@@ -293,15 +293,15 @@ class PhysicalDetailApiTests(unittest.TestCase):
     def test_stale_cut_cannot_overwrite_a_newer_detail_in_the_library(self):
         self.add_detail(); original = self.cut
         self.cut = self.new_cut(inherit=True)
-        stale = self.view()['draft_input']
+        stale_view = self.view(); stale = stale_view['draft_input']
         self.cut = original
         fresh = self.view()['draft_input']; fresh['active_units'][0]['physical_details'][0]['description'] = 'un uncino di bronzo'
         self.save(fresh)
         self.cut = self.client.get('/api/projects').json()[0]['scenes'][0]['cuts'][-1]['id']
         stale['active_units'][0]['physical_details'][0]['description'] = 'un uncino di argento'
-        response = self.client.put(f'/api/cuts/{self.cut}/draft', json=self.command(input=stale))
+        response = self.client.put(f'/api/cuts/{self.cut}/draft', json=dict(command_id=str(uuid4()), expected_revision=stale_view['revision'], input=stale))
         self.assertEqual(response.status_code, 409, response.text)
-        self.assertEqual(response.json()['detail']['code'], 'reference_conflict')
+        self.assertEqual(response.json()['detail']['code'], 'revision_conflict')
 
     def test_incomplete_draft_is_saved_but_compile_does_not_start_an_inference(self):
         self.add_detail(); raw = self.view()['draft_input']

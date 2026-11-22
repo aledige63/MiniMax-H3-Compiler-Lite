@@ -18,7 +18,7 @@ export function setAnalysisChoice(picture, key, value) {
 export function analysisLabel(settings, options) {
   if (!settings) return '';
   const category = options?.categories.find(item => item.value === settings.category)?.label || (settings.category === 'scale_reference' ? t('Riferimento dimensionale') : settings.category);
-  return `${t(category)} · ${settings.level[0].toUpperCase() + settings.level.slice(1)}${settings.attribute ? ` · ${settings.attribute}` : ''}${settings.view ? ` · ${t(options?.views.find(item => item.value === settings.view)?.label) || settings.view}` : ''}`;
+  return `${t(category).split(' · ')[0]} · ${settings.level[0].toUpperCase() + settings.level.slice(1)}${settings.attribute ? ` · ${settings.attribute}` : ''}${settings.view ? ` · ${t(options?.views.find(item => item.value === settings.view)?.label) || settings.view}` : ''}`;
 }
 
 export function analysisProposals(jobs, picture, options) {

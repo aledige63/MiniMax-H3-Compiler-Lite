@@ -20,6 +20,32 @@ from app import transcription
 def encode(data): return json.dumps(data, ensure_ascii=False, allow_nan=False)
 
 
+PICTURE_HISTORY_LIMIT = 3
+
+
+def prune_picture_history(db, cut_id=None):
+    """Keep three image/translation receipts per cut and Picture, plus live work."""
+    groups = {}
+    rows = db.execute("SELECT id,cut_id,data FROM assistance_jobs WHERE kind IN ('image_analyze','image_character_sheet','description_translate')"
+                      + (' AND cut_id=?' if cut_id is not None else '') + ' ORDER BY rowid',
+                      (str(cut_id),) if cut_id is not None else ())
+    for row in rows:
+        job = json.loads(row['data'])
+        if job.get('target_id'):
+            groups.setdefault((row['cut_id'], job['target_id']), []).append(job)
+    removed = []
+    for jobs in groups.values():
+        keep = {job['id'] for job in jobs[-PICTURE_HISTORY_LIMIT:]}
+        keep.update(job['id'] for job in jobs if job['status'] in {'queued', 'running'})
+        removed.extend(job for job in jobs if job['id'] not in keep)
+    db.executemany('DELETE FROM assistance_jobs WHERE id=?', [(job['id'],) for job in removed])
+    keys = {job.get('cache_key') for job in removed} - {None}
+    if keys:
+        retained = {json.loads(row[0]).get('cache_key') for row in db.execute('SELECT data FROM assistance_jobs')}
+        db.executemany('DELETE FROM assistance_cache WHERE key=?', [(key,) for key in keys - retained])
+    return len(removed)
+
+
 def target_context(state, kind, target_id):
     if kind == 'vision_trial': return None
     if kind == 'audio_asr':
@@ -60,6 +86,7 @@ class Assistance:
                     job['status'] = 'failed'
                     job['result'] = AssistanceResult(status='error', issues=['Operazione interrotta dal riavvio: avviala nuovamente se necessaria.']).model_dump(mode='json')
                     db.execute('UPDATE assistance_jobs SET data=? WHERE id=?', (encode(job), job['id']))
+            prune_picture_history(db)
 
     def models(self):
         with closing(self.repository.connect()) as db:
@@ -170,6 +197,7 @@ class Assistance:
                 job['result'] = self._cached_result(json.loads(cached[0]), kind, command.model, model_digest, key).model_dump(mode='json')
                 job['status'] = 'succeeded'
             db.execute('INSERT INTO assistance_jobs VALUES (?,?,?,?)', (job['id'], str(cut_id), kind, encode(job)))
+            prune_picture_history(db, cut_id)
             created = job['status'] == 'queued'
             return {'id': job['id']}
         saved = self.repository._entity_command('assistance', cut_id, command, action)
@@ -246,6 +274,7 @@ class Assistance:
                 if job['kind'] == 'vision_trial':
                     db.execute('INSERT INTO vision_trials VALUES (?,?,?) ON CONFLICT(digest) DO UPDATE SET data=excluded.data', (job['digest'], job['model'], encode(current)))
                 else: db.execute('INSERT INTO assistance_cache VALUES (?,?) ON CONFLICT(key) DO UPDATE SET data=excluded.data', (job['cache_key'], result.model_dump_json()))
+            prune_picture_history(db, job['cut_id'])
 
     def apply(self, cut_id, id, command):
         def action(state):
@@ -253,7 +282,7 @@ class Assistance:
             row = db.execute('SELECT data FROM assistance_jobs WHERE id=? AND cut_id=?', (str(id), str(cut_id))).fetchone()
             if row is None: raise StoreError('not_found', 'Proposta non trovata in questo cut.', 404)
             job = json.loads(row[0])
-            if job['kind'] == 'vision_trial' or job['status'] != 'succeeded' or not job['result'].get('text'):
+            if job['kind'] == 'vision_trial' or job['status'] != 'succeeded' or not job['result'].get('text') or job.get('discarded'):
                 raise StoreError('invalid_input', 'Nessuna proposta applicabile.', 422)
             if target_context(state, job['kind'], job['target_id']) != job['base']:
                 raise StoreError('stale_analysis', 'Il riferimento è cambiato dopo la richiesta. Il testo più recente è conservato; puoi leggere la proposta o avviare una nuova analisi.')
@@ -265,8 +294,34 @@ class Assistance:
                 if job['kind'] == 'description_translate':
                     picture.update(original_description=job['work']['text'], original_language=job['work']['language'])
                 picture.update(description_en=job['result']['text'], description_language='English', use_original_language=False, confirmed=False)
+            if job['kind'] != 'audio_asr':
+                job['applied'] = True
+                db.execute('UPDATE assistance_jobs SET data=? WHERE id=?', (encode(job), str(id)))
             state['state'] = 'draft'
         return self.repository._command(f'apply_assistance:{id}', cut_id, command, action)[0]
+
+    def dismiss(self, cut_id, id, command):
+        def action(db):
+            state = self.repository._load(db, cut_id, active=True)
+            if command.expected_revision != state['revision']:
+                raise StoreError('revision_conflict', 'La bozza è cambiata: recuperare la versione server senza perdere il testo locale.', current_revision=state['revision'])
+            if state['finalized']:
+                raise StoreError('scene_finalized', 'La scena è terminata. Riaprila prima di modificare i cut.')
+            row = db.execute('SELECT data FROM assistance_jobs WHERE id=? AND cut_id=?', (str(id), str(cut_id))).fetchone()
+            if row is None:
+                raise StoreError('not_found', 'Proposta non trovata in questo cut.', 404)
+            job = json.loads(row[0])
+            if job['kind'] not in IMAGE_ANALYSIS_TASKS | {'description_translate'} or job['status'] in {'queued', 'running'}:
+                raise StoreError('invalid_input', 'Puoi scartare solo una proposta immagine completata.', 422)
+            job['discarded'] = True
+            db.execute('UPDATE assistance_jobs SET data=? WHERE id=?', (encode(job), str(id)))
+            # Discard only changes receipt metadata; do not normalize a draft or
+            # synchronize its library references as a side effect.
+            state['revision'] += 1
+            self.repository._write_cut(db, state)
+            prune_picture_history(db, cut_id)
+            return self.repository._view(state, db)
+        return self.repository._entity_command(f'dismiss_assistance:{id}', cut_id, command, action)
 
     def attach_proxy(self, cut_id, picture_id, command):
         def action(state):

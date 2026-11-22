@@ -65,22 +65,20 @@ LENGTHS = {
 }
 
 SHEET_INSTRUCTION = (
-    'This is a character sheet of ONE person, repeated in different views and detail crops. '
+    'Write ONE unified appearance description of ONE person, ready to use as a character reference. '
+    'The repeated depictions are complementary evidence about the SAME person, not separate characters. '
     'Read ALL visible regions of the entire image before writing, including small panels, lower rows and close-ups. '
     'There is no fixed panel count, panel size, reading order or mandatory template. '
-    'Supported arrangements include a Classic strip with unequal widths, a Wide turnaround strip with equal widths, '
-    'a Three-panel strip, a Nine-panel layout with one large panel and eight smaller panels in two rows, '
-    'a Seven-panel layout with one large panel and six smaller panels in two rows, '
-    'and a Mixed mosaic with tall portrait/front/back columns, stacked side views in a separate column '
-    'and a bottom detail strip spanning the width; other arrangements are equally valid. '
-    'In a mixed mosaic, a tall portrait can span more than one row and the bottom strip can contain unequal detail crops. '
-    'Do not rely on the first or largest panel alone. Full-body, front, back and side views and face, hand, '
-    'footwear or accessory close-ups provide complementary evidence about the SAME person, not separate characters. '
-    'Combine supported identity and appearance details into ONE description, mentioning each feature once. '
-    'Use close-ups to resolve fine details; use wider views to establish which body part or garment they belong to. '
+    'Do not rely on the first or largest region alone. Combine supported details of the face, hair, build, '
+    'clothing, footwear, accessories and distinctive marks, mentioning each feature once. '
+    'Attribute each detail to the actual body part or garment it belongs to. '
     'Keep anatomical left/right only when the evidence is clear. Never infer a hidden or conflicting feature from the template. '
-    'The output describes the person directly, starting with their visible appearance. '
-    'Omit panels, views, layout, poses, background and camera framing. '
+    'Every sentence must describe the person or what they wear directly, independently of how the image presents them. '
+    'Start with the person and their appearance, then integrate distinctive clothing and accessory details naturally. '
+    'Do not introduce the image, enumerate depictions or explain where a detail was observed. '
+    'Omit panels, views, layout, poses, background, camera framing and phrases such as "the sheet shows" or "shown in multiple views". '
+    'Locations on the person are valid: say "a green jacket with a white emblem on its back", '
+    'rather than "the back view shows a green jacket". '
     'Panel numbers, captions, borders and template labels are page furniture, not the person’s appearance; omit them. '
     'Clearly readable text actually printed on a garment or accessory remains part of its description. '
 )
@@ -112,4 +110,6 @@ def analysis_instruction(settings, fallback, *, sheet=False):
         instruction += (f'User-selected reference view: {name}. Describe that visible surface only. '
             'Keep front/back artwork on the selected surface; do not infer, mirror or duplicate an unseen design. '
             'If the selected view conflicts with the image, report the uncertainty rather than silently relabelling it. ')
+    if sheet:
+        instruction += 'Consolidate all requested evidence into one coherent portrait of the person, never an account of the source image. '
     return instruction + 'Return JSON with exactly one field: description. Use one plain paragraph without headings, tags or line breaks.'

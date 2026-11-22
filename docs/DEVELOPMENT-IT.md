@@ -20,14 +20,12 @@ I comandi Python vanno eseguiti con l'interprete della virtualenv attiva.
 
 ## Ricetta autonoma
 
-`python -m scripts.build_packages --output dist/source-build` crea due ZIP di sviluppo
-Mac/Windows con versione distinta `2026.11.19-preview3-source1`. Non richiede Git,
-tag storici o fonti esterne e non ricrea gli ZIP collaudati byte per byte.
-`packaging/files.json` è l'elenco esplicito; `packaging/runtime-reference.json`
-verifica SHA256 dei file applicativi e degli avvii. Il campo source_commit è solo
-provenienza: il relativo oggetto Git originale non è incluso. Il tag stabile è null.
-Aggiornare consapevolmente il riferimento solo per revisioni runtime intenzionali.
-I manifesti verificano ogni file e i due archivi hanno checksum separati.
+`python -m scripts.build_packages --output dist/1.0.0` crea lo ZIP stabile
+Windows x64. Non servono Git, vecchi tag o vecchi ZIP. L’allowlist è
+`packaging/files.json`; `packaging/runtime-reference.json` controlla gli hash
+applicativi e degli avvii. Il commit sorgente è solo provenienza. Versione
+1.0.0, tag stabile v1.0.0. Aggiornare il riferimento solo per modifiche intenzionali.
+
 
 Gli script smoke/benchmark effettuano inferenze solo se avviati esplicitamente.
 Scegliere i modelli installati con `--model`; m3 richiede il modello vision e

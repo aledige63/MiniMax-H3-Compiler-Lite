@@ -13,7 +13,7 @@ from app.interpreter import INFERENCE_LOCK, OllamaError, PUBLIC_ERRORS
 from app.image_profiles import MAX_DESCRIPTION_CHARS, analysis_instruction, resolved_analysis
 
 ANALYSIS_VERSION = 'vision-profiles-v3-1280-budget4096'
-CHARACTER_SHEET_VERSION = 'vision-character-sheet-v5-review-1280'
+CHARACTER_SHEET_VERSION = 'vision-character-sheet-v6-unified-1280'
 IMAGE_ANALYSIS_TASKS = {'image_analyze', 'image_character_sheet'}
 CHARACTER_SHEET_ROLES = {'identity', 'appearance'}
 TRANSLATION_VERSION = 'reference-translation-v2-budget4096'
@@ -35,22 +35,27 @@ ROLE_INSTRUCTIONS = {
     'frame_anchor': 'Describe only the visible frame and its composition. Do not decide whether it is the first, last or another keyframe; the user supplies its anchor role and workflow.',
 }
 
-SHEET_VIEW_KIND = r'(?:front|rear|back|side|profile|full[ -]body|close[ -]up|different|multiple|various|each)'
+SHEET_VIEW_KIND = r'(?:front|frontal|rear|back|side|profile|three[ -]quarter|full[ -]body|close[ -]up|different|multiple|various|each)'
 SHEET_LAYOUT = re.compile(
     r'\b(?:character sheets?|contact sheets?|collages?|quadrants?|panels?\s+\d+|'
-    r'(?:in|across|from) (?:the )?panels?|'
+    r'(?:in|across|from) (?:(?:the|a|one|another|each) )?panels?|'
     r'(?:left|right|top|bottom|first|last|each|other|multiple|several) panels?)\b|'
+    r'\bpanels?\s+(?:[a-z]|\d+)\b|'
+    r'\b(?:the|these|both|all|several|multiple)\s+panels?\s+'
+    r'(?:show|depict|feature|display|contain|present)\b|'
+    r'\b(?:top|bottom|upper|lower|left|right|central|first|second|third|last)'
+    r'(?:[ -](?:left|right))?\s+(?:rows?|columns?|images?|pictures?|panels?|quadrants?|portraits?)\b|'
+    r'\b(?:the|this)\s+(?:sheet|image|grid|mosaic|montage)\s+'
+    r'(?:shows?|depicts?|contains?|features?|presents?|includes?|displays?)\b|'
+    r'(?:^|[.!?]\s+)(?:two|three|four|five|six|seven|eight|nine|\d+)\s+panels?\b|'
     # Una frase che parte dalla vista continua a descrivere il foglio.
     rf'(?:^|[.!?]\s+)(?:(?:in|across|from)\s+)?(?:(?:the|a|an)\s+)?'
     rf'{SHEET_VIEW_KIND}(?:(?:,\s*(?:and\s+)?|\s+and\s+|\s+){SHEET_VIEW_KIND})*\s+views?\b',
     re.IGNORECASE,
 )
 SHEET_VIEW_COMMENTARY = re.compile(
-    rf'\b(?:{SHEET_VIEW_KIND}\s+views?|(?:in|across|from)\s+(?:the\s+)?views?)\b', re.IGNORECASE)
-SHEET_VIEW_WARNING = (
-    'La proposta contiene riferimenti alle viste della scheda. '
-    'Controlla il testo e correggi questi riferimenti prima di confermare la descrizione.'
-)
+    rf'\b(?:{SHEET_VIEW_KIND}\s+views?|(?:in|across|from)\s+(?:the\s+)?views?|'
+    r'close[ -]?ups?|detail crops?|turnarounds?)\b', re.IGNORECASE)
 
 
 def encoded_image(content):
@@ -132,11 +137,9 @@ def infer(client, kind, model, digest, fingerprint, *, content=None, role=None, 
             warnings = []
             if kind == 'image_character_sheet':
                 # Le scritte citate appartengono all'abito, non all'impaginazione.
-                prose = re.sub(r'"[^"]*"|“[^”]*”', '', description)
-                if SHEET_LAYOUT.search(prose):
+                prose = re.sub(r'''"[^"]*"|“[^”]*”|(?<!\w)'[^']*'(?!\w)|‘[^’]*’''', '', description)
+                if SHEET_LAYOUT.search(prose) or SHEET_VIEW_COMMENTARY.search(prose):
                     raise OllamaError('sheet_layout_description')
-                if SHEET_VIEW_COMMENTARY.search(prose):
-                    warnings.append(SHEET_VIEW_WARNING)
             result = AssistanceResult(status='proposal', text=description.strip(), language='English', warnings=warnings)
     except (OllamaError, ValueError, TypeError, KeyError) as exc:
         code = exc.code if isinstance(exc, OllamaError) else 'invalid_response'
@@ -146,7 +149,7 @@ def infer(client, kind, model, digest, fingerprint, *, content=None, role=None, 
             'thinking_budget_exhausted': 'Il modello ha esaurito il limite di output durante il ragionamento interno, senza produrre una risposta finale. Riprova esplicitamente o scegli un altro modello.',
             'truncated_response': 'Risposta del modello interrotta al limite di output: nessuna proposta completa. Riprova esplicitamente o scegli un altro modello.',
             'invalid_response': 'La risposta del modello non rispetta il formato della descrizione richiesto. Puoi riprovare esplicitamente o scegliere un altro modello.',
-            'sheet_layout_description': 'Il modello ha descritto l’impaginazione della scheda. Riprova l’analisi o inserisci una descrizione unica della persona.',
+            'sheet_layout_description': 'Il modello ha descritto i riquadri o le viste invece di una descrizione unica del personaggio. La descrizione corrente è conservata. Riprova esplicitamente l’analisi o inserisci il testo manualmente.',
             'context_exhausted': 'Il modello ha esaurito il contesto disponibile per questa richiesta. Puoi scegliere un altro modello o un proxy più semplice.',
             'service_unreachable': 'Il servizio selezionato non è raggiungibile. Controlla la connessione e riprova esplicitamente.',
             'timeout': 'Tempo del modello esaurito. La descrizione manuale resta disponibile.'

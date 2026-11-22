@@ -1,4 +1,4 @@
-"""Build development ZIPs from this standalone source snapshot; original release ZIPs stay separate."""
+"""Build the stable Windows ZIP from standalone sources; previous releases stay separate."""
 import argparse
 import hashlib
 import json
@@ -82,7 +82,7 @@ def build(output):
             raise ValueError(f'File ripetuto: {name}')
         checkpoint[name] = prepared_bytes(name)
     platforms = config['platform_files']
-    if set(platforms) != {'macos-arm64', 'windows-x64'}:
+    if not platforms or not set(platforms) <= {'macos-arm64', 'windows-x64'}:
         raise ValueError('Il piano include soltanto Mac Apple Silicon e Windows x64.')
     output.mkdir(parents=True, exist_ok=True)
     packages = []
@@ -129,7 +129,8 @@ def build(output):
             'runtime_matches_reference': True,
             'license': config['license'], 'copyright': config['copyright'],
             'documentation': config['documentation'],
-            'distribution': 'MIT; source snapshot; development build; not the original tested release',
+            'distribution': 'MIT; stable numbered release; GitHub publication separate',
+            'acceptance': config['acceptance'],
             'files': {name: {'sha256': digest(content), 'bytes': len(content), **origins[name]}
                       for name, content in sorted(payload.items())},
         }
@@ -154,8 +155,8 @@ def build(output):
               'copyright': config['copyright'], 'documentation': config['documentation'],
               'runtime_reference_tag': config['runtime_reference_ref'],
               'runtime_reference_commit': runtime_commit, 'runtime_matches_reference': True,
-              'notes': {'it': 'Hash e contenuti verificati; runtime conforme al riferimento sorgenti. Build di sviluppo, non nuovo collaudo nativo.',
-                        'en': 'Hashes and contents verified; runtime matches source reference. Development build, not a new native acceptance test.'}}
+              'notes': {'it': 'Hash e contenuti verificati; runtime conforme al riferimento sorgenti. Release stabile; esito browser Windows confermato, nuova installazione nativa non ripetuta.',
+                        'en': 'Hashes and contents verified; runtime matches source reference. Stable release; Windows browser behavior accepted, fresh native installation not repeated.'}}
     (output / 'PACCHETTI.json').write_bytes(encoded(report))
     for source, name in config['prepared_files'].items():
         if '/' not in name:

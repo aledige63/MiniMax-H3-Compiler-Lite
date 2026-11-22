@@ -20,14 +20,12 @@ Use the interpreter from the active virtual environment for Python commands.
 
 ## Standalone recipe
 
-`python -m scripts.build_packages --output dist/source-build` creates two development
-ZIPs for Mac/Windows under distinct version `2026.11.19-preview3-source1`.
-It requires neither Git nor historical tags or reference materials, and does not
-recreate the tested release ZIPs byte for byte. `packaging/files.json` is the explicit
-allowlist; `packaging/runtime-reference.json` verifies application and launcher SHA256.
-The source_commit field records provenance only; the original Git object is excluded.
-The stable tag is null. Update the reference deliberately for intentional runtime
-revisions. Manifests verify each payload file; both archives have separate checksums.
+`python -m scripts.build_packages --output dist/1.0.0` creates the stable
+Windows x64 ZIP. Git, old tags and old ZIPs are not required. The explicit
+allowlist is `packaging/files.json`; `packaging/runtime-reference.json` checks
+application and launcher hashes. Source commit is provenance only. Version is
+1.0.0, stable tag v1.0.0. Update the reference deliberately for runtime changes.
+
 
 Smoke/benchmark scripts perform real inference only when run explicitly.
 Choose installed models using `--model`; m3 needs a vision model and m5 needs

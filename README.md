@@ -11,6 +11,15 @@ H3 workflow.
 **MIT License — Copyright (c) 2026 aledige.** See [LICENSE](LICENSE) and
 [dependency notices](THIRD-PARTY-NOTICES.md).
 
+
+## Stable version 1.0.0
+
+Windows behavior was accepted by the user on November 22, 2026, after the Mac
+backend was aligned. This source snapshot builds the standalone Windows package
+without historical ZIPs or private Git objects. GitHub publication is separate.
+
+[RELEASE-1.0.0](docs/RELEASE-1.0.0-EN.md) · [DESCRIPTION-WORKFLOW](docs/DESCRIPTION-WORKFLOW-EN.md) · [CHARACTER-SHEET](docs/CHARACTER-SHEET-EN.md) · [SCENE-REFERENCE-SYNC](docs/SCENE-REFERENCE-SYNC-EN.md)
+
 ## Download and install
 
 This repository contains the source code and startup tools. Clone it with Git,

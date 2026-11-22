@@ -343,10 +343,11 @@ class M2Tests(unittest.TestCase):
             other.save_draft(self.cut, DraftCommand(command_id=uuid4(), expected_revision=first['revision'], input=raw))
         self.assertEqual(conflict.exception.code, 'revision_conflict')
         raw2 = json.loads(json.dumps(current['draft_input'])); raw2['pictures'][0]['description_en'] = 'conflicting change'
-        response = self.client.put(f'/api/cuts/{second}/draft', json=self.cut_command(second, input=raw2))
+        response = self.client.put(f'/api/cuts/{second}/draft', json=dict(command_id=str(uuid4()), expected_revision=current['revision'], input=raw2))
         self.assertEqual(response.status_code, 409, response.text)
-        self.assertEqual(response.json()['detail']['code'], 'reference_conflict')
-        self.assertEqual(self.client.get(f'/api/cuts/{second}').json()['draft_input'], current['draft_input'])
+        self.assertEqual(response.json()['detail']['code'], 'revision_conflict')
+        expected = current['draft_input']; expected['pictures'][0]['description_en'] = 'new description'
+        self.assertEqual(self.client.get(f'/api/cuts/{second}').json()['draft_input'], expected)
 
     def test_trash_restore_preserves_versions_and_media(self):
         self.prepare(); job, _ = self.compile(); self.completed(job)
@@ -454,15 +455,15 @@ class AccessTests(unittest.TestCase):
         self.password = 'correct-horse-h3-secret'
         self.access.set_password(self.password)
         self.fake = FakeOllama()
-        self.app = create_app(self.temp.name, self.fake, lan=True, allowed_hosts=['workstation.local'])
-        self.client = TestClient(self.app, base_url='http://workstation.local:8767', client=('10.0.0.40', 5000))
+        self.app = create_app(self.temp.name, self.fake, lan=True, allowed_hosts=['mac.local'])
+        self.client = TestClient(self.app, base_url='http://mac.local:8767', client=('192.168.1.40', 5000))
         self.client.__enter__()
 
     def tearDown(self):
         self.client.__exit__(None, None, None); self.temp.cleanup()
 
     def login(self):
-        response = self.client.post('/api/access/login', json={'password': self.password}, headers={'Origin': 'http://workstation.local:8767'})
+        response = self.client.post('/api/access/login', json={'password': self.password}, headers={'Origin': 'http://mac.local:8767'})
         self.assertEqual(response.status_code, 200, response.text)
         return response.json()['csrf']
 
@@ -483,14 +484,14 @@ class AccessTests(unittest.TestCase):
         body = {'command_id': str(uuid4()), 'expected_revision': 0, 'name': 'Da LAN'}
         self.assertEqual(self.client.post('/api/projects', json=body).status_code, 403)
         self.assertEqual(self.client.post('/api/projects', json=body, headers={'X-CSRF-Token': csrf, 'Origin': 'http://attacker.example'}).status_code, 403)
-        self.assertEqual(self.client.post('/api/projects', json=body, headers={'X-CSRF-Token': csrf, 'Origin': 'http://workstation.local:8767'}).status_code, 200)
+        self.assertEqual(self.client.post('/api/projects', json=body, headers={'X-CSRF-Token': csrf, 'Origin': 'http://mac.local:8767'}).status_code, 200)
         self.assertEqual(self.client.get('/api/projects', headers={'Host': 'attacker.example'}).status_code, 400)
         self.assertEqual(self.client.put('/api/access/password', json={'password': 'another-long-password'}, headers={'X-CSRF-Token': csrf}).status_code, 403)
         self.assertEqual(self.client.get('/api/access/bootstrap').status_code, 403)
 
     def test_draft_and_manual_text_are_shared_between_mac_and_lan_without_compiling(self):
         csrf = self.login()
-        lan_headers = {'X-CSRF-Token': csrf, 'Origin': 'http://workstation.local:8767'}
+        lan_headers = {'X-CSRF-Token': csrf, 'Origin': 'http://mac.local:8767'}
         mac = TestClient(self.app, base_url='http://127.0.0.1:8767', client=('127.0.0.1', 5001))
         self.addCleanup(mac.close)
         initial = mac.get('/api/workspace').json()

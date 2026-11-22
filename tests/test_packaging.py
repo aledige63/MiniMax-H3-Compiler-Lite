@@ -25,11 +25,12 @@ class PackagingTests(unittest.TestCase):
                 if started:
                     thread.return_value.start.assert_called_once()
 
-    def test_both_zips_are_reproducible_and_include_only_verified_runtime_files(self):
+    def test_stable_windows_zip_is_reproducible_and_contains_verified_runtime(self):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory)
             first = build(output)
             self.assertEqual(first, build(output))
+            self.assertEqual({p['platform'] for p in first['packages']}, {'windows-x64'})
             for package in first['packages']:
                 path = output / package['file']
                 manifest = verify_archive(path)

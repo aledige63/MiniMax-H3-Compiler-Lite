@@ -11,8 +11,8 @@
     }
   </script>
   <link rel="stylesheet" href="/static/style.css?v=studio-sidebar">
-  <script type="module" src="/static/app.js?v=studio-appearance"></script>
-  <link rel="stylesheet" href="/static/studio.css?v=cut-participation">
+  <script type="module" src="/static/app.js?v=history-three-discard"></script>
+  <link rel="stylesheet" href="/static/studio.css?v=single-description">
   <link rel="stylesheet" href="/static/appearance.css?v=1">
 </head>
 <body class="studio">
@@ -108,13 +108,16 @@
 
         <div id="element-panels" class="element-panels" aria-label="Impostazioni della sezione selezionata" tabindex="0">
 <section class="panel studio-panel" data-studio-panel="images" aria-labelledby="nav-images" id="images-panel" hidden="hidden">
+          <div class="project-library-toolbar" role="group" aria-label="Libreria del progetto">
+            <span>Immagini e Subject</span>
+            <button id="open-library" type="button" class="button secondary small">Dalla libreria del progetto</button>
+          </div>
           <div class="section-heading">
 <div>
 <span class="step">01</span><h2>Immagini · Picture</h2>
 </div>
 <button id="add-picture" class="button secondary small" disabled>+ Immagine</button>
 </div>
-          <button id="open-library" class="button secondary small">Dalla libreria del progetto</button>
           <p class="section-help">Registra le immagini e gli slot che collegherai a H3. Una Picture è un’immagine: aggiungerla non crea un personaggio.</p>
           <div id="image-drop" class="drop-zone" tabindex="0">
 <span>Trascina qui le immagini JPEG, PNG o WebP</span><label class="upload-control">oppure scegli più immagini<input id="image-files" type="file" accept="image/jpeg,image/png,image/webp" multiple></label>
@@ -123,6 +126,10 @@
         </section>
 
         <section class="panel studio-panel" data-studio-panel="subjects" aria-labelledby="nav-subjects" id="subjects-panel" hidden="hidden">
+          <div class="project-library-toolbar" role="group" aria-label="Libreria del progetto">
+            <span>Immagini e Subject</span>
+            <button id="open-subject-library" type="button" class="button secondary small">Dalla libreria del progetto</button>
+          </div>
           <div class="section-heading">
 <div>
 <span class="step">02</span><h2>Personaggi e unità · Subject</h2>

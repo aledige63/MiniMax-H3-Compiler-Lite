@@ -1,0 +1,99 @@
+Windows 11 x64 acceptance test — 1.0.0
+English — Italiano: WINDOWS-CHECK-IT.txt
+
+1. SAVE AND STOP THE OLD COPY
+First copy any fields blocked by the conflict into a text file. Save remaining
+edits if possible. Stop the old server with Ctrl+C in its startup window, wait
+for shutdown, and close its browser tabs.
+
+2. CREATE A VERIFIED BACKUP
+Open Command Prompt (CMD) in the OLD application folder: click the File Explorer
+address bar, type cmd, and press Enter. For the default archive, run:
+  Avvia.cmd --backup "%USERPROFILE%\MiniMax-before-v1.0.0-01"
+  Avvia.cmd --verify-backup "%USERPROFILE%\MiniMax-before-v1.0.0-01"
+Wait for each command and press a key at its final pause. Expect verified true.
+The destination must be NEW; choose 02 if 01 exists. If you used --data-dir,
+append that exact --data-dir and path to the --backup command. Verify you backed
+up the actual archive, rather than another empty archive. Backups contain private
+data: do not publish or send them.
+
+3. RESTORE A TEST COPY
+Still in CMD in the old application folder, run on one line:
+  .venv\Scripts\python.exe -X utf8 -m scripts.backup_workspace restore "%USERPROFILE%\MiniMax-before-v1.0.0-01" "%USERPROFILE%\MiniMax-v1.0.0-test-01"
+Expect restored true. The destination must also be NEW. The test archive is
+MiniMax-v1.0.0-test-01\data, rather than its parent folder.
+
+4. DOWNLOAD AND EXTRACT THE NEW ZIP
+Download the Windows ZIP and SHA256SUMS.txt from the new Drive folder.
+In CMD verify (adjust the path if you do not use Downloads):
+  certutil -hashfile "%USERPROFILE%\Downloads\MiniMax-H3-Compiler-Lite-1.0.0-windows-x64.zip" SHA256
+Compare the value with SHA256SUMS.txt. Extract everything into a NEW local folder
+outside synchronized folders. Do not overwrite the old installation.
+
+5. START WITH THE RESTORED TEST ARCHIVE
+Open CMD in the NEW folder containing Avvia.cmd and run:
+  Avvia.cmd --data-dir "%USERPROFILE%\MiniMax-v1.0.0-test-01\data" --port 18768
+Check the displayed data path. First launch installs dependencies and requires
+Internet. Open the displayed address and refresh the browser with Ctrl+F5.
+Check that projects, model selections and previous versions are present.
+
+6. REPRODUCE THE SUBJECT 4 CASE
+Open the affected scene in the test project. Check Subject 4 in cut 2: if cut 1
+already has the new description, cut 2's draft should reconcile automatically.
+Save without manually restoring the old description. Expect no reference
+conflict. Slots, exclusions and request text retain their local values.
+Then change a recognizable detail in cut 1 and save. Return to cut 2: its shared
+description should have updated as well.
+
+7. LOCAL EDITS AND LIBRARY
+Check both Images and Subjects: “From project library” must appear in a separate
+toolbar above the + Image / + Subject controls. Scroll a long list: the toolbar
+and button must remain visible at the top in both sections, including when
+returning to a previously scrolled section. Both buttons open the same library.
+Open cut 2 in a second tab and change ONLY the request without saving.
+In the first tab change the shared description in cut 1 and save. Save cut 2 in
+the second tab: the local request should remain and the new description should
+merge without conflict. Also try editing the description to match the new value.
+Two DIFFERENT edits to the same description may still produce a conflict; this
+is expected. Keep the tab open and copy any text you want to retain.
+Open the project library: it must open. Reload the chosen Subject; other local
+fields and unsaved manual text must remain. Explicitly save remaining edits.
+
+8. PICTURE, HISTORY AND COMPILATION
+Change a shared Picture description in the scene. Other cuts should receive it
+while keeping their slots, H3 declarations and exclusions. Do not replace image
+files or proxies for this test. Open an old version: its text and snapshot must
+be identical. Another scene using the reference should retain its own draft.
+Saving and opening the library must not start inference.
+Finally press Compile in cut 2 using your configured model: only this step calls
+the model. Check the new result and retention of previous manual text; evaluate
+any model errors separately.
+
+9. SIMPLIFIED DESCRIPTION AND CHARACTER SHEET
+Follow DESCRIPTION-WORKFLOW-EN.md and CHARACTER-SHEET-EN.md inside the ZIP.
+Open a Picture with previous analyses: expect at most one current proposal and
+a closed history. Select Analysis type: Character sheet and press Analyze with
+your already verified vision model. Every click requests a fresh analysis.
+The result should indicate Character sheet and describe one person without
+panel/view commentary, preserving lettering on clothing and character details.
+Use this description changes only the Picture description, needing reconfirmation.
+Discard keeps the current text and moves the proposal to history, surviving
+restart. The result must disappear IMMEDIATELY with an inline message. If saving
+fails, it must return with the error. It must not promote an old proposal.
+Also discard with unsaved description
+and manual text: both must remain. Opening history or selecting a type must not
+call the model. Try Single image as well.
+Translate into English should be hidden for English descriptions; selecting
+Italian makes it appear without automatically translating.
+Only THREE analyses remain per Picture, including the current proposal. Older
+ones are deleted on first startup of the version 1.0.0 as well. Perform the backup
+above from the old installation before starting this new copy. Descriptions,
+prompts, versions and files are not deleted.
+
+10. AFTER TESTING
+If anything fails, stop the new copy and reopen the old installation with the
+original archive: testing used only the restored copy. If all tests pass, stop
+both copies and start the new folder without --data-dir for the default archive,
+or with your original --data-dir. Keep the backup and old ZIP. Test archive edits
+are not transferred. Version 1.0.0 consolidates user-confirmed behavior. These checks verify your
+installation and restored copy.

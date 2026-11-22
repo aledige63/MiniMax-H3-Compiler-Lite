@@ -46,7 +46,10 @@ class ReferenceRevisionTests(unittest.TestCase):
         raw['active_units'][0]['definition_mode']='manual';raw['active_units'][0]['confirmed']=False
         response=self.save(self.cut,raw);self.assertEqual(response.status_code,200,response.text)
         self.assertEqual(response.json()['unit_ids']['1'],unit_id)
-        self.assertEqual(self.client.get(f'/api/cuts/{second}').json()['draft_input'],stable['draft_input'])
+        after=self.client.get(f'/api/cuts/{second}').json()
+        expected=stable['draft_input'];expected['active_units'][0].update(description_en='A local manual definition.',definition_mode='manual',confirmed=False)
+        self.assertEqual(after['draft_input'],expected)
+        self.assertEqual(after['versions'],stable['versions'])
 
     def test_picture_default_fields_are_normalized_when_content_has_not_changed(self):
         self.prepare();before=self.view(); id=before['draft_input']['pictures'][0]['id']

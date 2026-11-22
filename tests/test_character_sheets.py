@@ -91,10 +91,11 @@ class CharacterSheetTests(unittest.TestCase):
         for level in LEVELS:
             prompt = analysis_instruction(dict(DEFAULTS, category='character', level=level), '', sheet=True)
             for expected in ['ALL visible regions', 'lower rows and close-ups', 'no fixed panel count',
-                             'Classic', 'Wide turnaround', 'Three-panel', 'Nine-panel', 'Seven-panel', 'Mixed mosaic',
-                             'other arrangements are equally valid', 'not separate characters',
+                             'not separate characters', 'ONE unified appearance description',
+                             'Every sentence must describe the person', 'one coherent portrait',
                              'Panel numbers, captions, borders', 'printed on a garment']:
                 with self.subTest(level=level, expected=expected): self.assertIn(expected, prompt)
+            self.assertNotIn('Supported arrangements',prompt)
 
     def test_single_picture_analysis_does_not_assert_a_character_sheet(self):
         prompt = analysis_instruction(dict(DEFAULTS, category='character'), '', sheet=False)

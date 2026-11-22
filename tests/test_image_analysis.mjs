@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
 import {selectedAnalysis, setAnalysisChoice, analysisLabel, analysisProposals, renderAnalysisControls} from '../app/static/image-analysis.js';
 
 const options = JSON.parse(readFileSync(new URL('../app/static/image-analysis-options.json', import.meta.url)));
@@ -80,4 +81,22 @@ test('le varianti sono distinte e cambiare categoria conserva i lavori attivi an
   assert.deepEqual(analysisProposals(jobs,{role:'outfit'},options).map(j=>j.id),['compact','full','pending','translate']);
   assert.deepEqual(analysisProposals(jobs,{role:'outfit',analysis:{category:'replacement'}},options).map(j=>j.id),['pending','translate']);
   assert.match(analysisLabel({...config,attribute:'fibbia'},options),/fibbia/);
+});
+
+test('il singolo comando Analizza usa la scelta visibile, senza inferenze al cambio di tipo',async()=>{
+  const source=readFileSync(new URL('../app/static/app.js',import.meta.url),'utf8');
+  const handler=source.slice(source.indexOf('const analysisState = pictureDescriptionState(picture);'),source.indexOf("const profile=el('p','field-help');"));
+  const actions=[],selectors=[],sent=[],state={mode:'image_analyze'};
+  const c={picture:{id:'picture',description_language:'English'},pictureDescriptionState:()=>state,language:{},
+    el:()=>({append(){}}),t:v=>v,refreshAssistancePanels(){},updateAssistanceControls(){},
+    selectField:(label,value,choices,change)=>{const field={label,value,choices,change,dataset:{}};selectors.push(field);return field;},
+    serverButton:(text,click)=>{const button={text,click,dataset:{}};actions.push(button);return button;},
+    requestAssistance:async(...args)=>sent.push(args)};
+  vm.createContext(c);vm.runInContext(handler,c);
+  assert.equal(actions.filter(b=>b.text==='Analizza').length,1);
+  for(const kind of ['image_character_sheet','image_analyze']){
+    const before=sent.length;selectors[0].change(kind);assert.equal(sent.length,before);
+    await actions.find(b=>b.text==='Analizza').click();assert.deepEqual(sent.at(-1),[kind,'picture',true]);
+  }
+  assert.equal(actions.find(b=>b.text==='Traduci in inglese').hidden,true);
 });

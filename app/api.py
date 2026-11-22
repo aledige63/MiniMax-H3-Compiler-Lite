@@ -286,6 +286,10 @@ def create_app(data_dir=None, client=None, *, lan=False, allowed_hosts=None, con
     def assistance_job(id: UUID):
         return assistance.job(id)
 
+    @app.post('/api/cuts/{cut_id}/assistance/{id}/dismiss')
+    async def dismiss_assistance(cut_id: UUID, id: UUID, request: Request):
+        return assistance.dismiss(cut_id, id, await body(request, RevisionCommand))
+
     @app.post('/api/cuts/{cut_id}/assistance/{id}/apply')
     async def apply_assistance(cut_id: UUID, id: UUID, request: Request):
         return assistance.apply(cut_id, id, await body(request, RevisionCommand))

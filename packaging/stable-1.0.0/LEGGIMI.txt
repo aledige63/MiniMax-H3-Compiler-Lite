@@ -1,0 +1,59 @@
+MiniMax H3 Compiler Lite — Windows 11 x64 — rilascio stabile
+1.0.0 — MIT — Copyright (c) 2026 aledige
+English: README-EN.txt
+
+Rilascio stabile Windows x64 1.0.0. Il 22 novembre l’utente ha confermato Scarta
+e analisi character sheet dal browser Windows sul backend Mac allineato.
+Non è stata ripetuta l’installazione nativa di questo nuovo ZIP. Runtime uguale
+all’applicazione accettata; avvio e dipendenze conservano la base già collaudata.
+Vedere RELEASE-1.0.0-IT.md e UPDATE-IT.txt.
+
+Una Descrizione, un Analizza e un selettore Immagine singola / Character sheet.
+Scarta è persistente; lo storico mantiene al massimo TRE analisi per cut/Picture,
+compresa l’attuale. Le più vecchie vengono eliminate all’avvio: eseguire prima
+il backup dalla vecchia installazione. Descrizioni salvate, file, prompt, versioni
+e snapshot sono conservati.
+
+Pubblicazione GitHub separata e non eseguita. Linux escluso.
+
+Requisiti: Windows 11 x64 e Python 3.12 x64 con launcher py installato.
+Python: https://www.python.org/downloads/windows/
+Estrai tutto lo ZIP in una cartella locale NUOVA, scrivibile, fuori da Drive,
+OneDrive o altre cartelle sincronizzate. Non sovrascrivere l'installazione vecchia.
+Il doppio clic su Avvia.cmd apre l'archivio predefinito; usa prima i comandi
+di WINDOWS-CHECK-IT.txt per scegliere l'archivio di prova ripristinato.
+Lascia aperta la finestra dei comandi. Ferma con Ctrl+C e attendi la chiusura.
+Dopo l'avvio aggiorna il browser con Ctrl+F5.
+
+Al primo avvio viene creato un ambiente .venv locale e vengono installate da PyPI
+le dipendenze di requirements.lock: serve Internet. Python, Ollama, modelli e
+chiavi API non sono inclusi. Nessun modello viene scaricato o chiamato in
+automatico. Le selezioni restano nell'archivio scelto. Nessun modello testo è
+preimpostato; i valori iniziali del modello vision restano invariati.
+
+Archivio di lavoro predefinito:
+  %LOCALAPPDATA%\MiniMax H3 Compiler Lite\data
+Se usavi --data-dir, per aggiornare usa esattamente quel percorso.
+La finestra di avvio mostra il percorso dei dati scelto. Codice e dati sono separati.
+
+Salvando una descrizione condivisa di Subject o Picture si aggiornano le bozze
+compatibili nella stessa scena aperta. Prompt storici e snapshot restano intatti;
+occorre ricompilare per ottenere un prompt con la nuova descrizione. La libreria
+si apre anche con campi non salvati o un conflitto. Ricaricare un riferimento
+conserva gli altri campi locali e il testo manuale non salvato.
+Il pulsante della libreria si trova in alto sia in Immagini sia in Subject,
+in una barra separata dalla creazione che rimane visibile durante lo scorrimento.
+SCENE-REFERENCE-SYNC-IT.md descrive ambito e gestione dei conflitti.
+
+Questa revisione include anche le nuove istruzioni v6 per il character sheet:
+una descrizione unica del personaggio, senza riquadri o commenti sulle viste.
+Per ottenere una nuova proposta scegli Character sheet nel Tipo di analisi
+e premi Analizza. Le descrizioni già salvate restano intatte. Il modello vision
+selezionato e l'analisi ordinaria delle immagini restano quelli esistenti.
+Vedi CHARACTER-SHEET-IT.md per prova, limiti e applicazione esplicita.
+
+release-manifest.json elenca file, dimensioni, SHA-256 e provenienza.
+SHA256SUMS.txt accanto allo ZIP verifica il download completo. Avvio e dipendenze sono invariati rispetto alla base già collaudata.
+Sono inclusi LICENSE e THIRD-PARTY-NOTICES.md. Dipendenze e modelli esterni hanno
+condizioni proprie; vedi NOTE-DIPENDENZE.txt. Nessun materiale esterno o archivio
+personale è incluso.

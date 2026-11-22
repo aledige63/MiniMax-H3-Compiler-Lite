@@ -1,7 +1,8 @@
 {
-  "version": "2026.11.19-preview3-source1",
-  "source_ref": "source-snapshot",
+  "version": "1.0.0",
+  "source_ref": "v1.0.0",
   "checkpoint_files": [
+    "VERSION",
     "app/__init__.py",
     "app/access.py",
     "app/analysis.py",
@@ -24,6 +25,7 @@
     "app/narrative.py",
     "app/physical.py",
     "app/prompts/interpreter.txt",
+    "app/reference_sync.py",
     "app/repository.py",
     "app/scale.py",
     "app/shots.py",
@@ -41,11 +43,13 @@
     "app/static/image-analysis-options.json",
     "app/static/image-analysis.js",
     "app/static/physical-details.js",
+    "app/static/picture-description.js",
     "app/static/print.css",
     "app/static/print.js",
     "app/static/project-library.js",
     "app/static/reference-menu.js",
     "app/static/request-shots.js",
+    "app/static/scene-reference-sync.js",
     "app/static/studio-layout.js",
     "app/static/studio.css",
     "app/static/style.css",
@@ -68,47 +72,71 @@
     "scripts/launcher.py": "scripts/launcher.py",
     "scripts/guided_server.py": "scripts/guided_server.py",
     "scripts/backup_workspace.py": "scripts/backup_workspace.py",
-    "packaging/LEGGIMI.txt": "LEGGIMI.txt",
-    "packaging/NOTE-DIPENDENZE.txt": "NOTE-DIPENDENZE.txt",
     "app/interpreter.py": "app/interpreter.py",
     "app/cut_operations.py": "app/cut_operations.py",
     "app/__main__.py": "app/__main__.py",
     "app/static/index.html": "app/static/index.html",
     "LICENSE": "LICENSE",
     "THIRD-PARTY-NOTICES.md": "THIRD-PARTY-NOTICES.md",
-    "packaging/README-EN.txt": "README-EN.txt",
-    "packaging/DEPENDENCIES-EN.txt": "DEPENDENCIES-EN.txt",
-    "packaging/UPDATE-IT.txt": "UPDATE-IT.txt",
-    "packaging/UPDATE-EN.txt": "UPDATE-EN.txt",
-    "packaging/WINDOWS-CHECK-IT.txt": "WINDOWS-CHECK-IT.txt",
-    "packaging/WINDOWS-CHECK-EN.txt": "WINDOWS-CHECK-EN.txt"
+    "packaging/stable-1.0.0/DEPENDENCIES-EN.txt": "DEPENDENCIES-EN.txt",
+    "packaging/stable-1.0.0/LEGGIMI.txt": "LEGGIMI.txt",
+    "packaging/stable-1.0.0/NOTE-DIPENDENZE.txt": "NOTE-DIPENDENZE.txt",
+    "packaging/stable-1.0.0/README-EN.txt": "README-EN.txt",
+    "packaging/stable-1.0.0/UPDATE-EN.txt": "UPDATE-EN.txt",
+    "packaging/stable-1.0.0/UPDATE-IT.txt": "UPDATE-IT.txt",
+    "packaging/stable-1.0.0/WINDOWS-CHECK-EN.txt": "WINDOWS-CHECK-EN.txt",
+    "packaging/stable-1.0.0/WINDOWS-CHECK-IT.txt": "WINDOWS-CHECK-IT.txt",
+    "docs/SCENE-REFERENCE-SYNC-EN.md": "SCENE-REFERENCE-SYNC-EN.md",
+    "docs/SCENE-REFERENCE-SYNC-IT.md": "SCENE-REFERENCE-SYNC-IT.md",
+    "docs/CHARACTER-SHEET-EN.md": "CHARACTER-SHEET-EN.md",
+    "docs/CHARACTER-SHEET-IT.md": "CHARACTER-SHEET-IT.md",
+    "docs/DESCRIPTION-WORKFLOW-EN.md": "DESCRIPTION-WORKFLOW-EN.md",
+    "docs/DESCRIPTION-WORKFLOW-IT.md": "DESCRIPTION-WORKFLOW-IT.md",
+    "docs/GITHUB-NEXT-RELEASE-EN.md": "GITHUB-NEXT-RELEASE-EN.md",
+    "docs/GITHUB-NEXT-RELEASE-IT.md": "GITHUB-NEXT-RELEASE-IT.md",
+    "docs/RELEASE-1.0.0-EN.md": "RELEASE-1.0.0-EN.md",
+    "docs/RELEASE-1.0.0-IT.md": "RELEASE-1.0.0-IT.md"
   },
   "platform_files": {
-    "macos-arm64": {
-      "packaging/Avvia.command": "Avvia.command"
-    },
     "windows-x64": {
       "packaging/Avvia.cmd": "Avvia.cmd"
     }
   },
-  "stable_tag": null,
+  "stable_tag": "v1.0.0",
   "runtime_reference_ref": "packaging/runtime-reference.json",
   "license": "MIT",
   "copyright": "Copyright (c) 2026 aledige",
   "documentation": {
     "it": [
+      "CHARACTER-SHEET-IT.md",
+      "DESCRIPTION-WORKFLOW-IT.md",
+      "GITHUB-NEXT-RELEASE-IT.md",
       "LEGGIMI.txt",
       "NOTE-DIPENDENZE.txt",
+      "RELEASE-1.0.0-IT.md",
+      "SCENE-REFERENCE-SYNC-IT.md",
       "UPDATE-IT.txt",
       "WINDOWS-CHECK-IT.txt"
     ],
     "en": [
-      "README-EN.txt",
+      "CHARACTER-SHEET-EN.md",
       "DEPENDENCIES-EN.txt",
+      "DESCRIPTION-WORKFLOW-EN.md",
+      "GITHUB-NEXT-RELEASE-EN.md",
+      "README-EN.txt",
+      "RELEASE-1.0.0-EN.md",
+      "SCENE-REFERENCE-SYNC-EN.md",
       "UPDATE-EN.txt",
       "WINDOWS-CHECK-EN.txt"
     ]
   },
-  "source_commit": "7042fe0d36fcc11d2ab13c1a6a3cfc7ef315abfc",
-  "source_timestamp": 1795244110
+  "source_commit": "e70ef52c116598c2dbbc30295d6bd634732bec56",
+  "source_timestamp": 1795337847,
+  "acceptance": {
+    "windows_browser_against_mac_backend": "confirmed by user 2026-11-22",
+    "discard_persistence_after_restart": "verified",
+    "character_sheet_without_panel_commentary": "confirmed by user",
+    "fresh_native_windows_installation_of_numbered_zip": "not repeated",
+    "github_published": false
+  }
 }

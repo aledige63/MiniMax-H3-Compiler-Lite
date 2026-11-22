@@ -70,6 +70,10 @@ body.studio {height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direct
 .studio .studio-panel .section-heading {margin-bottom:10px}
 .studio .studio-panel .step {display:none}
 .studio .studio-panel .section-help {margin:8px 0 12px}
+.studio .project-library-toolbar {position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;padding:10px 12px;margin-bottom:16px;background:var(--paper);border:1px solid var(--line);border-radius:8px;box-shadow:0 3px 8px #0000000a}
+.studio .project-library-toolbar>span {font-size:11px;color:var(--muted)}
+.studio .project-library-toolbar>.button {white-space:normal;text-align:left}
+.studio .project-library-toolbar::before {content:'';position:absolute;bottom:100%;left:-16px;right:-16px;height:18px;background:var(--editor-surface,var(--paper));pointer-events:none}
 .studio .studio-panel .catalog-note {margin:8px 0;padding:7px 10px}
 .studio .section-guidance {margin:5px 0 10px;font-size:11px;color:var(--muted)}
 .studio .section-guidance>summary {cursor:pointer}
@@ -85,6 +89,21 @@ body.studio {height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direct
 .image-analysis-settings {border-top:1px solid var(--line);margin-top:14px;padding-top:12px}
 .image-analysis-settings h3 {font-size:13px;font-weight:600}
 .image-analysis-settings .field-help {margin-top:9px}
+.picture-description {margin:16px 0;padding-top:14px;border-top:1px solid var(--line)}
+.description-analysis-actions {display:flex;align-items:end;flex-wrap:wrap;gap:8px;margin-top:12px}
+.description-analysis-actions>.field {flex:1;min-width:min(180px,100%);margin:0!important}
+.description-analysis-actions>.button {margin-bottom:1px}
+.description-analysis-options {margin:10px 0;font-size:12px}
+.description-analysis-options>summary,.description-history>summary {cursor:pointer;color:var(--muted)}
+.description-analysis-options .image-analysis-settings {margin-top:8px}
+.description-proposal {padding:12px;margin:12px 0;border:1px solid var(--line);border-left:3px solid var(--green);border-radius:6px;background:var(--paper)}
+.description-proposal h4 {margin:0;font-size:13px}
+.description-proposal>.button {margin:8px 7px 0 0}
+.description-history {margin:14px 0;font-size:12px}
+.description-history-list {display:grid;gap:8px;padding-top:10px}
+.description-history-item {padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--paper)}
+.description-history-item>summary {cursor:pointer;color:var(--muted)}
+.description-history-item .proposed-description,.description-proposal .proposed-description {white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65}
 .studio .soundscape-controls {border-bottom:1px solid var(--line);padding:12px 0;margin-bottom:15px}
 .studio .soundscape-controls h3 {font-size:13px}
 .studio #previous-cut-panel {padding:14px 0 0;margin:15px 0 0;border:0;border-top:1px solid var(--line);border-radius:0;box-shadow:none;background:transparent}

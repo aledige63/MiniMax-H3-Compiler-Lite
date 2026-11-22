@@ -1,0 +1,38 @@
+MiniMax H3 Compiler Lite — aggiornamento alla versione 1.0.0
+MIT — Copyright (c) 2026 aledige — English: UPDATE-EN.txt
+
+Se usi il browser Windows collegato a un backend Mac, il programma da aggiornare
+e riavviare è sul Mac. Sostituire soltanto i file o ricaricare il browser non
+ricarica il codice Python già in memoria. Il servizio Mac allineato il 22 novembre
+è già aggiornato: questa consegna Windows non richiede di reinstallarlo.
+
+Per un'installazione autonoma Windows:
+
+1. Conserva gli eventuali edit non salvati, salva i campi possibili e attendi
+   il termine dei lavori. Ferma il VECCHIO backend con Ctrl+C e attendi l'uscita.
+2. Dal CMD nella VECCHIA cartella del programma crea un backup in una cartella
+   NUOVA. Se usavi --data-dir, aggiungi esattamente quel percorso a --backup:
+
+   Avvia.cmd --backup "%USERPROFILE%\MiniMax-before-1.0.0-01"
+   Avvia.cmd --verify-backup "%USERPROFILE%\MiniMax-before-1.0.0-01"
+
+   Attendi verified true. Non cancellare backup precedenti per riusare un nome.
+3. Verifica SHA256SUMS.txt, estrai lo ZIP in una cartella nuova locale e non
+   sincronizzata. Conserva il vecchio codice e non copiare la vecchia .venv.
+4. Avvia il NUOVO backend con Avvia.cmd. Mantieni l'archivio dati preesistente:
+   se usavi --data-dir, riutilizza quel medesimo percorso. Il percorso Dati è
+   mostrato nel terminale; non avviare due backend sullo stesso archivio.
+5. Conservati gli edit del browser, riapri/aggiorna la pagina con Ctrl+F5.
+   Controlla progetto, descrizioni, file, prompt/versioni e selezioni modelli.
+6. Scarta una proposta: deve sparire e restare Scartata nello storico dopo
+   il riavvio, senza cambiare descrizioni o testo manuale.
+
+Al primo avvio rimangono solo TRE analisi per cut/Picture, inclusa quella
+attuale. Le più vecchie vengono eliminate; il backup le conserva. Non sono
+eliminati originali, descrizioni salvate, prompt, versioni o snapshot.
+Nessuna inferenza automatica o download di modelli. Nessun modello testo
+preimpostato; le selezioni già salvate restano nell'archivio.
+
+WINDOWS-CHECK-IT.txt descrive anche la prova su copia ripristinata. Per tornare
+a una versione precedente usa una nuova copia ripristinata del backup, senza
+puntare il vecchio codice all'archivio aggiornato. Mai sovrascrivere l'archivio operativo.

@@ -1,7 +1,7 @@
 import copy
 import json
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 from pydantic import ValidationError
 
@@ -170,8 +170,10 @@ class ImageProfileApiTests(unittest.TestCase):
             self.assertEqual(job['status'], 'succeeded', job)
             self.assertFalse(job['result']['metrics'].get('cache_hit', False))
         self.assertEqual(self.fake.chat_calls, len(choices) + 1)
-        self.select(**choices[0]); cached = self.run_job('image_analyze', id)
+        self.select(**choices[-1]); cached = self.run_job('image_analyze', id)
         self.assertEqual(cached['result']['metrics']['inference_calls'], 0)
+        self.select(**choices[0]); expired = self.run_job('image_analyze', id)
+        self.assertEqual(expired['result']['metrics']['inference_calls'], 1)
 
     def test_invalid_settings_and_missing_attribute_do_not_infer(self):
         id, _ = self.picture(); self.trial()
@@ -240,7 +242,7 @@ class ImageProfileApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 422)
         self.assertEqual(self.fake.chat_calls, 2)
 
-    def test_review_warning_survives_cache_and_requires_explicit_current_application(self):
+    def test_sheet_view_commentary_is_not_an_applicable_proposal_and_preserves_manual_text(self):
         id,_=self.picture();self.trial()
         raw=self.view()['draft_input'];raw['pictures'][0]['role']='identity';self.save(raw)
         description='A person with brown hair and round glasses, shown in various full-body and close-up views.'
@@ -251,18 +253,46 @@ class ImageProfileApiTests(unittest.TestCase):
             return response
         self.fake._request=request
         proposal=self.run_job('image_character_sheet',id)
-        self.assertEqual(proposal['status'],'succeeded',proposal)
-        self.assertEqual(proposal['result']['text'],description);self.assertTrue(proposal['result']['warnings'])
+        self.assertEqual(proposal['status'],'failed',proposal)
+        self.assertIsNone(proposal['result']['text'])
+        self.assertEqual(proposal['result']['metrics']['error_code'],'sheet_layout_description')
         self.assertEqual(self.view()['draft_input']['pictures'][0]['description_en'],'manual description')
+        self.assertEqual(self.fake.chat_calls,2)  # Trial plus one analysis; no hidden retry.
+        self.assertEqual(self.apply(proposal).status_code,422)
+        self.assertEqual(self.view()['draft_input']['pictures'][0]['description_en'],'manual description')
+
+    def test_unified_sheet_analysis_separates_caches_within_three_retained_results(self):
+        id,_=self.picture();self.trial()
+        raw=self.view()['draft_input'];raw['pictures'][0]['role']='identity';self.save(raw)
+        ordinary=self.run_job('image_analyze',id)
+        with patch('app.assistance.CHARACTER_SHEET_VERSION','vision-character-sheet-v5-review-1280'):
+            legacy=self.run_job('image_character_sheet',id)
+        original=self.fake._request
+        description='A person with brown hair and round glasses wears a blue shirt with white lettering on its back.'
+        def request(path,payload):
+            response=original(path,payload)
+            if path=='/api/chat':response['message']['content']=json.dumps(dict(description=description))
+            return response
+        self.fake._request=request
+        fresh=self.run_job('image_character_sheet',id)
+        self.assertEqual(fresh['status'],'succeeded',fresh)
+        self.assertEqual(fresh['result']['text'],description)
+        self.assertEqual(fresh['result']['metrics']['inference_calls'],1)
+        calls=self.fake.chat_calls
+        old=self.client.get('/api/assistance/jobs/'+legacy['id']).json()
+        self.assertEqual(old['result']['text'],legacy['result']['text'])
+        image_cached=self.run_job('image_analyze',id)
+        self.assertEqual(image_cached['result']['text'],ordinary['result']['text'])
+        self.assertEqual(image_cached['result']['metrics']['inference_calls'],0)
         cached=self.run_job('image_character_sheet',id)
-        self.assertEqual(cached['result']['warnings'],proposal['result']['warnings'])
-        self.assertEqual(cached['result']['metrics']['inference_calls'],0);self.assertEqual(self.fake.chat_calls,2)
+        self.assertEqual(cached['result']['text'],description)
+        self.assertEqual(cached['result']['metrics']['inference_calls'],0)
+        self.assertEqual(self.fake.chat_calls,calls)
+        self.assertEqual(self.client.get('/api/assistance/jobs/'+legacy['id']).status_code,404)
+        self.assertEqual(self.view()['draft_input']['pictures'][0]['description_en'],'manual description')
         applied=self.apply(cached);self.assertEqual(applied.status_code,200,applied.text)
         self.assertEqual(applied.json()['draft_input']['pictures'][0]['description_en'],description)
         self.assertFalse(applied.json()['draft_input']['pictures'][0]['confirmed'])
-        raw=self.view()['draft_input'];raw['pictures'][0]['description_en']='Manual correction without view commentary.';self.save(raw)
-        self.assertEqual(self.apply(proposal).status_code,409)
-        self.assertEqual(self.view()['draft_input']['pictures'][0]['description_en'],raw['pictures'][0]['description_en'])
 
 
 if __name__ == '__main__': unittest.main()

@@ -362,24 +362,35 @@ class AnalysisResponseTests(unittest.TestCase):
                 self.assertEqual(result.status, expected)
                 self.assertEqual(result.text, description if expected == 'proposal' else None)
 
-    def test_incidental_sheet_views_keep_the_exact_proposal_with_a_review_warning(self):
+    def test_incidental_sheet_views_cannot_be_applied_as_a_unified_description(self):
         for description in [
+            ('A slender woman with long, straight black hair and a fair complexion. '
+             'She has a neutral facial expression, dark eyes, and a straight nose. '
+             'She is depicted entirely unclothed in various full-body and close-up views, '
+             'showing her lean build and natural features.'),
             'A person with short brown hair and round glasses, depicted in various full-body and close-up views.',
             'A person wears a green jacket. The person is shown in different views.',
             'A person with curly hair and blue eyes seen in side views.',
         ]:
             with self.subTest(description=description):
                 result=self.inference(dict(done=True,done_reason='stop',message=dict(content=json.dumps(dict(description=description)))),'image_character_sheet')
-                self.assertEqual(result.status,'proposal');self.assertEqual(result.text,description)
-                self.assertEqual(len(result.warnings),1);self.assertIn('prima di confermare',result.warnings[0])
-                self.assertEqual(result.issues,[]);self.assertIsNone(result.metrics.error_code)
+                self.assertEqual(result.status,'error');self.assertIsNone(result.text)
+                self.assertEqual(result.warnings,[])
+                self.assertEqual(result.metrics.error_code,'sheet_layout_description')
 
     def test_sheet_layout_or_view_led_sentences_remain_errors_without_partial_text(self):
         for description in ['A collage shows a person.', 'The left panel shows a person.',
                             'The front view shows a person with glasses.', 'In the side view a person stands.',
                             'Front, side, and back views show the same person.',
                             'A person has short hair. The side view shows a coat.',
-                            'Different views of the same person are arranged in a row.']:
+                            'Different views of the same person are arranged in a row.',
+                            'A person with dark hair appears in the upper-left portrait.',
+                            'The sheet shows a person with round glasses.',
+                            'A man wears a green jacket. Three panels depict his outfit.',
+                            'A woman has red hair, with close-ups of her hands below.',
+                            'A woman wears a blue jacket in one panel.',
+                            'Panel A depicts the same woman from the front.',
+                            'The panels show a woman with short hair.']:
             with self.subTest(description=description):
                 result=self.inference(dict(done=True,done_reason='stop',message=dict(content=json.dumps(dict(description=description)))),'image_character_sheet')
                 self.assertEqual(result.status,'error');self.assertIsNone(result.text)
@@ -391,6 +402,15 @@ class AnalysisResponseTests(unittest.TestCase):
             result=self.inference(dict(done=True,done_reason='stop',message=dict(content=json.dumps(dict(description=description)))),kind)
             self.assertEqual(result.status,'proposal');self.assertEqual(result.text,description)
             self.assertEqual(result.warnings,[]);self.assertNotIn('warnings',result.model_dump())
+
+    def test_unified_sheet_description_keeps_anatomical_and_garment_locations(self):
+        for lettering in ['"FRONT VIEW"', "'FRONT VIEW'", '“FRONT VIEW”', '‘FRONT VIEW’']:
+            description=(f'A woman with short curly hair wears a green jacket with {lettering} printed on its back. '
+                         'The front panel of her jacket has a narrow zip and her left forearm has a small scar.')
+            with self.subTest(lettering=lettering):
+                result=self.inference(dict(done=True,done_reason='stop',message=dict(content=json.dumps(dict(description=description)))),'image_character_sheet')
+                self.assertEqual(result.status,'proposal');self.assertEqual(result.text,description)
+                self.assertEqual(result.warnings,[])
 
     def test_old_assistance_results_keep_empty_warning_defaults_omitted(self):
         from app.contracts import AssistanceResult

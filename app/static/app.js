@@ -3,8 +3,10 @@ import { visibleReferenceTokens, associatePicture, definitionPicture, subjectDef
 import { renderPhysicalDetails } from "./physical-details.js?v=scale-reference-role";
 import { renderSubjectScale } from './subject-scale.js?v=scale-reference-role';
 import { createStudioLayout } from "./studio-layout.js";
-import { selectedAnalysis, analysisLabel, analysisProposals, renderAnalysisControls } from "./image-analysis.js?v=scale-reference-role";
+import { selectedAnalysis, analysisLabel, analysisProposals, renderAnalysisControls } from "./image-analysis.js";
 import {renderLibraryRows} from './project-library.js';
+import {pictureTasks, renderPictureProposals} from './picture-description.js';
+import {mergeSceneReferences, applyLibraryReference, sameReferenceValue} from './scene-reference-sync.js';
 import {renderParticipation,includedSubjectChoices} from './cut-participation.js';
 import { cameraPreview, hasCameraSelection, cameraTag, shotPresetSnapshots } from "./direction.js?v=saved-shots";
 import { applyUploadedAudio } from "./audio-upload.js";
@@ -16,6 +18,15 @@ import { diagnostic, t, tr, uiLanguage } from "./i18n.js";
 
 const $ = (id) => document.getElementById(id);
 const clone = (value) => structuredClone(value);
+const pictureDescriptionUi = new Map();
+function pictureDescriptionState(picture) {
+  const key = `${workspace.id}/${picture.id}`;
+  if (!pictureDescriptionUi.has(key)) {
+    const latest = (workspace.assistance_jobs || []).filter(job=>job.target_id===picture.id && ['image_analyze','image_character_sheet'].includes(job.kind)).at(-1);
+    pictureDescriptionUi.set(key,{mode:latest?.kind || 'image_analyze',historyOpen:false,openJobs:new Set()});
+  }
+  return pictureDescriptionUi.get(key);
+}
 let timelineSeconds = new Intl.NumberFormat("it", { maximumFractionDigits: 3 });
 let workspace = null;
 let draft = null;
@@ -310,7 +321,7 @@ function renderPictures() {
       if (picture.guidance && value==='style')picture.guidance.mappings=[];
       renderPictures();renderUnits();renderTokens();
     });
-    const description = field(t("Descrizione dell’immagine · un paragrafo senza a capo"), picture.description_en, (value) => {
+    const description = field(t("Descrizione"), picture.description_en, (value) => {
       picture.description_en = value;
       picture.confirmed = false;
       confirmation.querySelector("input").checked = false;
@@ -327,6 +338,7 @@ function renderPictures() {
     const language = selectField(t("Lingua della descrizione"), picture.description_language || "English", languages, value => {
       picture.description_language = value; picture.use_original_language = false; picture.confirmed = false;
       originalConsent.hidden = value === "English"; originalConsent.querySelector("input").checked = false; confirmation.querySelector("input").checked = false;
+      updateAssistanceControls();
     });
     const link = checkbox(t("La collegherò a H3 nello slot Picture indicato"), picture.linked_to_h3, (value) => { picture.linked_to_h3 = value; });
     const bottom = el("div", "item-bottom");
@@ -349,24 +361,33 @@ function renderPictures() {
     const associate = button(t("Associa a un Subject"), "button secondary small", () => withCommand(() => askPictureAssociation(picture.id)));
     associate.dataset.associatePicture = "true";
     enableDrop(body, files => { if (files.length !== 1) throw new Error(t("Trascina una sola immagine per sostituire questa Picture.")); return uploadPicture(picture.id, files[0]); });
-    body.append(upload, first, role, language, description, originalConsent);
-    body.append(renderAnalysisControls(picture,imageAnalysisOptions,{el,field,selectField,button,
+    body.append(upload, first, role);
+    const descriptionArea = el('section','picture-description');
+    descriptionArea.setAttribute('aria-label',t('Descrizione'));
+    descriptionArea.append(description,el('p','field-help',t('Questo è il testo in uso. Puoi modificarlo oppure chiedere una proposta.')));
+    if (picture.original_description) descriptionArea.append(el("p", "field-help", tr`Originale (${picture.original_language || t("lingua originale")}): ${picture.original_description}`));
+    const analysisState = pictureDescriptionState(picture);
+    const actions = el('div','description-analysis-actions');
+    const type = selectField(t('Tipo di analisi'),analysisState.mode,[['image_analyze',t('Immagine singola')],['image_character_sheet',t('Character sheet')]],value=>{
+      analysisState.mode=value;refreshAssistancePanels();updateAssistanceControls();
+    },{draft:false});
+    type.dataset.pictureAnalysisType=picture.id;
+    actions.append(language,type,serverButton(t('Analizza'),()=>requestAssistance(analysisState.mode,picture.id,true),'picture-analyze',picture.id));
+    const translate=serverButton(t('Traduci in inglese'),()=>requestAssistance('description_translate',picture.id),'translate',picture.id);
+    translate.hidden=(picture.description_language || 'English')==='English';
+    actions.append(translate);
+    const profile=el('p','field-help');profile.dataset.pictureAnalysisProfile=picture.id;
+    const options=el('details','description-analysis-options');options.append(el('summary','',t('Opzioni di analisi')));
+    options.append(renderAnalysisControls(picture,imageAnalysisOptions,{el,field,selectField,button,
       changed:()=>{markDraft();refreshAssistancePanels();updateAssistanceControls();},openSubjects:()=>studioLayout.selectSection('subjects')}));
-    if (picture.original_description) body.append(el("p", "field-help", tr`Originale (${picture.original_language || t("lingua originale")}): ${picture.original_description}`));
-    const actions = el("div", "navigation-actions");
-    actions.append(serverButton(t("Analizza immagine"), () => requestAssistance("image_analyze", picture.id), "analyze", picture.id),
-                   serverButton(t("Proponi traduzione inglese"), () => requestAssistance("description_translate", picture.id), "translate", picture.id));
-    if (["identity", "appearance"].includes(picture.role)) {
-      const sheet = serverButton(t("Analizza character sheet"), () => requestAssistance("image_character_sheet", picture.id), "character-sheet", picture.id);
-      sheet.title = t("Usa il file completo della Picture per descrivere una sola persona attraverso tutte le viste");
-      actions.insertBefore(sheet, actions.lastChild);
-    }
     const reason = el("p", "field-help"); reason.dataset.analysisReason = picture.id;
-    body.append(actions, reason, assistancePanel(picture.id), proxyControls(picture), confirmation, link, usage, associate, bottom);
+    const proposals=assistancePanel(picture.id);proposals.dataset.pictureDescription=picture.id;
+    descriptionArea.append(actions,originalConsent,profile,options,reason,proposals);
+    body.append(descriptionArea,proxyControls(picture),confirmation,link,usage,associate,bottom);
     if(imageGuideRoles.has(picture.role))body.insertBefore(guideControls(picture,'picture',()=>{picture.confirmed=false;confirmation.querySelector('input').checked=false;}),confirmation);
     card.append(heading, body); container.append(card);
   }
-  renderTokens(); updateAssistanceControls();
+  renderTokens(); refreshAssistancePanels(); updateAssistanceControls();
 }
 
 function pictureChoices(source) {
@@ -658,7 +679,7 @@ function updateButtons() {
   const finalized = Boolean(currentContext()?.scene.finalized);
   if (finalized) for (const id of ["add-picture", "add-unit", "add-dialogue", "add-shot", "import-dialogues", "add-audio", "save-draft", "compile", "save-manual", "edit-proposal", "open-library"]) $(id).disabled = true;
   $("manual-text").disabled = finalized || navigationBusy;
-  $("open-library").disabled = !workspace || commandBusy || finalized;
+  for (const id of ["open-library", "open-subject-library"]) $(id).disabled = !workspace || commandBusy || finalized;
   $("manage-library").disabled = !workspace || commandBusy;
   renderNavigation(); updateConfirmationButtons(); updateAssistanceControls();
   if (finalized || navigationBusy) for (const node of $("draft-fields").querySelectorAll('input, select, textarea, button')) {
@@ -817,6 +838,7 @@ async function withCommand(action) {
 }
 
 async function saveDraft() {
+  if (!await refreshReferencesBeforeSave()) return false;
   const tick = draftTick;
   const input = clone(draft);
   try {
@@ -832,6 +854,27 @@ async function saveDraft() {
     if (draftTick === tick) { draftDirty = false; $("save-state").textContent = t("Bozza salvata su questo Mac"); renderContinuity(); renderContinuityPreview(); }
   });
   return tick === draftTick;
+}
+
+async function refreshReferencesBeforeSave() {
+  const cutId = workspace.id, revision = workspace.revision, tick = draftTick;
+  const view = await request(`/api/cuts/${cutId}`);
+  if (workspace.id !== cutId || workspace.revision !== revision || draftTick !== tick) return false;
+  if (view.revision === revision) return true;
+  const merged = mergeUpdatedReferences(view);
+  if (!merged) throw new ApiError(t('La bozza è cambiata: recuperare la versione server senza perdere il testo locale.'), 'revision_conflict', 409);
+  workspace = view; draft = normalizeDraft(merged); draftTick += 1;
+  renderDraft();
+  return true;
+}
+
+function mergeUpdatedReferences(view, ignored = null) {
+  if (view.id !== workspace.id || ['latest_candidate_id', 'manual_version_id', 'confirmed_version_id']
+    .some(key => view[key] !== workspace[key]) || view.latest_job?.id !== workspace.latest_job?.id) return null;
+  const changed = !sameReferenceValue(view.reference_revisions, workspace.reference_revisions)
+    || !sameReferenceValue(view.unit_revisions, workspace.unit_revisions);
+  if (!changed) return null;
+  return mergeSceneReferences(normalizeDraft(workspace.draft_input), draft, normalizeDraft(view.draft_input), ignored);
 }
 
 async function addItem(kind) {
@@ -972,6 +1015,7 @@ function startPolling(jobId) {
 }
 
 async function saveManual() {
+  if (!draftDirty && !await refreshReferencesBeforeSave()) throw new ApiError(t("La bozza è cambiata: salva prima gli ultimi campi."), "local_changes", 0);
   if (draftDirty && !await saveDraft()) throw new ApiError(t("La bozza è cambiata: salva prima gli ultimi campi."), "local_changes", 0);
   const text = $("manual-text").value;
   await mutation("PUT", `/api/cuts/${workspace.id}/manual`, { command_id: newCommandId(), expected_revision: workspace.revision, text, base_candidate_id: manualBaseId }, (view) => {
@@ -1253,7 +1297,6 @@ async function uploadPicture(pictureId, file) {
 }
 
 async function openLibrary() {
-  if (draftDirty && !await saveDraft()) return;
   const projectId = workspace.project_id, sceneId = workspace.scene_id;
   const url = `/api/projects/${projectId}/library?scene_id=${sceneId}`;
   let library = await request(url);
@@ -1318,10 +1361,24 @@ async function openLibrary() {
   const accepted = await dialog(t("Libreria del progetto"), content, null);
   libraryOpen=false;
   if (!accepted || !chosen) return;
-  const tick = draftTick;
-  await mutation("POST", `/api/cuts/${workspace.id}/reuse`, { command_id: newCommandId(), expected_revision: workspace.revision,
-    kind: chosen.kind, reference_id: chosen.item.id, slots: chosen.slots }, view => adoptView(view, tick));
-  feedback(t("Riferimento riusato. Controlla gli slot e dichiara il collegamento a H3 nel nuovo cut."));
+  const cutId = workspace.id, tick = draftTick;
+  const latest = await request(`/api/cuts/${cutId}`);
+  if (workspace.id !== cutId || tick !== draftTick) return;
+  const ignored = chosen.kind === 'picture' ? {key:'pictures', id:chosen.item.id}
+    : {key:'active_units', id:Number(Object.entries(workspace.unit_ids || {}).find(([,id])=>id===chosen.item.id)?.[0])};
+  const local = latest.revision === workspace.revision ? clone(draft) : mergeUpdatedReferences(latest, ignored);
+  if (!local) throw new ApiError(t('La bozza è cambiata: recuperare la versione server senza perdere il testo locale.'), 'revision_conflict', 409);
+  await mutation("POST", `/api/cuts/${cutId}/reuse`, { command_id: newCommandId(), expected_revision: latest.revision,
+    kind: chosen.kind, reference_id: chosen.item.id, slots: chosen.slots }, view => {
+      workspace = view;
+      if (draftTick === tick) {
+        draft = normalizeDraft(applyLibraryReference(local, normalizeDraft(view.draft_input), chosen.kind, chosen.item.id, view.unit_ids || {}, chosen.slots));
+        draftDirty = !sameReferenceValue(draft, normalizeDraft(view.draft_input)); draftTick += 1;
+        renderDraft(); renderResults();
+      }
+  });
+  feedback(draftDirty ? t('Riferimento ricaricato. Le altre modifiche locali sono conservate e restano da salvare.')
+    : t("Riferimento riusato. Controlla gli slot e dichiara il collegamento a H3 nel nuovo cut."));
 }
 
 function updateConfirmationButtons() {
@@ -1506,7 +1563,7 @@ $("cut-select").onchange = event => {
   withCommand(() => switchCut(cutId));
 };
 for (const kind of ["project", "scene", "cut"]) $( `new-${kind}` ).onclick = () => withCommand(() => createNamed(kind));
-$("open-library").onclick = () => withCommand(openLibrary);
+for (const id of ["open-library", "open-subject-library"]) $(id).onclick = () => withCommand(openLibrary);
 $("manage-library").onclick = () => withCommand(openLibrary);
 $("cancel-job").onclick = () => withCommand(async () => {
   await mutation("POST", `/api/jobs/${workspace.latest_job.id}/cancel`, { command_id: newCommandId(), expected_revision: workspace.revision }, view => { workspace = view; clearTimeout(pollTimer); });
@@ -1631,21 +1688,53 @@ function updateAssistanceControls() {
   if (chosen?.capabilities.includes("thinking")) $("vision-status").textContent += t(" L’app richiede una risposta diretta. Se il modello continua a ragionare, l’analisi può essere più lenta o esaurire il limite senza una descrizione. In quel caso puoi scegliere un altro modello oppure la variante instruct se già installata.");
   for (const node of document.querySelectorAll("[data-assistance-action]")) {
     let enabled = true;
+    if (node.dataset.assistanceAction === 'picture-analyze') {
+      const picture=draft.pictures.find(p=>p.id===node.dataset.target);
+      const sheet=picture && pictureDescriptionState(picture).mode==='image_character_sheet';
+      enabled=Boolean(picture && chosen?.vision_tested && (sheet
+        ? ['identity','appearance'].includes(picture.role) && selectedAnalysis(picture,imageAnalysisOptions).category==='character' && workspace?.media_by_picture?.[picture.id]
+        : workspace?.proxy_by_picture?.[picture.id] || workspace?.media_by_picture?.[picture.id]));
+      if((workspace?.assistance_jobs || []).some(j=>j.target_id===picture?.id && pictureTasks.has(j.kind) && ['queued','running'].includes(j.status)))enabled=false;
+    }
     if (node.dataset.assistanceAction === "analyze") enabled = Boolean(chosen?.vision_tested && (workspace?.proxy_by_picture?.[node.dataset.target] || workspace?.media_by_picture?.[node.dataset.target]));
     if (node.dataset.assistanceAction === "character-sheet") enabled = Boolean(chosen?.vision_tested && workspace?.media_by_picture?.[node.dataset.target] && selectedAnalysis(draft.pictures.find(p=>p.id===node.dataset.target),imageAnalysisOptions).category === 'character');
-    if (node.dataset.assistanceAction === "translate") enabled = textAvailable && (draft?.pictures.find(p => p.id === node.dataset.target)?.description_language || "English") !== "English";
+    if (node.dataset.assistanceAction === "translate") {
+      const english=(draft?.pictures.find(p => p.id === node.dataset.target)?.description_language || 'English')==='English';
+      node.hidden=english;enabled=textAvailable && !english;
+      if((workspace?.assistance_jobs || []).some(j=>j.target_id===node.dataset.target && pictureTasks.has(j.kind) && ['queued','running'].includes(j.status)))enabled=false;
+    }
     if (node.dataset.assistanceAction === "asr") enabled = asrState.available && Boolean(draft?.audio_references.find(a => a.id === node.dataset.target)?.media_id);
-    if (node.dataset.assistanceAction === "apply") enabled = !draftDirty && !(workspace?.assistance_jobs || []).find(j => j.id === node.dataset.job)?.stale;
+    if (node.dataset.assistanceAction === "apply") {
+      const job=(workspace?.assistance_jobs || []).find(j=>j.id===node.dataset.job);
+      enabled=!draftDirty && !job?.stale && !job?.discarded && !job?.applied;
+    }
     if (node.dataset.assistanceAction === "context_subject") enabled = Boolean(draft?.continuity.previous_version_id) && !draft?.active_units.some(u=>u.subject===Number(node.dataset.target));
-    node.disabled = !enabled || commandBusy || finalized;
+    node.disabled = !enabled || commandBusy || navigationBusy || finalized;
   }
   for (const reason of document.querySelectorAll("[data-analysis-reason]")) {
+    const picture=draft.pictures.find(p=>p.id===reason.dataset.analysisReason);
+    const sheet=picture && pictureDescriptionState(picture).mode==='image_character_sheet';
     const hasFile = workspace?.proxy_by_picture?.[reason.dataset.analysisReason] || workspace?.media_by_picture?.[reason.dataset.analysisReason];
-    reason.textContent = !hasFile ? t("Carica il file della Picture o un proxy per l’analisi; la descrizione manuale resta disponibile.") : !chosen ? t("Scegli il modello vision in Impostazioni.") : !chosen.vision_tested ? t("Verifica prima il modello vision selezionato.") : "";
+    reason.textContent = sheet && (!['identity','appearance'].includes(picture.role) || selectedAnalysis(picture,imageAnalysisOptions).category!=='character')
+      ? t('Per il character sheet scegli Identità o Aspetto e la categoria Personaggio.')
+      : sheet && !workspace?.media_by_picture?.[picture.id] ? t('Carica il file originale per analizzare il character sheet.')
+      : !hasFile ? t("Carica il file della Picture o un proxy per l’analisi; la descrizione manuale resta disponibile.") : !chosen ? t("Scegli il modello vision in Impostazioni.") : !chosen.vision_tested ? t("Verifica prima il modello vision selezionato.") : "";
+  }
+  for(const node of document.querySelectorAll('[data-picture-analysis-profile]')) {
+    const picture=draft.pictures.find(p=>p.id===node.dataset.pictureAnalysisProfile);
+    node.textContent=picture && imageAnalysisOptions ? analysisLabel(selectedAnalysis(picture,imageAnalysisOptions),imageAnalysisOptions) : '';
+  }
+  for(const node of document.querySelectorAll('[data-picture-analysis-type]')) {
+    const pending=(workspace?.assistance_jobs || []).some(job=>job.target_id===node.dataset.pictureAnalysisType && pictureTasks.has(job.kind) && ['queued','running'].includes(job.status));
+    node.querySelector('select').disabled=commandBusy || navigationBusy || finalized || pending;
   }
   for (const input of document.querySelectorAll('input[type="file"]')) input.disabled = commandBusy || (finalized && !input.dataset.resultVideo);
 }
 async function requestAssistance(kind, targetId = null, force = false) {
+  if(pictureTasks.has(kind)) {
+    const picture=draft.pictures.find(p=>p.id===targetId);
+    if(picture)Object.assign(pictureDescriptionState(picture),{notice:'',noticeError:false});
+  }
   if (draftDirty && !await saveDraft()) { feedback(t("Salva prima gli ultimi campi.")); return; }
   const model = kind === "audio_asr" ? "local-whisper" : kind === "description_translate" ? $("model").value : $("vision-model").value;
   if (!model) throw new Error(t("Scegli prima il modello da usare."));
@@ -1657,6 +1746,7 @@ async function requestAssistance(kind, targetId = null, force = false) {
 }
 function mergePolledView(view) {
   if (view.id !== workspace?.id) return;
+  if (view.revision < workspace.revision) return;
   const base = workspace.revision;
   workspace = view;
   if (view.revision !== base) {
@@ -1687,6 +1777,19 @@ function refreshAssistancePanels() {
   const trial = jobs.filter(j => j.kind === "vision_trial").at(-1);
   $("assistance-status").textContent = trial ? ["queued", "running"].includes(trial.status) ? tr`Verifica vision ${trial.status === "queued" ? t("in coda") : t("in corso")}…` : trial.status === "succeeded" ? t("Prova vision superata: forme e colori riconosciuti.") : (trial.result?.issues || []).map(diagnostic).join(" ") : "";
   for (const panel of document.querySelectorAll("[data-assistance-for]")) {
+    if(panel.dataset.pictureDescription) {
+      const picture=draft?.pictures.find(p=>p.id===panel.dataset.pictureDescription);
+      if(!picture){panel.replaceChildren();continue;}
+      const state=pictureDescriptionState(picture);
+      const locked=commandBusy || navigationBusy || Boolean(currentContext()?.scene.finalized);
+      renderPictureProposals(panel,picture,jobs,state.mode,imageAnalysisOptions,state,{el,serverButton,
+        apply:applyAssistance,dismiss:dismissAssistance,cancel:cancelAssistance,diagnostic,locked,
+        canApply:job=>!locked && !draftDirty && !job.stale && !job.discarded && !job.applied,
+        error:job=>job.result?.metrics?.error_code==='truncated_response'
+          ? t('Risposta del modello interrotta al limite di output: nessuna proposta completa. Riprova esplicitamente o scegli un altro modello.')
+          : (job.result?.issues || [t('Operazione non disponibile.')]).map(diagnostic).join(' ')});
+      continue;
+    }
     panel.replaceChildren();
     const matching = jobs.filter(j => j.target_id === panel.dataset.assistanceFor);
     // Ultime varianti per profilo/livello; lavori attivi sempre annullabili.
@@ -1710,7 +1813,10 @@ function refreshAssistancePanels() {
         box.append(apply);
         if (draftDirty && !job.stale) box.append(el("p", "field-help", t("Salva la bozza per verificare che questa proposta sia ancora attuale.")));
         if (job.analysis && job.stale) box.append(el('p','field-help',t('Per riproporre un livello già analizzato, selezionalo e premi Analizza. La cache verrà riusata se immagine e impostazioni corrispondono.')));
-        box.append(serverButton(job.analysis ? t("Analizza selezione attuale senza cache") : t("Nuova analisi senza cache"), () => requestAssistance(job.kind, job.target_id, true)));
+        const retryLabel = job.kind === 'image_character_sheet' ? t('Rianalizza character sheet senza cache')
+          : job.kind === 'image_analyze' ? t('Rianalizza immagine senza cache')
+          : job.analysis ? t("Analizza selezione attuale senza cache") : t("Nuova analisi senza cache");
+        box.append(serverButton(retryLabel, () => requestAssistance(job.kind, job.target_id, true)));
       } else {
         // Le ricevute storiche restano intatte: chiarisci anche i vecchi errori
         // M3 che esponevano un messaggio generico pur registrando la troncatura.
@@ -1731,6 +1837,30 @@ async function applyAssistance(job) {
   const tick = draftTick;
   await mutation("POST", `/api/cuts/${workspace.id}/assistance/${job.id}/apply`, { command_id: newCommandId(), expected_revision: workspace.revision }, view => adoptView(view, tick));
   feedback(t("Proposta applicata ai campi come testo da controllare. Correggila e confermala prima della compilazione."));
+}
+async function dismissAssistance(job) {
+  const cutId=workspace.id;
+  const picture=draft.pictures.find(p=>p.id===job.target_id);
+  const state=pictureDescriptionState(picture);
+  state.pendingDismiss ??= new Set();state.pendingDismiss.add(job.id);
+  Object.assign(state,{notice:t('Scarto della proposta in corso…'),noticeError:false,historyOpen:false});
+  refreshAssistancePanels();
+  const panel=[...document.querySelectorAll('[data-picture-description]')].find(node=>node.dataset.pictureDescription===job.target_id);
+  panel?.querySelector('[data-discard-notice]')?.focus();
+  try {
+    await mutation('POST',`/api/cuts/${cutId}/assistance/${job.id}/dismiss`,{command_id:newCommandId(),expected_revision:workspace.revision},view=>{
+      if(workspace.id!==cutId)return;
+      workspace=view;
+    });
+    state.notice=t('Proposta scartata. La descrizione attuale è conservata.');
+    feedback(state.notice);
+  } catch(error) {
+    Object.assign(state,{notice:t('Scarto non riuscito:')+' '+error.message,noticeError:true});
+    throw error;
+  } finally {
+    state.pendingDismiss.delete(job.id);
+    if(workspace.id===cutId){refreshAssistancePanels();updateButtons();}
+  }
 }
 function enableDrop(node, upload) {
   node.addEventListener("dragover", event => { if ([...(event.dataTransfer?.types || [])].includes("Files")) { event.preventDefault(); event.stopPropagation(); node.classList.add("dragging"); } });

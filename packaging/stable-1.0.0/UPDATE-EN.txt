@@ -1,0 +1,38 @@
+MiniMax H3 Compiler Lite — update to version 1.0.0
+MIT — Copyright (c) 2026 aledige — Italiano: UPDATE-IT.txt
+
+If your Windows browser connects to a Mac backend, update and restart the
+application on the Mac. Replacing files or reloading the browser alone does not
+reload Python already in memory. The Mac service aligned on November 22 is
+already updated; this Windows delivery does not require reinstalling it.
+
+For a standalone Windows installation:
+
+1. Preserve unsaved edits, save available fields and wait for jobs to finish.
+   Stop the OLD backend with Ctrl+C and wait for it to exit.
+2. In CMD inside the OLD application folder, create a backup in a NEW folder.
+   If you used --data-dir, add that exact path to the --backup command:
+
+   Avvia.cmd --backup "%USERPROFILE%\MiniMax-before-1.0.0-01"
+   Avvia.cmd --verify-backup "%USERPROFILE%\MiniMax-before-1.0.0-01"
+
+   Wait for verified true. Never delete earlier backups to reuse their names.
+3. Check SHA256SUMS.txt and extract into a new local, unsynchronized folder.
+   Keep the old code and do not copy its .venv.
+4. Start the NEW backend with Avvia.cmd. Keep the existing data archive: if
+   you used --data-dir, use that same path. The terminal displays the selected
+   data folder. Never run two backends against the same archive.
+5. Preserve browser edits, then reopen/refresh the page with Ctrl+F5. Check
+   project, descriptions, files, prompts/versions and selected models.
+6. Discard a proposal: it must disappear and remain Discarded in history after
+   restart without changing descriptions or manual text.
+
+First startup retains only THREE analyses per cut/Picture, including the current
+one. Older entries are deleted; the backup preserves them. Originals, saved
+descriptions, prompts, versions and snapshots are not deleted. No automatic
+inference or model download occurs. No text model is preset; saved selections
+remain in the archive.
+
+WINDOWS-CHECK-EN.txt also describes testing a restored copy. To return to an older
+version, use a new restored backup copy rather than pointing old code at the
+updated archive. Never overwrite the operational archive.

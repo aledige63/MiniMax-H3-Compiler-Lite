@@ -199,7 +199,7 @@ class DefinitionApiTests(unittest.TestCase):
         self.assertEqual(self.client.get(f"/api/cuts/{self.cut}/text?version_id={first['id']}").text,first['text'])
         self.assertEqual(self.fake.calls,2)
 
-    def test_shared_picture_updates_are_visible_but_do_not_rewrite_other_cut_or_versions(self):
+    def test_shared_picture_updates_refresh_same_scene_drafts_without_inference(self):
         first=self.view(); picture=first['draft_input']['pictures'][0]
         scene=self.client.get('/api/projects').json()[0]['scenes'][0]
         second=self.client.post(f"/api/scenes/{scene['id']}/cuts",json=dict(command_id=str(uuid4()),expected_revision=scene['revision'],name='Secondo')).json()
@@ -212,9 +212,11 @@ class DefinitionApiTests(unittest.TestCase):
             unchanged=other_browser.get(f"/api/cuts/{second['id']}").json()
         self.assertEqual(same_cut['draft_input']['pictures'][0]['description_en'],'a replacement character')
         self.assertNotIn(picture['id'],same_cut['reference_updates'])
-        self.assertIn(picture['id'],unchanged['reference_updates'])
-        self.assertEqual(unchanged['draft_input'],second_before['draft_input'])
-        self.assertEqual(unchanged['revision'],second_before['revision'])
+        self.assertNotIn(picture['id'],unchanged['reference_updates'])
+        expected=second_before['draft_input'];expected['pictures'][0]['description_en']='a replacement character'
+        self.assertEqual(unchanged['draft_input'],expected)
+        self.assertEqual(unchanged['revision'],second_before['revision']+1)
+        self.assertEqual(unchanged['versions'],second_before['versions'])
         self.assertEqual(self.fake.calls,0)
 
     def test_ambient_choice_persists_and_new_cut_defaults_on(self):

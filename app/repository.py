@@ -24,6 +24,7 @@ from app.physical import unit_picture_ids, detail_content
 from app.scale import canonical_scale, resolve_scale_subject
 from app.image_profiles import normalized_settings
 from app.library import LibraryOperations
+from app.reference_sync import synchronize_scene_descriptions
 
 
 def encode(value):
@@ -483,6 +484,12 @@ class Repository(LibraryOperations, ShotLibraryOperations, SubjectOperations, Ar
                 ids=[r[0] for r in active]
                 cut_id=default[0] if default and default[0] in ids else ids[0] if ids else None
                 if cut_id is None:raise StoreError('empty_archive','Non ci sono cut attivi. Crea o ripristina un progetto.',404)
+            state = self._load(db, cut_id, active=True)
+            if not synchronize_scene_descriptions(self, db, state['scene_id'], apply=False):
+                return self._view(state, db)
+        with self.transaction() as db:
+            state = self._load(db, cut_id, active=True)
+            synchronize_scene_descriptions(self, db, state['scene_id'])
             return self._view(self._load(db, cut_id, active=True), db)
 
     def preview_dialogues(self, cut_id):
@@ -589,6 +596,9 @@ class Repository(LibraryOperations, ShotLibraryOperations, SubjectOperations, Ar
                 for unit in (version.get('input_snapshot') or {}).get('active_units',[]):
                     identity = state.get('unit_bindings',{}).get(str(unit['subject']))
                     if identity:db.execute('INSERT INTO version_subjects VALUES (?,?,?)',(version['id'],unit['subject'],identity))
+            synchronize_scene_descriptions(self, db, state['scene_id'])
+            # A read may have reconciled a previously stale reference of this cut.
+            state = self._load(db, cut_id, active=True)
             response = self._job_view(state, state['jobs'][job_id]) if job_id else self._view(state, db)
             result = {'kind': 'job', 'id': job_id} if job_id else self._compact_view(response)
             payload_hash = digest({'operation': operation, 'cut_id': str(cut_id), 'command': command.model_dump(mode='json')})

@@ -1,0 +1,25 @@
+MiniMax H3 Compiler Lite — materials and dependencies
+Version 1.0.0 — English (Italiano: NOTE-DIPENDENZE.txt)
+
+The compiler's original code is licensed under MIT.
+Copyright (c) 2026 aledige. LICENSE contains the applicable legal text.
+This note does not change its terms. MIT permits use, copying, modification
+and distribution, including commercial use, while retaining the copyright
+notice and license text.
+
+The ZIPs contain the compiler's code, launchers and documentation.
+They do not include interpreters, wheels, AI models, weights, MiniMax
+documentation, development-machine inventories or materials from fonti/.
+Repository references retain their original provenance and terms;
+see THIRD-PARTY-NOTICES.md (Italian/English).
+
+First launch installs the versions pinned in requirements.lock from PyPI.
+Each dependency retains its own licenses and attribution notices, available
+in the .venv environment's *.dist-info metadata. The compiler's MIT License
+does not change the terms of Python packages or their native libraries.
+Any future redistribution of wheels/runtimes must preserve their applicable
+notices as well.
+
+The application does not distribute MiniMax H3, Ollama or OpenAI and does not
+execute the external video workflow. Configure those components separately.
+Private delivery through Drive; GitHub publication suspended.
