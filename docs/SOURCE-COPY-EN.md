@@ -15,7 +15,7 @@ MIT and copyright aledige are retained. English is the primary README language;
 the Italian version is README-IT.md. Operating guides remain available in both.
 
 The standalone recipe and its tests are adapted to work without old tags.
-The current numbered release is 1.0.0; its manifest records exact runtime hashes. No old tag moved and no
+The current numbered release is 1.1.0; its manifest records exact runtime hashes. No old tag moved and no
 tested ZIP changed. The source is published at
 https://github.com/aledige63/MiniMax-H3-Compiler-Lite.
 The tested launch ZIPs are separate distributions; publishing these sources

@@ -8,6 +8,15 @@ export function selectedAnalysis(picture = {}, options) {
   return settings;
 }
 
+export const sheetAnalysisKinds = new Set(['image_character_sheet', 'image_object_sheet']);
+
+export function sheetAnalysisSupported(picture, options, kind) {
+  const category = selectedAnalysis(picture, options).category;
+  if (kind === 'image_object_sheet') return ['object','appearance'].includes(picture?.role) && category === 'held_item';
+  if (kind === 'image_character_sheet') return ['identity','appearance'].includes(picture?.role) && category === 'character';
+  return false;
+}
+
 export function setAnalysisChoice(picture, key, value) {
   const settings = {...defaults, ...picture.analysis, [key]:value};
   const saved = Object.fromEntries(Object.entries(settings).filter(([key,value]) => value !== defaults[key]));

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {readFileSync} from 'node:fs';
-import {pictureProposalView,renderPictureProposals} from '../app/static/picture-description.js';
+import {pictureProposalView,renderPictureProposals,pictureTaskLabel} from '../app/static/picture-description.js';
 import {setUiLanguage} from '../app/static/i18n.js';
 import vm from 'node:vm';
 
@@ -10,6 +10,21 @@ const picture={id:'picture',role:'identity',description_en:'Current manual text.
 const analysis={category:'character',level:'compact',attribute:'',view:''};
 const job=(id,extra={})=>({id,target_id:'picture',kind:'image_character_sheet',status:'succeeded',analysis,
   result:{text:'An exact proposed description.\n',warnings:[],metrics:{cache_hit:true}},...extra});
+
+test('le schede oggetto partecipano alla proposta unica e allo storico di tre risultati',()=>{
+  const object={...picture,role:'object'};
+  const jobs=[job('old'),job('single',{kind:'image_analyze',analysis:{...analysis,category:'held_item'}}),
+    job('object',{kind:'image_object_sheet',analysis:{...analysis,category:'held_item'}})];
+  const current=pictureProposalView(jobs,object,options,'image_object_sheet');
+  assert.equal(current.current.id,'object');
+  assert.deepEqual(current.history.map(j=>j.id),['single','old']);
+  assert.equal(pictureProposalView(jobs,object,options,'image_analyze').current,null);
+  jobs.at(-1).discarded=true;
+  assert.equal(pictureProposalView(jobs,object,options,'image_object_sheet').current,null);
+  setUiLanguage('en');
+  try{assert.equal(pictureTaskLabel('image_object_sheet'),'Object sheet · multiple views');}
+  finally{setUiLanguage('it');}
+});
 
 test('one latest matching proposal is current; legacy and other profiles stay in history',()=>{
   const jobs=[job('legacy',{analysis:null}),job('medium',{analysis:{...analysis,level:'medium'}}),job('latest')];

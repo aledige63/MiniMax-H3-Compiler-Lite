@@ -1,45 +1,57 @@
-# Registro GitHub — versione 1.0.0
+# MiniMax H3 Compiler Lite 1.1.0
 
-Rilascio stabile numerato del 22 novembre 2026. English: [GITHUB-NEXT-RELEASE-EN.md](GITHUB-NEXT-RELEASE-EN.md).
+26 novembre 2026 · rilascio stabile · MIT, copyright (c) 2026 aledige.
 
-L'utente ha confermato dal PC Windows, dopo il riavvio del backend Mac, che
-Scarta funziona e che la nuova analisi character sheet non cita più i pannelli.
-Ha quindi autorizzato il consolidamento della release, eliminando il suffisso
-preview dalla versione corrente. Le versioni precedenti restano immutate.
+## Novità rispetto a 1.0.0
 
-## Contenuto da integrare
+- **Scheda oggetto · più viste**: integra le raffigurazioni dello stesso oggetto
+  in una descrizione unica. File originale completo, livelli Compact/Medium/Full,
+  cache distinta, proposta da applicare esplicitamente e nessun Subject automatico.
+- Guide movimento con mapping espliciti nelle definizioni: aspetto dalle Picture
+  o dal contesto, posizione/orientamento/traiettoria dal proxy Video. Il Subject
+  sostituisce la sagoma dalla prima comparsa; la sagoma non è un oggetto aggiuntivo.
+- Apertura dichiarata nella guida autorevole. Le seconde aperture riconosciute
+  nelle azioni o nel summary sono rifiutate senza riscritture o retry nascosti.
+- Prerequisiti AI espliciti nei README e nelle guide: Ollama locale/remoto con
+  modelli installati, oppure chiave API OpenAI. Servono testo e vision verificato.
 
-- Descrizioni condivise per UUID fra bozze compatibili nella stessa scena aperta.
-- Libreria accessibile con edit non salvati, ricaricamento selettivo e barra fissa.
-- Character sheet v6 con descrizione unica, controllo delle viste e cache distinta.
-- Un solo Analizza, selettore esplicito, proposta unica e storico chiuso.
-- Scarta persistente tramite dismiss, rimozione immediata e ripristino su errore.
-- Limite di tre analisi per cut/Picture, incluse traduzioni e tentativi falliti;
-  eliminazione delle più vecchie già autorizzata, con protezione di file e testi.
-- Guide IT/EN e note [RELEASE-1.0.0-IT.md](RELEASE-1.0.0-IT.md).
+## Utilizzo dell’output Stage dalla versione 0.9.0
 
-## Validazione e consegna
+Da **Stage 0.9.0** si possono usare insieme l’MP4 esportato e il testo
+**Prompt per MiniMax Compiler**, salvato come `_compiler.txt`.
+Caricare l’MP4 come Video guida nel cut, scegliere il ruolo corretto, attivarlo,
+associare ogni figura al Subject e incollare il solo corpo narrativo nel campo
+**Prompt guida · inglese** (massimo 2.500 caratteri).
+Il manichino e un parallelepipedo possono guidare rispettivamente una persona
+e un’auto, definite dalle proprie Picture. L’ambiente resta un riferimento distinto.
+Il file va collegato anche allo stesso slot Video nel workflow H3 esterno.
 
-421 test Python eseguiti (uno saltato su Mac), 111 JavaScript superati.
-Scarta verificato sul backend reale, sulla LAN e dopo un secondo riavvio:
-cut invariati salvo revisione, versioni/snapshot conservati e hash media intatti.
-La conferma utente riguarda il browser Windows collegato al backend Mac;
-non viene dichiarata una nuova installazione Windows del nuovo ZIP numerato.
+È un flusso manuale già utilizzabile: questa release non include un importatore
+automatico congiunto MP4/TXT/JSON e non esegue Stage o MiniMax H3.
+Guida: [STAGE-IT](STAGE-IT.md). Stage: https://github.com/aledige63/Stage/releases/tag/v0.9.0.
 
-La ricetta pubblicabile è autonoma: allowlist e riferimento runtime aggiornati,
-nessuna dipendenza da vecchi ZIP o dalla cronologia privata. Il pacchetto stabile
-Windows mantiene il runtime accettato e gli avvii/dipendenze già collaudati.
-Il manifesto del pacchetto identifica hash e provenienza; i report di verifica
-accompagnano la consegna. MIT, copyright aledige, documentazione in entrambe le lingue.
+## Conservazione e verifiche
 
-## Pubblicazione separata
+Prompt salvati, versioni manuali, snapshot, associazioni e file sono conservati.
+Le nuove istruzioni si applicano soltanto a nuove analisi/compilazioni. Nessuna
+migrazione SQLite o modello scaricato automaticamente. La serie 1.0.0 e i vecchi
+tag/ZIP restano invariati.
 
-**Nessun push o pubblicazione GitHub eseguito.** Il consolidamento locale e la
-consegna Drive non autorizzano la pubblicazione. La base pubblica controllata
-in sola lettura è `aledige63/MiniMax-H3-Compiler-Lite`, main,
-`5e7d59cd02fe71666063a401144821f7ca780036`. Patch, sorgenti e manifesti revisionati
-sono preparati per una successiva istruzione di pubblicazione.
+Controlli locali del runtime: 438 test Python eseguiti (uno saltato), 114 JavaScript,
+schema DTO, dipendenze e integrità dati/media dopo riavvio Mac. La copia pubblica
+include inoltre il controllo autonomo del confezionamento. Le prove automatiche
+usano archivi sintetici e risposte simulate, senza inferenze reali.
+Il test esterno dell’utente con una guida Stage e un prompt corretto ha dato un
+risultato migliore, con traiettorie ancora approssimative. Non è una garanzia di
+fedeltà geometrica H3 né un collaudo del nuovo percorso LLM automatico.
+Una nuova installazione nativa Windows di questo ZIP non è stata ripetuta.
 
-Non importare cronologia privata, handoff locale, dati, media, chiavi, modelli,
-report di inferenze o materiali esterni. Conservare tutti i vecchi ZIP/tag.
-Stage resta nel piano futuro. Linux escluso; nessun nuovo installer Mac richiesto.
+## Download e aggiornamento
+
+Windows 11 x64: estrarre il nuovo ZIP in una cartella locale nuova e avviare
+`Avvia.cmd` con Python 3.12 x64 installato. Salvare gli edit, fermare il vecchio
+server e creare prima un backup verificato. Conservare lo stesso archivio dati
+o lo stesso `--data-dir`. Non sovrascrivere la vecchia cartella del codice.
+Mac Apple Silicon: avvio dai sorgenti con Python 3.12; nessun nuovo ZIP Mac.
+Modelli, Ollama, Python e chiavi API non sono inclusi. Linux escluso.
+Confrontare i download con `SHA256SUMS.txt`.

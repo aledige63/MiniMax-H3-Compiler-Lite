@@ -118,6 +118,7 @@
           "enum": [
             "image_analyze",
             "image_character_sheet",
+            "image_object_sheet",
             "vision_trial",
             "description_translate",
             "audio_asr"
@@ -2546,6 +2547,7 @@
             "text_compile",
             "image_analyze",
             "image_character_sheet",
+            "image_object_sheet",
             "vision_trial",
             "description_translate",
             "audio_asr"

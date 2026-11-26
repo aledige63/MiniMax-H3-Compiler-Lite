@@ -16,13 +16,13 @@ MiniMax H3 esterno.
 [note sulle dipendenze](THIRD-PARTY-NOTICES.md).
 
 
-## Versione stabile 1.0.0
+## Versione stabile 1.1.0
 
-Comportamento confermato dall’utente su Windows il 22 novembre 2026, dopo
-l’allineamento del backend Mac. Questi sorgenti costruiscono il pacchetto Windows
-senza vecchi ZIP o oggetti Git privati. Pubblicazione GitHub separata.
+Schede oggetto e mapping espliciti delle guide Video, con una sola apertura dichiarata.
+Utilizzo manuale degli export MP4 e `_compiler.txt` di **Stage dalla versione 0.9.0**.
+Prompt e snapshot già salvati restano intatti.
 
-[RELEASE-1.0.0](docs/RELEASE-1.0.0-IT.md) · [DESCRIPTION-WORKFLOW](docs/DESCRIPTION-WORKFLOW-IT.md) · [CHARACTER-SHEET](docs/CHARACTER-SHEET-IT.md) · [SCENE-REFERENCE-SYNC](docs/SCENE-REFERENCE-SYNC-IT.md)
+[Note di rilascio](docs/RELEASE-1.1.0-IT.md) · [Changelog](CHANGELOG-IT.md) · [Guida Stage](docs/STAGE-IT.md) · [Schede oggetto](docs/OBJECT-SHEET-IT.md)
 
 ## Scaricamento e installazione
 

@@ -1,0 +1,7 @@
+Upgrade from 1.0.0 to 1.1.0
+Save edits, wait for an idle queue, stop the server and create a verified full
+data backup. Extract 1.1.0 into a new folder and keep the data archive or exact
+--data-dir path. Do not overwrite older ZIPs/code. New compilations use explicit
+bindings and authoritative guide openings; earlier versions remain identical.
+Object-sheet analysis added. Stage MP4/_compiler.txt output from v0.9.0 can be
+used manually. See RELEASE-1.1.0-EN.md and WINDOWS-CHECK-EN.txt.

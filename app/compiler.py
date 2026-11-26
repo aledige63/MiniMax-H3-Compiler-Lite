@@ -3,7 +3,7 @@ import re
 from collections import Counter
 
 from app.domain import CompileInput, CompileResult, Interpretation, definition_picture
-from app.direction import CAMERA_EVENT, GUIDE_EVENT, camera_instruction, guide_key, guide_text
+from app.direction import CAMERA_EVENT, GUIDE_EVENT, camera_instruction, guide_key, guide_text, guide_opening, subject_motion_bindings
 from app.shots import SHOT_EVENT, TAG, shot_cues, shot_instruction
 from app.voice import dialogue_voice_sources, voice_direction, voice_phrases, voice_sources, voice_translations
 from app.physical import detail_entries, detail_key, detail_phrase
@@ -17,10 +17,30 @@ PLACEHOLDER = re.compile(
 # Il terminatore appartiene al formato H3, non alle parole autorevoli del parlato.
 # Assorbe un eventuale punto già emesso dal modello, evitando il doppio terminatore.
 DIALOGUE_EVENT = re.compile(PLACEHOLDER.pattern + r"(?:[ \t]*\.+)?")
+OPENING_STATEMENT = re.compile(
+    r'\b(?:(?:the\s+)?(?:scene|shot)\s+(?:opens?|begins?|starts?)|'
+    r'at\s+(?:the\s+)?(?:opening|start|beginning)|initially|(?:first|opening|initial)\s+frame)\b',
+    re.IGNORECASE,
+)
 
 
 class StructuralError(ValueError):
     pass
+
+
+def restates_guide_opening(data, text):
+    """Riconosce una seconda apertura LLM; non riscrive né interpreta il testo guida."""
+    subjects = {f'<Subject {subject}>' for subject, bindings in subject_motion_bindings(data).items()
+                if any(guide_opening(reference) for reference, _ in bindings)}
+    if not subjects:
+        return False
+    # Scritte visibili citate sono dati, non istruzioni sull'apertura.
+    prose = re.sub(r'''"[^"]*"|“[^”]*”|(?<!\w)'[^']*'(?!\w)|‘[^’]*’''', '', text)
+    for sentence in re.split(r'(?<=[.!?])\s+', prose):
+        tokens = set(re.findall(r'<Subject [1-9][0-9]*>', sentence))
+        if OPENING_STATEMENT.search(sentence) and (not tokens or tokens & subjects):
+            return True
+    return False
 
 
 def speech_copy_instruction(audio):
@@ -147,6 +167,9 @@ def render(data: CompileInput, plan: Interpretation, input_hash: str) -> Compile
         if prefix and prefix[-1] not in '.!?' and not prefix.endswith('}}'):
             raise StructuralError('Il segnaposto della guida deve essere una frase completa, non parte di una proposizione.')
     without_events = PLACEHOLDER.sub("", CAMERA_EVENT.sub('', GUIDE_EVENT.sub('', SHOT_EVENT.sub('', narrative))))
+    if restates_guide_opening(data, without_events):
+        raise StructuralError('Il modello ha aggiunto una seconda apertura per i Subject già regolati dalla guida Video. '
+            'L’apertura dichiarata nella guida deve restare l’unica. Ricompila il prompt.')
     if "{{" in without_events or "}}" in without_events:
         raise StructuralError("Segnaposto non valido.")
     known = {u.token for u in data.active_units}
@@ -211,6 +234,9 @@ def render(data: CompileInput, plan: Interpretation, input_hash: str) -> Compile
         raise StructuralError("Il modello deve restituire un solo paragrafo senza sezioni.")
     if plan.summary_en is not None:
         summary_text = plan.summary_en
+        if restates_guide_opening(data, summary_text):
+            raise StructuralError('Summary: il modello ha aggiunto un’apertura per i Subject già regolati dalla guida Video. '
+                'Il riassunto deve descrivere lo sviluppo senza ridefinire l’apertura. Ricompila il prompt.')
         summary_tokens = re.findall(r"<[^>]*>", summary_text)
         if not summary_text.strip():
             raise StructuralError('Summary: il modello ha restituito un riassunto vuoto.')
@@ -312,6 +338,7 @@ def render(data: CompileInput, plan: Interpretation, input_hash: str) -> Compile
         lambda match: shot_instruction(cues[int(match[1][1:])-1], int(match[1][1:])-1), narrative
     ) if cues else "[Shot 1] " + narrative
     definitions, retention = [], []
+    motion_bindings = subject_motion_bindings(data)
     for u in data.active_units:
         description = data.description_for(u).rstrip('.')
         picture_sources = [s for s in u.sources if s.origin == 'picture']
@@ -358,6 +385,11 @@ def render(data: CompileInput, plan: Interpretation, input_hash: str) -> Compile
             phrase = scale_phrase(data, u, translated_scales[f's{u.subject}'])
             definitions[-1] += ' Declared ' + phrase + '.'
             retention[-1] += ' Preserve ' + phrase + '. ' + SCALE_RETENTION
+        for reference, mapping in motion_bindings.get(u.subject, []):
+            proxy = mapping.figure.strip()
+            definitions[-1] += (f' The position, orientation and motion of {u.token} follow the "{proxy}" proxy in {reference.token}; '
+                'its appearance comes from the Subject references defined above.')
+            retention[-1] += f' Placement, orientation and motion follow the "{proxy}" proxy in {reference.token}.'
     for video in data.active_videos:
         role={'continuation':'video-continuation source','camera':'camera-movement guide','subject_motion':'Subject-motion guide','camera_and_subject_motion':'combined camera and Subject-motion guide'}[video.role]
         definitions.append(f"{video.token} is {video.description_en}, used as the {role} ({video.duration_s:g}s).")

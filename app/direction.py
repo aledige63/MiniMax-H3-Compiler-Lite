@@ -114,6 +114,28 @@ class GuideUsage(DirectionDTO):
 def guide_key(reference,kind):return f'{kind}_{reference.slot}'
 
 
+def subject_motion_bindings(data):
+    """Associazioni dichiarate delle sole guide Video attive, senza leggere i video."""
+    bindings = {}
+    for reference in data.active_video_guides:
+        if reference.role not in {'subject_motion', 'camera_and_subject_motion'}:
+            continue
+        for mapping in reference.guidance.mappings:
+            bindings.setdefault(mapping.subject, []).append((reference, mapping))
+    return bindings
+
+
+def guide_opening(reference):
+    """Legge l'etichetta esplicita del testo guida, senza dedurne presenze o tempi."""
+    if reference.role not in {'subject_motion', 'camera_and_subject_motion'}:
+        return None
+    for line in reference.guidance.prompt_en.splitlines():
+        match = re.match(r'^\s*Opening(?:\s+(?:frame|composition))?\s*:\s*(\S.*)$', line, re.IGNORECASE)
+        if match:
+            return match[1].strip()
+    return None
+
+
 def guide_text(reference,kind):
     token=f'<{kind.title()} {reference.slot}>';g=reference.guidance
     if kind=='video':
@@ -133,7 +155,14 @@ def guide_text(reference,kind):
         else:
             subject=f'<Subject {mapping.subject}>'
             meaning={'figure':subject,'start':f'the starting position of {subject}','destination':f'the destination of {subject}','motion':f'the motion of {subject}'}[mapping.role]
-        instructions.append(f'In {token}, "{mapping.figure}" identifies {meaning}.')
+        instructions.append(f'In {token}, "{mapping.figure.strip()}" identifies {meaning}.')
+    if kind == 'video' and reference.role in {'subject_motion', 'camera_and_subject_motion'}:
+        instructions.append('Each mapped Subject replaces its guide proxy in place from the proxy’s first visible appearance, '
+            'using the Subject’s declared appearance. Preserve the proxy’s placement, orientation, trajectory and entry/exit timing. '
+            'The proxy shapes are not additional scene objects.')
+        if guide_opening(reference):
+            instructions.append('The following declared opening governs initial presence and placement. '
+                'A Subject whose proxy enters later remains outside the frame until that entry.')
     if g.prompt_en:instructions.append(g.prompt_en)
     text=' '.join(instructions)
     return text if text.rstrip().endswith(('.', '!', '?')) else text+'.'

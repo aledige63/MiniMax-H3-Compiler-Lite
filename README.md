@@ -16,13 +16,13 @@ H3 workflow.
 [dependency notices](THIRD-PARTY-NOTICES.md).
 
 
-## Stable version 1.0.0
+## Stable version 1.1.0
 
-Windows behavior was accepted by the user on November 22, 2026, after the Mac
-backend was aligned. This source snapshot builds the standalone Windows package
-without historical ZIPs or private Git objects. GitHub publication is separate.
+Object sheets and explicit Video-guide bindings, with a single declared opening.
+Use MP4 and `_compiler.txt` output from **Stage 0.9.0 onward** through the manual
+guide workflow. Saved prompts and snapshots stay intact.
 
-[RELEASE-1.0.0](docs/RELEASE-1.0.0-EN.md) · [DESCRIPTION-WORKFLOW](docs/DESCRIPTION-WORKFLOW-EN.md) · [CHARACTER-SHEET](docs/CHARACTER-SHEET-EN.md) · [SCENE-REFERENCE-SYNC](docs/SCENE-REFERENCE-SYNC-EN.md)
+[Release notes](docs/RELEASE-1.1.0-EN.md) · [Changelog](CHANGELOG.md) · [Stage guide](docs/STAGE-EN.md) · [Object sheets](docs/OBJECT-SHEET-EN.md)
 
 ## Download and install
 

@@ -1,10 +1,10 @@
 import {t, tr} from './i18n.js';
 import {analysisLabel, selectedAnalysis} from './image-analysis.js';
 
-export const pictureTasks = new Set(['image_analyze', 'image_character_sheet', 'description_translate']);
+export const pictureTasks = new Set(['image_analyze', 'image_character_sheet', 'image_object_sheet', 'description_translate']);
 const pending = job => ['queued','running'].includes(job.status);
 export const pictureTaskLabel = kind => t(({image_analyze:'Immagine singola',
-  image_character_sheet:'Character sheet',description_translate:'Traduzione in inglese'})[kind] || 'Analisi');
+  image_character_sheet:'Character sheet',image_object_sheet:'Scheda oggetto · più viste',description_translate:'Traduzione in inglese'})[kind] || 'Analisi');
 
 // Choose one result, never promote an older proposal after a dismissal or a
 // profile change. Legacy receipts without a profile remain readable in history.

@@ -14,8 +14,11 @@ from app.image_profiles import MAX_DESCRIPTION_CHARS, analysis_instruction, reso
 
 ANALYSIS_VERSION = 'vision-profiles-v3-1280-budget4096'
 CHARACTER_SHEET_VERSION = 'vision-character-sheet-v6-unified-1280'
-IMAGE_ANALYSIS_TASKS = {'image_analyze', 'image_character_sheet'}
+OBJECT_SHEET_VERSION = 'vision-object-sheet-v1-unified-1280'
+SHEET_ANALYSIS_TASKS = {'image_character_sheet', 'image_object_sheet'}
+IMAGE_ANALYSIS_TASKS = {'image_analyze'} | SHEET_ANALYSIS_TASKS
 CHARACTER_SHEET_ROLES = {'identity', 'appearance'}
+OBJECT_SHEET_ROLES = {'object', 'appearance'}
 TRANSLATION_VERSION = 'reference-translation-v2-budget4096'
 # Il budget comprende anche il ragionamento interno: alcuni renderer Ollama
 # continuano a usarlo con think=False. Non estrarre mai descrizioni da thinking.
@@ -97,7 +100,8 @@ def infer(client, kind, model, digest, fingerprint, *, content=None, role=None, 
             message = {'role': 'user', 'content': instruction, 'images': [encoded_image(trial_image())]}
         elif kind in IMAGE_ANALYSIS_TASKS:
             settings = analysis or resolved_analysis(dict(role=role))
-            instruction = analysis_instruction(settings, ROLE_INSTRUCTIONS.get(role, ''), sheet=kind == 'image_character_sheet')
+            instruction = analysis_instruction(settings, ROLE_INSTRUCTIONS.get(role, ''),
+                sheet=kind == 'image_character_sheet', object_sheet=kind == 'image_object_sheet')
             schema = {'type': 'object', 'properties': {'description': {'type': 'string'}}, 'required': ['description'], 'additionalProperties': False}
             message = {'role': 'user', 'content': instruction, 'images': [encoded_image(content)]}
         else:
@@ -135,11 +139,15 @@ def infer(client, kind, model, digest, fingerprint, *, content=None, role=None, 
             if not isinstance(description, str) or not description.strip() or len(description) > MAX_DESCRIPTION_CHARS or re.search(r'[<>\r\n]', description):
                 raise OllamaError('invalid_response')
             warnings = []
-            if kind == 'image_character_sheet':
-                # Le scritte citate appartengono all'abito, non all'impaginazione.
+            if kind in SHEET_ANALYSIS_TASKS:
+                # Le scritte citate appartengono al soggetto, non all'impaginazione.
                 prose = re.sub(r'''"[^"]*"|“[^”]*”|(?<!\w)'[^']*'(?!\w)|‘[^’]*’''', '', description)
-                if SHEET_LAYOUT.search(prose) or SHEET_VIEW_COMMENTARY.search(prose):
-                    raise OllamaError('sheet_layout_description')
+                if kind == 'image_object_sheet':
+                    # Un rear-view mirror è una parte dell'oggetto, non un commento sulla vista.
+                    prose = re.sub(r'\b(?:rear|side)[ -]view\s+mirrors?\b', '', prose, flags=re.IGNORECASE)
+                object_layout = kind == 'image_object_sheet' and re.search(r'\b(?:object|vehicle|product|reference) sheets?\b', prose, re.IGNORECASE)
+                if SHEET_LAYOUT.search(prose) or SHEET_VIEW_COMMENTARY.search(prose) or object_layout:
+                    raise OllamaError('object_sheet_layout_description' if kind == 'image_object_sheet' else 'sheet_layout_description')
             result = AssistanceResult(status='proposal', text=description.strip(), language='English', warnings=warnings)
     except (OllamaError, ValueError, TypeError, KeyError) as exc:
         code = exc.code if isinstance(exc, OllamaError) else 'invalid_response'
@@ -150,6 +158,7 @@ def infer(client, kind, model, digest, fingerprint, *, content=None, role=None, 
             'truncated_response': 'Risposta del modello interrotta al limite di output: nessuna proposta completa. Riprova esplicitamente o scegli un altro modello.',
             'invalid_response': 'La risposta del modello non rispetta il formato della descrizione richiesto. Puoi riprovare esplicitamente o scegliere un altro modello.',
             'sheet_layout_description': 'Il modello ha descritto i riquadri o le viste invece di una descrizione unica del personaggio. La descrizione corrente è conservata. Riprova esplicitamente l’analisi o inserisci il testo manualmente.',
+            'object_sheet_layout_description': 'Il modello ha descritto i riquadri o le viste invece di una descrizione unica dell’oggetto. La descrizione corrente è conservata. Riprova esplicitamente l’analisi o inserisci il testo manualmente.',
             'context_exhausted': 'Il modello ha esaurito il contesto disponibile per questa richiesta. Puoi scegliere un altro modello o un proxy più semplice.',
             'service_unreachable': 'Il servizio selezionato non è raggiungibile. Controlla la connessione e riprova esplicitamente.',
             'timeout': 'Tempo del modello esaurito. La descrizione manuale resta disponibile.'

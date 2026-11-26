@@ -1,0 +1,8 @@
+Aggiornamento a 1.1.0 da 1.0.0
+Salvare gli edit, attendere la coda vuota, fermare il server e creare un backup
+verificato dell’intero archivio. Estrarre 1.1.0 in una cartella nuova. Usare lo
+stesso archivio dati o --data-dir. Non sovrascrivere i vecchi ZIP/codice.
+Le nuove compilazioni hanno mapping espliciti e apertura della guida autorevole;
+le vecchie versioni restano identiche. Aggiunta Scheda oggetto multivista.
+Output MP4/_compiler.txt di Stage dalla v0.9.0 utilizzabile manualmente.
+Controllare RELEASE-1.1.0-IT.md e WINDOWS-CHECK-IT.txt.

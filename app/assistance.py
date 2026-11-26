@@ -8,6 +8,7 @@ from uuid import uuid4
 from pydantic import ValidationError
 
 from app.analysis import (ANALYSIS_VERSION, CHARACTER_SHEET_ROLES, CHARACTER_SHEET_VERSION,
+                          OBJECT_SHEET_ROLES, OBJECT_SHEET_VERSION, SHEET_ANALYSIS_TASKS,
                           IMAGE_ANALYSIS_TASKS, ROLE_INSTRUCTIONS, TRANSLATION_VERSION, infer, installed_model)
 from app.contracts import AssistanceResult
 from app.domain import ImageAnalysisSettings, Metrics
@@ -26,7 +27,7 @@ PICTURE_HISTORY_LIMIT = 3
 def prune_picture_history(db, cut_id=None):
     """Keep three image/translation receipts per cut and Picture, plus live work."""
     groups = {}
-    rows = db.execute("SELECT id,cut_id,data FROM assistance_jobs WHERE kind IN ('image_analyze','image_character_sheet','description_translate')"
+    rows = db.execute("SELECT id,cut_id,data FROM assistance_jobs WHERE kind IN ('image_analyze','image_character_sheet','image_object_sheet','description_translate')"
                       + (' AND cut_id=?' if cut_id is not None else '') + ' ORDER BY rowid',
                       (str(cut_id),) if cut_id is not None else ())
     for row in rows:
@@ -62,7 +63,7 @@ def target_context(state, kind, target_id):
     if settings is None: picture.pop('analysis', None)
     else: picture['analysis'] = settings
     final_media = state.get('media_bindings', {}).get(target_id)
-    media = final_media if kind == 'image_character_sheet' else state.get('proxy_bindings', {}).get(target_id) or final_media
+    media = final_media if kind in SHEET_ANALYSIS_TASKS else state.get('proxy_bindings', {}).get(target_id) or final_media
     return {'picture': picture, 'media': media, 'final_media': final_media,
             'reference_revision': state.get('reference_revisions', {}).get(target_id)}
 
@@ -166,11 +167,16 @@ class Assistance:
                         raise StoreError('invalid_input', 'Per il character sheet scegli Identità o Aspetto e la categoria Personaggio.', 422)
                     if not media:
                         raise StoreError('invalid_input', 'Carica il character sheet come file della Picture.', 422)
+                if kind == 'image_object_sheet':
+                    if role not in OBJECT_SHEET_ROLES or analysis['category'] != 'held_item':
+                        raise StoreError('invalid_input', 'Per la scheda oggetto scegli Oggetto o Aspetto e la categoria Oggetto / oggetto impugnato.', 422)
+                    if not media:
+                        raise StoreError('invalid_input', 'Carica la scheda oggetto come file della Picture.', 422)
                 if not media: raise StoreError('invalid_input', 'Carica un’immagine da analizzare o un proxy esplicito.', 422)
                 path, _ = self.media_store.file(media['id'])
                 if hashlib.sha256(path.read_bytes()).hexdigest() != media['sha256']: raise StoreError('media_unavailable', 'Immagine gestita non integra.', 409)
                 work.update(media_id=media['id'], sha256=media['sha256'], role=role, analysis=analysis)
-                version = CHARACTER_SHEET_VERSION if kind == 'image_character_sheet' else ANALYSIS_VERSION
+                version = OBJECT_SHEET_VERSION if kind == 'image_object_sheet' else CHARACTER_SHEET_VERSION if kind == 'image_character_sheet' else ANALYSIS_VERSION
                 key = digest({'task': kind, 'sha256': media['sha256'], 'role': role, 'analysis': analysis, 'digest': model_digest, 'version': version})
             elif kind == 'description_translate':
                 text = base['picture'].get('description_en', '')

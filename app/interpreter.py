@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 from pydantic import ValidationError
 
 from app.compiler import StructuralError, render
-from app.direction import guide_key
+from app.direction import guide_key, guide_opening
 from app.shots import marked_request, shot_cues
 from app.domain import CompileInput, CompileResult, Metrics
 from app.narrative import NarrativePlan, response_schema
@@ -100,6 +100,14 @@ def model_context(data: CompileInput) -> dict:
             guides.append(dict(id=guide_key(ref,kind), placeholder='{{guide:'+guide_key(ref,kind)+'}}', token=f'<{kind.title()} {ref.slot}>', role=ref.role,
                 mappings=[m.model_dump(exclude_none=True) for m in g.mappings], anchor=g.anchor, at_s=g.at_s,
                 verbatim_prompt_en=g.prompt_en))
+            if kind == 'video' and ref.role in {'subject_motion', 'camera_and_subject_motion'}:
+                guides[-1]['subject_bindings'] = [dict(subject=f'<Subject {m.subject}>', proxy=m.figure.strip(),
+                    appearance='declared Subject references', motion='this guide',
+                    replacement='in place from the proxy first appearance') for m in g.mappings]
+                opening = guide_opening(ref)
+                if opening:
+                    guides[-1]['opening_en'] = opening
+                    guides[-1]['opening_authority'] = 'guide only; do not add another opening for the mapped Subjects'
     if guides: context['direction_guides']=guides
     cues = shot_cues(data.request, data.shot_presets, data.declared_duration_s)
     if cues:

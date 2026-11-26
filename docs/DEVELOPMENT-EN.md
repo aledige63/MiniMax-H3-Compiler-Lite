@@ -20,11 +20,11 @@ Use the interpreter from the active virtual environment for Python commands.
 
 ## Standalone recipe
 
-`python -m scripts.build_packages --output dist/1.0.0` creates the stable
+`python -m scripts.build_packages --output dist/1.1.0` creates the stable
 Windows x64 ZIP. Git, old tags and old ZIPs are not required. The explicit
 allowlist is `packaging/files.json`; `packaging/runtime-reference.json` checks
-application and launcher hashes. Source commit is provenance only. Version is
-1.0.0, stable tag v1.0.0. Update the reference deliberately for runtime changes.
+application and launcher hashes. The public release tag and runtime hashes identify the payload; the exact public commit is recorded in the delivery VERIFICA.json. Version is
+1.1.0, stable tag v1.1.0. Update the reference deliberately for runtime changes.
 
 
 Smoke/benchmark scripts perform real inference only when run explicitly.

@@ -221,7 +221,7 @@ class ConnectionTrialCommand(DTO):
 
 
 class AssistanceCommand(RevisionCommand):
-    kind: Literal["image_analyze", "image_character_sheet", "vision_trial", "description_translate", "audio_asr"]
+    kind: Literal["image_analyze", "image_character_sheet", "image_object_sheet", "vision_trial", "description_translate", "audio_asr"]
     target_id: str | None = None
     model: str = Field(min_length=1)
     force: bool = False

@@ -155,8 +155,8 @@ def build(output):
               'copyright': config['copyright'], 'documentation': config['documentation'],
               'runtime_reference_tag': config['runtime_reference_ref'],
               'runtime_reference_commit': runtime_commit, 'runtime_matches_reference': True,
-              'notes': {'it': 'Hash e contenuti verificati; runtime conforme al riferimento sorgenti. Release stabile; esito browser Windows confermato, nuova installazione nativa non ripetuta.',
-                        'en': 'Hashes and contents verified; runtime matches source reference. Stable release; Windows browser behavior accepted, fresh native installation not repeated.'}}
+              'notes': {'it': 'Hash e contenuti verificati; runtime conforme al riferimento sorgenti. Release stabile; controlli sintetici e backend Mac verificati, nuova installazione nativa Windows non ripetuta.',
+                        'en': 'Hashes and contents verified; runtime matches source reference. Stable release; synthetic checks and Mac backend verified, fresh native Windows installation not repeated.'}}
     (output / 'PACCHETTI.json').write_bytes(encoded(report))
     for source, name in config['prepared_files'].items():
         if '/' not in name:
@@ -171,7 +171,7 @@ def main():
     try:
         output = args.output or ROOT / 'dist' / json.loads(CONFIG.read_text(encoding='utf-8'))['version']
         report = build(output.resolve())
-    except (ValueError, OSError, subprocess.CalledProcessError) as error:
+    except (ValueError, OSError) as error:
         parser.exit(1, f'Confezionamento non riuscito: {error}\n')
     print(json.dumps(report, ensure_ascii=False, indent=2))
 

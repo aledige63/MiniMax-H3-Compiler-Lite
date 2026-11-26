@@ -639,7 +639,7 @@ class ManualPromptCommand(DTO):
 class Metrics(DTO):
     model: str
     digest: str
-    task: Literal["text_compile", "image_analyze", "image_character_sheet", "vision_trial", "description_translate", "audio_asr"] = "text_compile"
+    task: Literal["text_compile", "image_analyze", "image_character_sheet", "image_object_sheet", "vision_trial", "description_translate", "audio_asr"] = "text_compile"
     inference_calls: int
     input_hash: str
     input_chars: int

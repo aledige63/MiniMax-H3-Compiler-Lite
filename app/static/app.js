@@ -3,7 +3,7 @@ import { visibleReferenceTokens, associatePicture, definitionPicture, subjectDef
 import { renderPhysicalDetails } from "./physical-details.js?v=scale-reference-role";
 import { renderSubjectScale } from './subject-scale.js?v=scale-reference-role';
 import { createStudioLayout } from "./studio-layout.js";
-import { selectedAnalysis, analysisLabel, analysisProposals, renderAnalysisControls } from "./image-analysis.js";
+import { selectedAnalysis, analysisLabel, analysisProposals, renderAnalysisControls, sheetAnalysisKinds, sheetAnalysisSupported } from "./image-analysis.js";
 import {renderLibraryRows} from './project-library.js';
 import {pictureTasks, renderPictureProposals} from './picture-description.js';
 import {mergeSceneReferences, applyLibraryReference, sameReferenceValue} from './scene-reference-sync.js';
@@ -22,7 +22,7 @@ const pictureDescriptionUi = new Map();
 function pictureDescriptionState(picture) {
   const key = `${workspace.id}/${picture.id}`;
   if (!pictureDescriptionUi.has(key)) {
-    const latest = (workspace.assistance_jobs || []).filter(job=>job.target_id===picture.id && ['image_analyze','image_character_sheet'].includes(job.kind)).at(-1);
+    const latest = (workspace.assistance_jobs || []).filter(job=>job.target_id===picture.id && (job.kind==='image_analyze' || sheetAnalysisKinds.has(job.kind))).at(-1);
     pictureDescriptionUi.set(key,{mode:latest?.kind || 'image_analyze',historyOpen:false,openJobs:new Set()});
   }
   return pictureDescriptionUi.get(key);
@@ -368,7 +368,7 @@ function renderPictures() {
     if (picture.original_description) descriptionArea.append(el("p", "field-help", tr`Originale (${picture.original_language || t("lingua originale")}): ${picture.original_description}`));
     const analysisState = pictureDescriptionState(picture);
     const actions = el('div','description-analysis-actions');
-    const type = selectField(t('Tipo di analisi'),analysisState.mode,[['image_analyze',t('Immagine singola')],['image_character_sheet',t('Character sheet')]],value=>{
+    const type = selectField(t('Tipo di analisi'),analysisState.mode,[['image_analyze',t('Immagine singola')],['image_character_sheet',t('Character sheet')],['image_object_sheet',t('Scheda oggetto · più viste')]],value=>{
       analysisState.mode=value;refreshAssistancePanels();updateAssistanceControls();
     },{draft:false});
     type.dataset.pictureAnalysisType=picture.id;
@@ -1690,9 +1690,10 @@ function updateAssistanceControls() {
     let enabled = true;
     if (node.dataset.assistanceAction === 'picture-analyze') {
       const picture=draft.pictures.find(p=>p.id===node.dataset.target);
-      const sheet=picture && pictureDescriptionState(picture).mode==='image_character_sheet';
+      const kind=picture && pictureDescriptionState(picture).mode;
+      const sheet=sheetAnalysisKinds.has(kind);
       enabled=Boolean(picture && chosen?.vision_tested && (sheet
-        ? ['identity','appearance'].includes(picture.role) && selectedAnalysis(picture,imageAnalysisOptions).category==='character' && workspace?.media_by_picture?.[picture.id]
+        ? sheetAnalysisSupported(picture,imageAnalysisOptions,kind) && workspace?.media_by_picture?.[picture.id]
         : workspace?.proxy_by_picture?.[picture.id] || workspace?.media_by_picture?.[picture.id]));
       if((workspace?.assistance_jobs || []).some(j=>j.target_id===picture?.id && pictureTasks.has(j.kind) && ['queued','running'].includes(j.status)))enabled=false;
     }
@@ -1713,11 +1714,12 @@ function updateAssistanceControls() {
   }
   for (const reason of document.querySelectorAll("[data-analysis-reason]")) {
     const picture=draft.pictures.find(p=>p.id===reason.dataset.analysisReason);
-    const sheet=picture && pictureDescriptionState(picture).mode==='image_character_sheet';
+    const kind=picture && pictureDescriptionState(picture).mode;
+    const sheet=sheetAnalysisKinds.has(kind);
     const hasFile = workspace?.proxy_by_picture?.[reason.dataset.analysisReason] || workspace?.media_by_picture?.[reason.dataset.analysisReason];
-    reason.textContent = sheet && (!['identity','appearance'].includes(picture.role) || selectedAnalysis(picture,imageAnalysisOptions).category!=='character')
-      ? t('Per il character sheet scegli Identità o Aspetto e la categoria Personaggio.')
-      : sheet && !workspace?.media_by_picture?.[picture.id] ? t('Carica il file originale per analizzare il character sheet.')
+    reason.textContent = sheet && !sheetAnalysisSupported(picture,imageAnalysisOptions,kind)
+      ? kind==='image_object_sheet' ? t('Per la scheda oggetto scegli Oggetto o Aspetto e la categoria Oggetto / oggetto impugnato.') : t('Per il character sheet scegli Identità o Aspetto e la categoria Personaggio.')
+      : sheet && !workspace?.media_by_picture?.[picture.id] ? kind==='image_object_sheet' ? t('Carica il file originale per analizzare la scheda oggetto.') : t('Carica il file originale per analizzare il character sheet.')
       : !hasFile ? t("Carica il file della Picture o un proxy per l’analisi; la descrizione manuale resta disponibile.") : !chosen ? t("Scegli il modello vision in Impostazioni.") : !chosen.vision_tested ? t("Verifica prima il modello vision selezionato.") : "";
   }
   for(const node of document.querySelectorAll('[data-picture-analysis-profile]')) {
@@ -1796,7 +1798,7 @@ function refreshAssistancePanels() {
     const picture = draft?.pictures.find(p=>p.id === panel.dataset.assistanceFor);
     for (const job of analysisProposals(matching,picture,imageAnalysisOptions)) {
       const box = el("div", "analysis-proposal");
-      const title = { image_analyze: t("Analisi immagine"), image_character_sheet: t("Analisi character sheet"), description_translate: t("Traduzione"), audio_asr: t("Trascrizione") }[job.kind];
+      const title = { image_analyze: t("Analisi immagine"), image_character_sheet: t("Analisi character sheet"), image_object_sheet: t('Analisi scheda oggetto'), description_translate: t("Traduzione"), audio_asr: t("Trascrizione") }[job.kind];
       box.append(el("strong", "", `${title} · ${job.model}`));
       if(job.analysis)box.append(el('p','field-help',analysisLabel(job.analysis,imageAnalysisOptions)));
       if (["queued", "running"].includes(job.status)) {
@@ -1814,6 +1816,7 @@ function refreshAssistancePanels() {
         if (draftDirty && !job.stale) box.append(el("p", "field-help", t("Salva la bozza per verificare che questa proposta sia ancora attuale.")));
         if (job.analysis && job.stale) box.append(el('p','field-help',t('Per riproporre un livello già analizzato, selezionalo e premi Analizza. La cache verrà riusata se immagine e impostazioni corrispondono.')));
         const retryLabel = job.kind === 'image_character_sheet' ? t('Rianalizza character sheet senza cache')
+          : job.kind === 'image_object_sheet' ? t('Rianalizza scheda oggetto senza cache')
           : job.kind === 'image_analyze' ? t('Rianalizza immagine senza cache')
           : job.analysis ? t("Analizza selezione attuale senza cache") : t("Nuova analisi senza cache");
         box.append(serverButton(retryLabel, () => requestAssistance(job.kind, job.target_id, true)));

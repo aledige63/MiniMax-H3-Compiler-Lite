@@ -2,9 +2,28 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
-import {selectedAnalysis, setAnalysisChoice, analysisLabel, analysisProposals, renderAnalysisControls} from '../app/static/image-analysis.js';
+import {selectedAnalysis, setAnalysisChoice, analysisLabel, analysisProposals, renderAnalysisControls, sheetAnalysisSupported, sheetAnalysisKinds} from '../app/static/image-analysis.js';
 
 const options = JSON.parse(readFileSync(new URL('../app/static/image-analysis-options.json', import.meta.url)));
+
+test('le schede oggetto e personaggio hanno categorie e ruoli distinti, anche con scelta automatica',()=>{
+  assert.equal(sheetAnalysisSupported({role:'object'},options,'image_object_sheet'),true);
+  assert.equal(sheetAnalysisSupported({role:'appearance',analysis:{category:'held_item'}},options,'image_object_sheet'),true);
+  for(const picture of [{role:'identity',analysis:{category:'held_item'}},{role:'object',analysis:{category:'character'}},{role:'appearance'}]){
+    assert.equal(sheetAnalysisSupported(picture,options,'image_object_sheet'),false);
+  }
+  assert.equal(sheetAnalysisSupported({role:'identity'},options,'image_character_sheet'),true);
+  assert.equal(sheetAnalysisSupported({role:'object'},options,'image_character_sheet'),false);
+});
+
+test('riaprire una Picture ripristina il tipo scheda oggetto della ricevuta più recente',()=>{
+  const source=readFileSync(new URL('../app/static/app.js',import.meta.url),'utf8');
+  const handler=source.slice(source.indexOf('function pictureDescriptionState('),source.indexOf('let timelineSeconds'));
+  const c={workspace:{id:'cut',assistance_jobs:[{target_id:'picture',kind:'image_analyze'},{target_id:'picture',kind:'image_object_sheet'}]},
+    pictureDescriptionUi:new Map(),sheetAnalysisKinds};
+  vm.createContext(c);vm.runInContext(handler,c);
+  assert.equal(c.pictureDescriptionState({id:'picture'}).mode,'image_object_sheet');
+});
 
 test('il ruolo dimensionale segue il profilo dedicato e mostra un’etichetta leggibile',()=>{
   const picture={role:'scale_reference'};
@@ -94,7 +113,8 @@ test('il singolo comando Analizza usa la scelta visibile, senza inferenze al cam
     requestAssistance:async(...args)=>sent.push(args)};
   vm.createContext(c);vm.runInContext(handler,c);
   assert.equal(actions.filter(b=>b.text==='Analizza').length,1);
-  for(const kind of ['image_character_sheet','image_analyze']){
+  assert.ok(selectors[0].choices.some(([kind])=>kind==='image_object_sheet'));
+  for(const kind of ['image_character_sheet','image_object_sheet','image_analyze']){
     const before=sent.length;selectors[0].change(kind);assert.equal(sent.length,before);
     await actions.find(b=>b.text==='Analizza').click();assert.deepEqual(sent.at(-1),[kind,'picture',true]);
   }

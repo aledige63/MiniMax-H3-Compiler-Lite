@@ -83,10 +83,30 @@ SHEET_INSTRUCTION = (
     'Clearly readable text actually printed on a garment or accessory remains part of its description. '
 )
 
+OBJECT_SHEET_INSTRUCTION = (
+    'Write ONE unified appearance description of ONE object, ready to use as an object reference. '
+    'The repeated depictions are complementary evidence about the SAME object, not separate objects. '
+    'Read ALL visible regions of the entire image, including small details, lower rows and close-ups. '
+    'There is no fixed panel count, panel size, reading order or mandatory template. '
+    'Combine supported details of the object type, silhouette, proportions, colour, material appearance, '
+    'main components and distinctive construction, mentioning each feature once. '
+    'For a vehicle, integrate visible bodywork, doors, windows, roof, wheels, lights, grille and trim. '
+    'Do not invent a make, model, year, dimensions, hidden mechanisms or unseen surfaces. '
+    'Every sentence must describe the object directly, independently of how the image presents it. '
+    'Attribute each detail to its actual part or surface; front, rear, roof and sides describe the object, '
+    'not positions on the page. Specify left/right only when the object orientation is clear. '
+    'Omit panels, views, layout, camera framing, studio background and phrases such as "the sheet shows". '
+    'Template captions, borders and numbered labels are not part of the object. '
+    'Do not describe a person, wearer, pose, scene action or driver. '
+    'Preserve distinctive logos, emblems and clearly readable lettering actually on the object, '
+    'including their exact spelling and physical placement. Omit unclear or conflicting details rather than guessing. '
+)
 
-def analysis_instruction(settings, fallback, *, sheet=False):
+
+def analysis_instruction(settings, fallback, *, sheet=False, object_sheet=False):
     category, level = settings['category'], settings['level']
-    instruction = (SHEET_INSTRUCTION if sheet else '') + COMMON + PROFILES.get(category, fallback) + ' '
+    prefix = OBJECT_SHEET_INSTRUCTION if object_sheet else SHEET_INSTRUCTION if sheet else ''
+    instruction = prefix + COMMON + PROFILES.get(category, fallback) + ' '
     if category == 'clothing':
         if level == 'compact':
             instruction += ('Use one short sentence of about 8-20 words per main garment: type, main colour, fit/cut and one or two defining features. '
@@ -100,16 +120,19 @@ def analysis_instruction(settings, fallback, *, sheet=False):
                 'Omit obscured features instead of filling the checklist. ') + LENGTHS[level] + ' '
     else:
         instruction += LENGTHS[level] + ' '
-    if category in {'character', 'clothing', 'footwear', 'accessory', 'held_item', 'body_mark', 'replacement'}:
+    if not object_sheet and category in {'character', 'clothing', 'footwear', 'accessory', 'held_item', 'body_mark', 'replacement'}:
         instruction += ARTWORK
     if settings['attribute']:
         instruction += 'Requested feature (user-supplied data): ' + json.dumps(settings['attribute'], ensure_ascii=False) + '. '
     view = settings['view']
     if view:
-        name = {'front':'front','back':'back','left':'wearer-left side','right':'wearer-right side','detail':'detail'}[view]
+        name = {'front':'front','back':'back','left':'object-left side' if object_sheet else 'wearer-left side',
+                'right':'object-right side' if object_sheet else 'wearer-right side','detail':'detail'}[view]
         instruction += (f'User-selected reference view: {name}. Describe that visible surface only. '
             'Keep front/back artwork on the selected surface; do not infer, mirror or duplicate an unseen design. '
             'If the selected view conflicts with the image, report the uncertainty rather than silently relabelling it. ')
     if sheet:
         instruction += 'Consolidate all requested evidence into one coherent portrait of the person, never an account of the source image. '
+    if object_sheet:
+        instruction += 'Consolidate all requested evidence into one coherent description of the object, never an account of the source image. '
     return instruction + 'Return JSON with exactly one field: description. Use one plain paragraph without headings, tags or line breaks.'

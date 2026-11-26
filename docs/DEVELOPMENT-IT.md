@@ -20,11 +20,11 @@ I comandi Python vanno eseguiti con l'interprete della virtualenv attiva.
 
 ## Ricetta autonoma
 
-`python -m scripts.build_packages --output dist/1.0.0` crea lo ZIP stabile
+`python -m scripts.build_packages --output dist/1.1.0` crea lo ZIP stabile
 Windows x64. Non servono Git, vecchi tag o vecchi ZIP. L’allowlist è
 `packaging/files.json`; `packaging/runtime-reference.json` controlla gli hash
-applicativi e degli avvii. Il commit sorgente è solo provenienza. Versione
-1.0.0, tag stabile v1.0.0. Aggiornare il riferimento solo per modifiche intenzionali.
+applicativi e degli avvii. Tag pubblico e hash runtime identificano i file; il commit pubblico esatto è nel VERIFICA.json di consegna. Versione
+1.1.0, tag stabile v1.1.0. Aggiornare il riferimento solo per modifiche intenzionali.
 
 
 Gli script smoke/benchmark effettuano inferenze solo se avviati esplicitamente.

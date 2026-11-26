@@ -1,0 +1,38 @@
+MiniMax H3 Compiler Lite 1.1.0 — Windows 11 x64
+MIT — Copyright (c) 2026 aledige
+English: README-EN.txt
+
+REQUISITI
+Windows 11 x64 e Python 3.12 x64 con pip e launcher py:
+https://www.python.org/downloads/windows/
+Per le funzioni AI occorre Ollama locale/remoto con modelli installati,
+oppure una chiave API OpenAI. Configurare e verificare testo e vision in
+Impostazioni utente; un modello multimodale può coprire entrambe le funzioni.
+Le chiamate OpenAI possono comportare costi API. Python, Ollama, modelli e
+chiavi non sono inclusi e non vengono scaricati automaticamente.
+
+AVVIO
+Estrarre tutto lo ZIP in una cartella locale nuova, scrivibile e fuori dalle
+cartelle sincronizzate. Avviare Avvia.cmd. Al primo avvio servono Internet per
+installare requirements.lock e Python 3.12 già installato. Lasciare aperta la
+finestra; salvare e attendere la fine dei lavori prima di fermare con Ctrl+C.
+URL locale: http://127.0.0.1:8767/
+
+AGGIORNAMENTO E DATI
+Prima salvare gli edit, fermare il vecchio server e creare un backup verificato.
+Conservare lo stesso archivio dati o --data-dir. Non sovrascrivere il vecchio
+codice. Archivio predefinito: %LOCALAPPDATA%\MiniMax H3 Compiler Lite\data
+Prompt, versioni, snapshot e file restano conservati. Le nuove istruzioni
+si applicano solo alle nuove analisi e compilazioni.
+
+NOVITA E STAGE
+Schede oggetto multivista e mapping Video espliciti, con apertura coerente.
+Da Stage 0.9.0 usare MP4 e Prompt per MiniMax Compiler (_compiler.txt): caricare
+il Video, associare le figure ai Subject e incollare il corpo narrativo nel
+Prompt guida inglese, entro 2500 caratteri. Collegare i file anche al workflow H3.
+Vedere STAGE-IT.md, OBJECT-SHEET-IT.md, GUIDE-MAPPING-IT.md e RELEASE-1.1.0-IT.md.
+Nessun importatore automatico MP4/TXT/JSON o esecuzione H3 inclusi.
+
+Controllare SHA256SUMS.txt. Test sintetici e backend Mac verificati; una nuova
+installazione nativa Windows di questo ZIP non è stata ripetuta. Originali,
+vecchi ZIP e tag conservati. LICENSE e THIRD-PARTY-NOTICES.md inclusi.
